@@ -44,8 +44,6 @@ svg { border: solid #ccc 1px; }
 	// .style("fill", "#ccc")
 	// .text("problem 1");
 
-
-
 var number = d3.range(1000).map(d3.randomBates(10));
 plotHistogram("p1_plots", number);
 
@@ -91,12 +89,6 @@ plotHistogram("p1_plots", number);
 						  .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
 						  .attr("height", function(d) { return height - y(d.length); });
 
-						// bar.append("text")
-						//     .attr("dy", ".75em")
-						//     .attr("y", 6)
-						//     .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
-						//     .attr("text-anchor", "middle")
-						//     .text(function(d) { return formatCount(d.length); });
 
 		g.append("g")
 						.attr("class", "x_axis")
@@ -108,72 +100,6 @@ plotHistogram("p1_plots", number);
 		      .call(d3.axisLeft(y));
 
 	}
-
-	// var x_scale = d3.scaleLinear()
-	// .domain([1, 9])
-	// .range([x_padding, width - x_padding]);
-  //
-	// var y_scale = d3.scaleLinear()
-	// .domain([1, 80])
-	// .range([y_padding, height - y_padding]);
-
-
-	// var circleR = 4;
-	// circles.forEach(function (d, i) {
-	//   svg.append("circle")
-	// 	.attr("cx", x_scale(d.x))
-	// 	.attr("cy", height  - y_scale(d.y))
-	// 	.attr("r", circleR)
-	// 	.style("fill", "black")
-	// 	.on("click", function(){
-	// 		d3.select(this).style("fill", "blue");
-	// 	})
-	// });
-  //
-  //
-	// var rectSize = 8;
-	// rects.forEach(function (d, i) {
-	// 	svg.append("rect")
-	// 	.attr("x", x_scale(d.x) - rectSize/2)
-	// 	.attr("y", height  - y_scale(d.y) - rectSize/2)
-	// 	.attr("width", rectSize)
-	// 	.attr("height", rectSize)
-	// 	.style("fill", "black")
-	// 	.on("click", function(){
-	// 		d3.select(this).style("fill", "blue");
-	// 	})
-	// });
-
-	// rects.forEach(function (d, i) {
-	// 	svg.append("circle")
-	// 	.attr("cx", x_scale(d.x))
-	// 	.attr("cy", height  - y_scale(d.y))
-	// 	.attr("r", 1)
-	// 	.style("fill", "red");
-	// });
-
-	// define the axis
-	// var x_axis = d3.axisBottom()
-	// 		.scale(x_scale);
-  //
-	// var y_axis_scale = d3.scaleLinear()
-	// 		.domain([1, 80])
-	// 		.range([height - y_padding, y_padding]);
-  //
-	// var y_axis = d3.axisLeft()
-	// 		.scale(y_axis_scale);
-  //
-	// // draw x axis
-	// svg.append("g")
-	// 		.attr("transform", "translate(0," + (height - y_padding) + ")")
-	// 		.call(x_axis);
-  //
-  //
-	// // draw y axis
-	// svg.append("g")
-	// 		.attr("transform", "translate(" + x_padding + ",0)")
-	// 		.call(y_axis);
-
 
 
 </script>
