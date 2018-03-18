@@ -13,13 +13,9 @@ svg { border: solid #ccc 1px; }
 <style>
 
 .bar rect {
-  fill: steelblue;
+  fill: #454952;
 }
 
-.bar text {
-  fill: #fff;
-  font: 10px sans-serif;
-}
 
 </style>
 
@@ -61,14 +57,15 @@ svg { border: solid #ccc 1px; }
 		var formatCount = d3.format(",.0f");
 
 
-		var svg = d3.select("#"+element_id).append("svg").attr("width", 400).attr("height", 400);
-		svg.append("text")
-		.attr("x", 120).attr("y", 30)
-		.style("fill", "#ccc")
+		var svg = d3.select("#"+element_id)
+    .append("svg").attr("width", 300).attr("height", 300);
+
+    svg.append("text")
+		.attr("x", 120).attr("y", 30).style("fill", "#ccc")
 		.text(element_id);
 
 		d3.select("svg"),
-		    margin = {top: 10, right: 30, bottom: 30, left: 30},
+		    margin = {top: 10, right: 30, bottom: 50, left: 50},
 		    width = +svg.attr("width") - margin.left - margin.right,
 		    height = +svg.attr("height") - margin.top - margin.bottom,
 		    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -78,8 +75,7 @@ svg { border: solid #ccc 1px; }
 
 		var bins = d3.histogram()
 				    .domain(x.domain())
-				    .thresholds(x.ticks(20))
-				    (data);
+				    .thresholds(x.ticks(10))(data);
 
 		var y = d3.scaleLinear()
 				    .domain([0, d3.max(bins, function(d) { return d.length; })])
@@ -106,6 +102,15 @@ svg { border: solid #ccc 1px; }
 		g.append("g")
 		      .attr("class", "y_axis")
 		      .call(d3.axisLeft(y));
+    svg.append("text")
+      		.attr("x", margin.left + width/2)
+          .attr("y", margin.top + height + 35)
+      		.text("value");
+
+    svg.append("text")
+          .attr("x", 5)
+          .attr("y", margin.top + height/2)
+          .text("freq");
 
 	}
 

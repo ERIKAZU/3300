@@ -4,6 +4,7 @@
 <title>Min Zheng (mz474)</title>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="http://d3js.org/topojson.v2.min.js"></script>
 
 <style>
 body { font-family: 'Alegreya Sans', Calibri, sans-serif; }
@@ -14,14 +15,8 @@ svg { border: solid #ccc 1px; }
 
 <body>
 
-<p id="problem 1">
-	<h3 id = "p1_text">
-		Problem1:
-	</h3>
-	<!-- Here's an SVG element. Note that in this file it looks like the <div> above. -->
-	<svg height="200" width="200" id="p1_svg">
-	  <!-- Visual elements are represented by tags, which have attributes -->
-	</svg>
+<p id="problem1">
+		Problem1:</br>
 
 	<script id="p1">
 	var circles = [
@@ -34,7 +29,11 @@ svg { border: solid #ccc 1px; }
 	{"x":9,"y":80,"Shape":"b"}
 	];
 
-	var svg = d3.select("#p1_svg");
+	var svg = d3.select("#problem1")
+	.append("svg")
+	.attr("width", 200)
+	.attr("height", 200);
+
 	svg.append("text")
 	.attr("x", 100).attr("y", 30)
 	.style("fill", "#ccc")
@@ -81,14 +80,6 @@ svg { border: solid #ccc 1px; }
 		})
 	});
 
-	// rects.forEach(function (d, i) {
-	// 	svg.append("circle")
-	// 	.attr("cx", x_scale(d.x))
-	// 	.attr("cy", height  - y_scale(d.y))
-	// 	.attr("r", 1)
-	// 	.style("fill", "red");
-	// });
-
 	// define the axis
 	var x_axis = d3.axisBottom()
 			.scale(x_scale);
@@ -102,41 +93,431 @@ svg { border: solid #ccc 1px; }
 
 	// draw x axis
 	svg.append("g")
-			.attr("transform", "translate(0," + (height - y_padding) + ")")
+			.attr("transform", "translate(-0.5," + (height - y_padding) + ")")
 			.call(x_axis);
-
 
 	// draw y axis
 	svg.append("g")
 			.attr("transform", "translate(" + x_padding + ",0)")
 			.call(y_axis);
 
+	svg.append("text")
+			.text("A")
+			.style("font-size", "10px")
+			.attr("x", 100)
+			.attr("y",  height - y_padding + 30);
 
+	svg.append("text")
+			.text("C")
+			.style("font-size", "10px")
+			.attr("x", x_padding - 30)
+			.attr("y",  100);
 
 </script>
+
 </p>
 
 
-<p id="problem 2">
-	<h3 id = "p2_text">
+<p id="problem2">
 		Problem2:
-	</h3>
-	<!-- Here's an SVG element. Note that in this file it looks like the <div> above. -->
-	<svg height="200" width="200" id="p1_svg">
-	  <!-- Visual elements are represented by tags, which have attributes -->
-	</svg>
+		(b)This is not good visualization, because both rank and count ranges a lot, and those with small values stick together therefore making the text hard to see.
+	</br>
+	(c)This is much better than b, since the text are seperated and readable comparing to b.
+	</br>
+
+
 
 	<script id="p2">
 	var wordData;
 
-		d3.json("words.json", function (error, data) {
+	d3.json("words.json", function (error, data) {
 	  wordData = data;
 
 	  console.log("Code in the call-back function is only executed when the data file loads.");
-	  
+
+		var svg2b = d3.select("#problem2")
+		.append("svg")
+		.attr("width", 200)
+		.attr("height", 200);
+
+		svg2b.append("text")
+		.attr("x", 170).attr("y", 30)
+		.style("fill", "#ccc")
+		.text("(b)");
+
+		var width = svg2b.attr("width");
+		var height = svg2b.attr("height");
+
+		var x_padding = 40;
+		var y_padding = 40;
+
+		var rank_scale = d3.scaleLinear()
+		.domain([1, 65536])
+		.range([x_padding, width - x_padding]);
+
+		var count_scale = d3.scaleLinear()
+		.domain([144913, 15342397280])
+		.range([height - y_padding, y_padding]);
+
+		wordData.forEach(function (d, i) {
+		  svg2b.append("text")
+			.text(d.word)
+			.style("font-size", "5px")
+			.attr("x", rank_scale(d.rank))
+			.attr("y",  count_scale(d.count));
+		});
+
+		// define the axis
+		var count_axis = d3.axisLeft(count_scale);
+		var rank_axis = d3.axisBottom(rank_scale);
+
+		// draw x axis
+		svg2b.append("g")
+			 .attr("transform", "translate(-0.5," + (height - y_padding) + ")")
+			 .call(rank_axis)
+			 .selectAll("text").remove();
+
+		// draw y axis
+		svg2b.append("g")
+				.attr("transform", "translate(" + x_padding + ",0)")
+				.call(count_axis)
+				.selectAll("text").remove();
 	});
+
+
+
+
+
+
+// --------------part C----------------------
+d3.json("words.json", function (error, data) {
+		  wordData = data;
+
+		  console.log("Code in the call-back function is only executed when the data file loads.");
+
+		var svg = d3.select("#problem2")
+		.append("svg")
+		.attr("width", 200)
+		.attr("height", 200);
+
+		// var svg = d3.select("#p2b_svg");
+		svg.append("text")
+		.attr("x", 170).attr("y", 30)
+		.style("fill", "#ccc")
+		.text("(c)");
+
+		var rank_scale = d3.scaleLinear()
+		.domain([Math.log(1), Math.log(65536)])
+		.range([x_padding, width - x_padding]);
+
+		var count_scale = d3.scaleLinear()
+		.domain([Math.log(144913), Math.log(15342397280)])
+		.range([height - y_padding, y_padding]);
+
+		wordData.forEach(function (d, i) {
+		  svg.append("text")
+			.text(d.word)
+			.style("font-size", "5px")
+			.attr("x", rank_scale(Math.log(d.rank)))
+			.attr("y",  count_scale(Math.log(d.count)));
+		});
+
+		// define the axis
+		var count_axis = d3.axisLeft(count_scale);
+		var rank_axis = d3.axisBottom(rank_scale);
+
+		// draw x axis
+		svg.append("g")
+			 .attr("transform", "translate(-0.5," + (height - y_padding) + ")")
+			 .call(rank_axis)
+			 .selectAll("text").remove();
+
+		// draw y axis
+		svg.append("g")
+				.attr("transform", "translate(" + x_padding + ",0)")
+				.call(count_axis)
+				.selectAll("text").remove();
+
+	});
+
+	// --------------part D----------------------
+	d3.json("words.json", function (error, data) {
+			  wordData = data;
+
+			  console.log("Code in the call-back function is only executed when the data file loads.");
+
+			var svg = d3.select("#problem2")
+			.append("svg")
+			.attr("width", 200)
+			.attr("height", 200);
+
+			svg.append("text")
+			.attr("x", 170).attr("y", 30)
+			.style("fill", "#ccc")
+			.text("(d)");
+
+			var rank_scale_log = d3.scaleLog().base(Math.E)
+			.domain([1, 65536])
+			.range([x_padding, width - x_padding]);
+
+			var count_scale_log = d3.scaleLog().base(Math.E)
+			.domain([144913, 15342397280])
+			.range([height - y_padding, y_padding]);
+
+			wordData.forEach(function (d, i) {
+			  svg.append("text")
+				.text(d.word)
+				.style("font-size", "5px")
+				.attr("x", rank_scale_log(d.rank))
+				.attr("y",  count_scale_log(d.count));
+			});
+
+			var count_axis_log = d3.axisLeft(count_scale_log);
+			var rank_axis_log = d3.axisBottom(rank_scale_log);
+
+			svg.append("g")
+				 .attr("transform", "translate(-0.5," + (height - y_padding) + ")")
+				 .call(rank_axis_log)
+				 .selectAll("text").remove();
+
+			// draw y axis
+			svg.append("g")
+					.attr("transform", "translate(" + x_padding + ",0)")
+					.call(count_axis_log)
+					.selectAll("text").remove();
+
+		});
+
 	</script>
-</p>
+	</p>
+
+
+
+	<p id="problem3">
+			Problem3:
+		</br>
+		<script id="p3">
+
+		var svg = d3.select("#problem3")
+		.append("svg")
+		.attr("width", 400)
+		.attr("height", 400);
+
+
+		var x_padding = 40;
+		var y_padding = 40;
+
+		var x_scale = d3.scaleLinear()
+		.domain([0, 100])
+		.range([10, 390]);
+
+		var y_scale = d3.scaleLinear()
+		.domain([50, -50])
+		.range([10, 390]);
+
+
+		function trajectory(initialVelocity, angle, initialY) {
+			var angleRad = angle * (Math.PI/180);
+			var arr = [];
+			var ground = 0;
+			var x = 0;
+			var y = initialY;
+			var xVelocity = initialVelocity * Math.cos(angleRad);
+			var yVelocity = initialVelocity * Math.sin(angleRad);
+			var xAcceleration = 0;
+			var yAcceleration = -9.8/5;
+			var point = {"ground": ground,
+			"x": x, "y" : y,
+			"xVelocity": xVelocity,"yVelocity":yVelocity, "xAcceleration":xAcceleration, "yAcceleration":yAcceleration };
+			arr.push(point);
+
+			while (ground <= y) {
+				xAcceleration = 0;
+				yAcceleration = -9.8/5;
+
+				xVelocity = xVelocity + xAcceleration;
+				yVelocity = yVelocity + yAcceleration;
+
+				x = x + 0.2 * xVelocity;
+
+				y = y + 0.2 * yVelocity;
+
+				ground = (-0.5)*x;
+				var point = {"ground": ground,
+				"x": x, "y" : y,
+				"xVelocity": xVelocity,"yVelocity":yVelocity, "xAcceleration":xAcceleration, "yAcceleration":yAcceleration };
+				arr.push(point);
+
+			}
+			return arr;
+		}
+
+		function plotTrajectory(array) {
+				var myPath = d3.line()
+				.x(function(d) { return (x_scale(d.x)) })
+				.y(function(d) { return (y_scale(d.y)) })
+				svg.append("path")
+				.attr("d",myPath(array.slice(0,-1)))
+				.attr("stroke", "blue")
+				.attr("fill","none")
+				.attr("stroke-opacity",0.25)
+				.attr("stroke-width",5)
+
+				var last = array[array.length - 1]
+				var first = array[0]
+				svg.append("text")
+				.attr("x", x_scale(last.x)).attr("y", y_scale(last.y))
+				.style("fill", "blue")
+				.text(round(dist(first.x, first.y, last.x,last.y),2))
+		}
+
+		function dist(x1,y1,x2,y2) {
+			var sum = Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2);
+			return Math.sqrt(sum);
+		}
+
+		function plotGround() {
+			svg.append("line")
+			.style("stroke","black")
+			.attr("x1",10).attr("y1",200)
+			.attr("x2",390).attr("y2",390)
+		}
+
+		function round(number, precision) {
+  		var factor = Math.pow(10, precision);
+  		return Math.round(number * factor) / factor;
+		}
+
+		plotGround();
+		plotTrajectory(trajectory(26, -7, 1));
+		plotTrajectory(trajectory(20, -7, 1));
+		plotTrajectory(trajectory(15, -7, 1));
+
+		</script>
+
+	</p>
+
+	<p id="problem4">
+			Problem4:</br>
+		<script>
+
+		var svg4 = d3.select("#problem4")
+		.append("svg")
+		.attr("width", 400)
+		.attr("height", 400);
+		var projection = d3.geoMercator().scale(75);
+		var pathGenerator = d3.geoPath().projection(projection);
+
+		var rawData;
+		var countries;
+		d3.json("world-50m.json", function (error, data) {
+
+			rawData = data;
+
+			console.log("Code in the call-back function is only executed when the data file loads.");
+
+			countries = topojson.feature(rawData, rawData.objects.countries);
+			showMap();
+
+
+
+			svg4.selectAll("circle")
+			.data([LAX,XM,USC]).enter()
+			.append("circle")
+			.attr("cx", function (d) { return projection(d)[0]; })
+			.attr("cy", function (d) { return projection(d)[1]; })
+			.attr("r", "3px")
+			.attr("fill", "red")
+			.attr("opacity",0.5)
+
+
+			svg4
+			.append("text")
+			.attr("x", projection(USC)[0] - 65)
+			.attr("y", 30 + projection(USC)[1])
+			.text("my undergrad school")
+			.attr("font-size","10px")
+			.style("fill", "#D2846F")
+
+			svg4.append("line")
+			.style("stroke","#A0503F")
+			.attr("x1",projection(USC)[0] - 30).attr("y1",25 + projection(USC)[1])
+			.attr("x2",projection(USC)[0]).attr("y2",projection(USC)[1])
+
+			svg4
+			.append("text")
+			.attr("x", projection(LAX)[0] - 60)
+			.attr("y", projection(LAX)[1])
+			.text("LA airport")
+			.attr("font-size","10px")
+			.style("fill", "#D2846F")
+
+			svg4.append("line")
+			.style("stroke","#A0503F")
+			.attr("x1",projection(LAX)[0] - 25).attr("y1",projection(LAX)[1])
+			.attr("x2",projection(LAX)[0]).attr("y2",projection(LAX)[1])
+
+			svg4
+			.append("text")
+			.attr("x", projection(XM)[0] + 20)
+			.attr("y", projection(XM)[1])
+			.text("hometown")
+			.attr("font-size","10px")
+			.style("fill", "#D2846F")
+
+			svg4.append("line")
+			.style("stroke","#A0503F")
+			.attr("x1",projection(XM)[0] + 18).attr("y1",projection(XM)[1])
+			.attr("x2",projection(XM)[0]).attr("y2",projection(XM)[1])
+
+		// svg4.selectAll("circle")
+		// .data([USC]).enter()
+		// .append("circle")
+		// .attr("cx", projection(d)[0])
+		// .attr("cy", projection(d)[1])
+		// .attr("r", "5px")
+		// .attr("fill", "blue")
+		// .attr("opacity",0.5)
+		});
+
+
+		LAX = [-118.4085, 33.9416];
+		USC = [-118.2851, 34.0224];
+		XM = [118.0894,24.4798];
+		var interestingPoints = [LAX,USC,XM];
+
+		function showMap() {
+		  // Create or modify paths for each country
+
+		  projection.fitExtent([[0,0], [svg.attr("width"), svg4.attr("height")]], countries);
+		  pathGenerator = d3.geoPath().projection(projection);
+		  var paths = svg4.selectAll("path.country")
+		  .data(countries.features);
+
+
+		  paths = paths.enter().append("path")
+		  .attr("class", "country").merge(paths);
+
+
+		  paths.attr("d", function(country) {
+		    return pathGenerator(country);
+		  });
+		  // var circles = svg4.selectAll("circle")
+		  // .data(interestingPoints);
+      //
+		  // circles = circles.enter().append("circles")
+		  // .attr("r", 3).merge(circles);
+      //
+		  // circles
+		  // .attr("cx", function(d) {return projection(d)[0]})
+		  // .attr("cy", function(d) {return projection(d)[1]});
+
+		}
+
+		</script>
+
+	</p>
+
 
 
 
