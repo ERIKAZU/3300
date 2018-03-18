@@ -34,8 +34,14 @@ svg { border: solid #ccc 1px; }
 	</h3>
 
 
-	<div id="p1_plots">
+	<div id="normal">
 	</div>
+
+  <div id="lognormal">
+  </div>
+
+  <div id="exponential">
+  </div>
 	<script id="p1">
 
 	// var svg = d3.select("#p1_svg");
@@ -46,8 +52,8 @@ svg { border: solid #ccc 1px; }
 
 	//http://blockbuilder.org/bsurnida/c4fcc315afca2f78d27832bcd5e4984e
 
-var number = d3.range(1000).map(d3.randomBates(10));
-plotHistogram("p1_plots", number);
+// var number = d3.range(1000).map(d3.randomBates(10));
+// plotHistogram("p1_plots", number);
 
 	function plotHistogram(element_id, number){
 
@@ -102,6 +108,22 @@ plotHistogram("p1_plots", number);
 		      .call(d3.axisLeft(y));
 
 	}
+
+  function gaussian(){
+    return d3.randomNormal(0.0, 1.0)();
+  }
+
+  function gaussian1000(){
+    var array = [];
+    var length = 1000;
+    for(var i = 0; i < length; i++) {
+        array.push(gaussian() + 1);
+    }
+    return array;
+  }
+
+  var gData = gaussian1000();
+  plotHistogram("normal", gData);
 
 
 </script>
