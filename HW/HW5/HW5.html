@@ -302,11 +302,17 @@ plotHistogram("cau_mean", mean_cau);
 	<div id="ij">
 
 	</div>
+
+  <div class="slider_div">
+  <input type="range" min="0" max="360" value="180" class="slider" id="hue_slider">
+  <input type="range" min="0" max="100" value="50" class="slider" id="opa_slider">
+  </div>
+
 </p>
 <script>
 
 var svg2 = d3.select("#ij")
-.append("svg").attr("width", 600).attr("height", 600);
+.append("svg").attr("width", 500).attr("height", 500);
 
 // returns the upper right poisiton of the circle. need to shift.
 function grid_position() {
@@ -332,21 +338,45 @@ function grid_position() {
     return pos_array;
 }
 
-var grid_position = grid_position();
-var row = svg2.selectAll(".row")
-    .data(grid_position)
-    .enter().append("g")
-    .attr("class", "row");
 
-var column = row.selectAll(".circle")
-        .data(function(d) { return d; })
-        .enter().append("circle")
-        .attr("class","circle")
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return  d.y; })
-        .attr("r", 20)
-        .style("fill", function(d){return d3.hsl(0.7, d.sat/100, d.light/100);})
-        .style("stroke", "#eee");
+function showCircles(hue,opacity){
+  var grid_data = grid_position();
+  var row = svg2.selectAll(".row")
+      .data(grid_data)
+      .enter().append("g")
+      .attr("class", "row");
+
+  var column = row.selectAll(".circle")
+          .data(function(d) { return d; })
+          .enter().append("circle")
+          .attr("class","circle")
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return  d.y; })
+          .attr("r", 20)
+          .style("fill", function(d){return d3.hsl(hue, d.sat/100, d.light/100, opacity);})
+          .style("stroke", "#eee");
+}
+
+showCircles(220,0.5);
+
+document.getElementById("hue_slider").addEventListener("click", function(){
+  svg2.selectAll("*").remove();
+  var hue = document.getElementById("hue_slider").value;
+  var opa = document.getElementById("opa_slider").value;
+  showCircles(hue,opa/100);
+});
+
+document.getElementById("opa_slider").addEventListener("click", function(){
+  svg2.selectAll("*").remove();
+  var hue = document.getElementById("hue_slider").value;
+  var opa = document.getElementById("opa_slider").value;
+  showCircles(hue,opa/100);
+});
+
+// hue_slider.onchange = function() {
+//
+//     // sliderDiv.innerHTML = this.value;
+// }​;
 
 
 
