@@ -314,12 +314,15 @@ function grid_position() {
     var xpos = 20; var ypos = 20;
     var spacing = 40;
 
+
     for (var row = 0; row < 11; row++) {
         pos_array.push( new Array() );
         for (var column = 0; column < 11; column++) {
             pos_array[row].push({
                 x: xpos,
                 y: ypos,
+                light: column * 10,
+                sat: 100-row * 10,
             })
             xpos += spacing;
         }
@@ -335,14 +338,14 @@ var row = svg2.selectAll(".row")
     .enter().append("g")
     .attr("class", "row");
 
-    var column = row.selectAll(".circle")
+var column = row.selectAll(".circle")
         .data(function(d) { return d; })
         .enter().append("circle")
         .attr("class","circle")
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return  d.y; })
         .attr("r", 20)
-        .style("fill", "#A8B5C9")
+        .style("fill", function(d){return d3.hsl(0.7, d.sat/100, d.light/100);})
         .style("stroke", "#eee");
 
 
