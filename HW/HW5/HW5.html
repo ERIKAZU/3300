@@ -44,6 +44,17 @@ svg { border: solid #ccc 1px; }
 
   <div id="exponential">
   </div>
+
+  <div id="exp_mean">
+  </div>
+
+  <div id="gumbel">
+  </div>
+
+  <div id="gum_mean">
+  </div>
+
+
 	<script id="p1">
 
 	// var svg = d3.select("#p1_svg");
@@ -187,9 +198,62 @@ plotHistogram("log_mean", mean_log);
 // p5 writeup
   var p = d3.select("#log_mean").append("p")
   .text("The mean distribution has roughly the same shape as that of problem 2. But the values are more centered. The range in problem2 is about 5, and the range of the log mean is about 0.5. The frequency is similar between the two.");
-</script>
 
-<script>
+// Part 6
+function exponential1000(){
+  var exp_array = [];
+
+  var length = 1000;
+  for(var i = 0; i < length; i++) {
+      exp_array.push(-Math.log(Math.random()));
+  }
+  return exp_array;
+}
+
+plotHistogram("exponential", exponential1000());
+
+// Part 7
+var mean_exp = [];
+
+var length = 1000;
+for(var i = 0; i < length; i++) {
+    mean_exp.push(d3.mean(exponential1000()));
+}
+
+plotHistogram("exp_mean", mean_exp);
+
+// p5 writeup
+  var p = d3.select("#exp_mean").append("p")
+  .text("The mean distribution has roughly the same shape as that of problem 2. But the values are more centered. The range in problem2 is about 5, and the range of the exponential mean is about 0.5. The frequency is similar between the two.");
+
+
+// Part 8
+function gumbel1000(){
+  var gum_array = [];
+
+  var length = 1000;
+  for(var i = 0; i < length; i++) {
+      var expRand = -Math.log(Math.random());
+      gum_array.push(-Math.log(expRand)*1.732455);
+  }
+  return gum_array;
+}
+plotHistogram("gumbel", gumbel1000());
+
+// Part 9
+var mean_gum = [];
+
+var length = 1000;
+for(var i = 0; i < length; i++) {
+    mean_gum.push(d3.mean(gumbel1000()));
+}
+
+plotHistogram("gum_mean", mean_gum);
+
+// p5 writeup
+  var p = d3.select("#gum_mean").append("p")
+  .text("The mean distribution has roughly the same shape as that of problem 2. But the values are more centered. The range in problem2 is about 5, and the range of the exponential mean is about 0.5. The frequency is similar between the two.");
+
 
 
 </script>
