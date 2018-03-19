@@ -39,6 +39,9 @@ svg { border: solid #ccc 1px; }
   <div id="lognormal">
   </div>
 
+  <div id="log_mean">
+  </div>
+
   <div id="exponential">
   </div>
 	<script id="p1">
@@ -61,10 +64,10 @@ svg { border: solid #ccc 1px; }
 
 
 		var svg = d3.select("#"+element_id)
-    .append("svg").attr("width", 300).attr("height", 300);
+    .append("svg").attr("width", 400).attr("height", 400);
 
     svg.append("text")
-		.attr("x", 120).attr("y", 30).style("fill", "#ccc")
+		.attr("x", 300).attr("y", 30).style("fill", "#ccc")
 		.text(element_id);
 
 		d3.select("svg"),
@@ -95,14 +98,7 @@ svg { border: solid #ccc 1px; }
       .attr("width", function(d) { return x(d.x1) - x(d.x0); })
       .attr("stroke","white")
       .attr("height", function(d) { return height - y(d.length); });
-		// 				  .enter().append("g")
-		// 				  .attr("class", "bar")
-		// 				  .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
-    //
-		// bar.append("rect")
-		// 				  .attr("x", 0)
-		// 				  .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
-		// 				  .attr("height", function(d) { return height - y(d.length); });
+
 
 		g.append("g")
 						.attr("class", "x_axis")
@@ -160,8 +156,12 @@ svg { border: solid #ccc 1px; }
 
   plotHistogram("normal_mean", mean_array);
 
+// p3 writeup
+  var p = d3.select("#normal_mean").append("p")
+  .text("The mean distribution has roughly the same shape as that of problem 2. But the values are more centered. The range of normal is about 5, and the range of the mean is about 0.2. The frequency is similar between the two, but the max frequency in mean distribution is smaller.");
+</script>
 
-
+<script>
 // Part 4
   function lognormal1000(){
     var log_array = [];
@@ -175,7 +175,22 @@ svg { border: solid #ccc 1px; }
   plotHistogram("lognormal", lognormal1000());
 
 // Part 5
-  function 
+var mean_log = [];
+
+var length = 1000;
+for(var i = 0; i < length; i++) {
+    mean_log.push(d3.mean(lognormal1000()));
+}
+
+plotHistogram("log_mean", mean_log);
+
+// p5 writeup
+  var p = d3.select("#log_mean").append("p")
+  .text("The mean distribution has roughly the same shape as that of problem 2. But the values are more centered. The range in problem2 is about 5, and the range of the log mean is about 0.5. The frequency is similar between the two.");
+</script>
+
+<script>
+
 
 </script>
 </p>
