@@ -24,7 +24,7 @@ svg { border: solid #ccc 1px; }
 
 <body>
 
-<p id="problem 1">
+<p id="problem1">
 	<h3 id = "p1_text">
 		Problem1:
 	</h3>
@@ -39,8 +39,28 @@ svg { border: solid #ccc 1px; }
   <div id="lognormal">
   </div>
 
+  <div id="log_mean">
+  </div>
+
   <div id="exponential">
   </div>
+
+  <div id="exp_mean">
+  </div>
+
+  <div id="gumbel">
+  </div>
+
+  <div id="gum_mean">
+  </div>
+
+  <div id="cauchy">
+  </div>
+
+  <div id="cau_mean">
+  </div>
+
+
 	<script id="p1">
 
 	// var svg = d3.select("#p1_svg");
@@ -61,10 +81,10 @@ svg { border: solid #ccc 1px; }
 
 
 		var svg = d3.select("#"+element_id)
-    .append("svg").attr("width", 300).attr("height", 300);
+    .append("svg").attr("width", 400).attr("height", 400);
 
     svg.append("text")
-		.attr("x", 120).attr("y", 30).style("fill", "#ccc")
+		.attr("x", 300).attr("y", 30).style("fill", "#ccc")
 		.text(element_id);
 
 		d3.select("svg"),
@@ -95,14 +115,7 @@ svg { border: solid #ccc 1px; }
       .attr("width", function(d) { return x(d.x1) - x(d.x0); })
       .attr("stroke","white")
       .attr("height", function(d) { return height - y(d.length); });
-		// 				  .enter().append("g")
-		// 				  .attr("class", "bar")
-		// 				  .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
-    //
-		// bar.append("rect")
-		// 				  .attr("x", 0)
-		// 				  .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
-		// 				  .attr("height", function(d) { return height - y(d.length); });
+
 
 		g.append("g")
 						.attr("class", "x_axis")
@@ -160,8 +173,12 @@ svg { border: solid #ccc 1px; }
 
   plotHistogram("normal_mean", mean_array);
 
+// p3 writeup
+  var p = d3.select("#normal_mean").append("p")
+  .text("The mean distribution has roughly the same shape as that of problem 2. But the values are more centered. The range of normal is about 5, and the range of the mean is about 0.2. The frequency is similar between the two, but the max frequency in mean distribution is smaller.");
+</script>
 
-
+<script>
 // Part 4
   function lognormal1000(){
     var log_array = [];
@@ -175,12 +192,195 @@ svg { border: solid #ccc 1px; }
   plotHistogram("lognormal", lognormal1000());
 
 // Part 5
-  function 
+var mean_log = [];
+
+var length = 1000;
+for(var i = 0; i < length; i++) {
+    mean_log.push(d3.mean(lognormal1000()));
+}
+
+plotHistogram("log_mean", mean_log);
+
+// p5 writeup
+  var p = d3.select("#log_mean").append("p")
+  .text("The mean distribution has roughly the same shape as that of problem 2. But the values are more centered. The range in problem2 is about 6(from -2 to 4), and the range of the log mean is about 0.2(from 0.9 to 1.1). The frequency is similar between the two.");
+
+// Part 6
+function exponential1000(){
+  var exp_array = [];
+
+  var length = 1000;
+  for(var i = 0; i < length; i++) {
+      exp_array.push(-Math.log(Math.random()));
+  }
+  return exp_array;
+}
+
+plotHistogram("exponential", exponential1000());
+
+// Part 7
+var mean_exp = [];
+
+var length = 1000;
+for(var i = 0; i < length; i++) {
+    mean_exp.push(d3.mean(exponential1000()));
+}
+
+plotHistogram("exp_mean", mean_exp);
+
+// p5 writeup
+  var p = d3.select("#exp_mean").append("p")
+  .text("The mean distribution has roughly the same shape as that of problem 2. But the values are more centered. The range in problem2 is about 6(from -2 to 4), and the range of the exponential mean is about 0.2(from 0.9 to 1.1). The frequency is similar between the two.");
+
+
+// Part 8
+function gumbel1000(){
+  var gum_array = [];
+
+  var length = 1000;
+  for(var i = 0; i < length; i++) {
+      var expRand = -Math.log(Math.random());
+      gum_array.push(-Math.log(expRand)*1.732455);
+  }
+  return gum_array;
+}
+plotHistogram("gumbel", gumbel1000());
+
+// Part 9
+var mean_gum = [];
+
+var length = 1000;
+for(var i = 0; i < length; i++) {
+    mean_gum.push(d3.mean(gumbel1000()));
+}
+
+plotHistogram("gum_mean", mean_gum);
+
+// p9 writeup
+  var p = d3.select("#gum_mean").append("p")
+  .text("The mean distribution's shape looks similar to the gumbel. The x range is about -3 to 14 in gumbel, while the x range is 0.8 to 1.2 for the mean.");
+
+// Part 10
+function cauchy1000(){
+  var cau_array = [];
+
+  var length = 1000;
+  for(var i = 0; i < length; i++) {
+      cau_array.push(gaussian()/gaussian());
+  }
+  return cau_array;
+}
+
+plotHistogram("cauchy", cauchy1000());
+
+// Part 11
+var mean_cau = [];
+
+var length = 1000;
+for(var i = 0; i < length; i++) {
+    mean_cau.push(d3.mean(cauchy1000()));
+}
+
+plotHistogram("cau_mean", mean_cau);
+
+// p9 writeup
+  var p = d3.select("#cau_mean").append("p")
+  .text("The mean distribution does not look like those in 3,5,7. The cauchy mean is centered at 0, and the range is very large, for example, 500(from -300 to 200), and even somtimes from -3000 to 200. The other mean distributions has smaller x range, usually from 0.9 to 1.1.");
+
 
 </script>
 </p>
 
 
+
+<p id="problem2">
+	<h3 id = "p2_text">
+		Problem2:
+	</h3>
+
+
+	<div id="ij">
+
+	</div>
+
+  <div class="slider_div">
+  <input type="range" min="0" max="360" value="180" class="slider" id="hue_slider">
+  <input type="range" min="0" max="100" value="50" class="slider" id="opa_slider">
+  </div>
+
+</p>
+<script>
+
+var svg2 = d3.select("#ij")
+.append("svg").attr("width", 500).attr("height", 500);
+
+// returns the upper right poisiton of the circle. need to shift.
+function grid_position() {
+    var pos_array = new Array();
+    var xpos = 20; var ypos = 20;
+    var spacing = 40;
+
+
+    for (var row = 0; row < 11; row++) {
+        pos_array.push( new Array() );
+        for (var column = 0; column < 11; column++) {
+            pos_array[row].push({
+                x: xpos,
+                y: ypos,
+                light: column * 10,
+                sat: 100-row * 10,
+            })
+            xpos += spacing;
+        }
+        xpos = 20;
+        ypos += spacing;
+    }
+    return pos_array;
+}
+
+
+function showCircles(hue,opacity){
+  var grid_data = grid_position();
+  var row = svg2.selectAll(".row")
+      .data(grid_data)
+      .enter().append("g")
+      .attr("class", "row");
+
+  var column = row.selectAll(".circle")
+          .data(function(d) { return d; })
+          .enter().append("circle")
+          .attr("class","circle")
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return  d.y; })
+          .attr("r", 20)
+          .style("fill", function(d){return d3.hsl(hue, d.sat/100, d.light/100, opacity);})
+          .style("stroke", "#eee");
+}
+
+showCircles(220,0.5);
+
+document.getElementById("hue_slider").addEventListener("click", function(){
+  svg2.selectAll("*").remove();
+  var hue = document.getElementById("hue_slider").value;
+  var opa = document.getElementById("opa_slider").value;
+  showCircles(hue,opa/100);
+});
+
+document.getElementById("opa_slider").addEventListener("click", function(){
+  svg2.selectAll("*").remove();
+  var hue = document.getElementById("hue_slider").value;
+  var opa = document.getElementById("opa_slider").value;
+  showCircles(hue,opa/100);
+});
+
+// hue_slider.onchange = function() {
+//
+//     // sliderDiv.innerHTML = this.value;
+// }​;
+
+
+
+</script>
 
 </body>
 </html>
