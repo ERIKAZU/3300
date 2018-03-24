@@ -74,46 +74,50 @@ var line = d3.line()
                       .x(function(d) { return x(d.Date); })
                       .y(function(d) { return y(d.JobChange); });
 
- x.domain(d3.extent(data, function(d) { return d.Date; }));
- y.domain(d3.extent(data, function(d) { return d.JobChange; }));
-
-
- var dateFilter = new Date("2007-01-01");
  // Add the valueline path.
-   svg.append("path")
-       .data([data])
+
+ function filterData(data) {
+  var dateFilter = new Date("2007-01-01");
+ 	return data.filter(function(d) { return d.Date > dateFilter; });
+ }
+ var filtered = filterData(data);
+
+
+  x.domain(d3.extent(filtered, function(d) { return d.Date; }));
+  y.domain(d3.extent(filtered, function(d) { return d.JobChange; }));
+
+
+
+
+   g.append("path")
+       .data([filtered])
        // .filter(function(d) { return d.Date > dateFilter })
        .attr("class", "line")
        .attr("fill", "none")
        .attr("stroke", "black")
        .attr("d", line);
 
-
-
-
-
-
    // Add the scatterplot
-   svg.selectAll("dot")
-       .data(data)
+   g.selectAll("dot")
+       .data(filtered)
      .enter().append("circle")
-       .filter(function(d) { return d.Date > dateFilter })  // <== This line
+       //.filter(function(d) { return d.Date > dateFilter })
        .style("fill", function(d){
          if(d.Preliminary){
            return "#CD5E53";
          }
-         return "#86B6BB";})                          // <== and this one
+         return "#86B6BB";})
        .attr("r", 3)
        .attr("cx", function(d) { return x(d.Date); })
        .attr("cy", function(d) { return y(d.JobChange); });
 
    // Add the X Axis
-   svg.append("g")
+   g.append("g")
        .attr("transform", "translate(0," + height + ")")
        .call(d3.axisBottom(x));
 
    // Add the Y Axis
-   svg.append("g")
+   g.append("g")
        .call(d3.axisLeft(y));
 
 
