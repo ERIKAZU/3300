@@ -51,16 +51,13 @@ svg { border: solid #ccc 1px; }
 
           data[i].JobChange = eval((data[i].Value).replace(/\(P\)/ , ""));
           data[i].Preliminary = (((data[i].Value)).match(/\(P\)/) === null);
-          //console.log(data[i].Preliminary);
           data[i].Month = (data[i].Period).replace("M" , "");
           data[i].Date = (data[i].Period).replace("M" , "");
           data[i].Date = new Date((data[i].Year).concat( "-", data[i].Month, "-01"," 00:00:00 EST"));
-          var dateFilter = new Date("2007-01-01");
-          // console.log(data[i].Date > dateFilter);
 
       }
 // var svg = d3.select("svg"),
-margin = {top: 20, right: 20, bottom: 30, left: 50},
+margin = {top: 50, right: 30, bottom: 80, left: 80},
 width = +svg.attr("width") - margin.left - margin.right,
 height = +svg.attr("height") - margin.top - margin.bottom,
 g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -71,10 +68,8 @@ var y = d3.scaleLinear()
 
 
 var line = d3.line()
-                      .x(function(d) { return x(d.Date); })
-                      .y(function(d) { return y(d.JobChange); });
-
- // Add the valueline path.
+    .x(function(d) { return x(d.Date); })
+    .y(function(d) { return y(d.JobChange); });
 
  function filterData(data) {
   var dateFilter = new Date("2007-01-01");
@@ -85,8 +80,6 @@ var line = d3.line()
 
   x.domain(d3.extent(filtered, function(d) { return d.Date; }));
   y.domain(d3.extent(filtered, function(d) { return d.JobChange; }));
-
-
 
 
    g.append("path")
@@ -120,47 +113,25 @@ var line = d3.line()
    g.append("g")
        .call(d3.axisLeft(y));
 
+// title
+  svg.append("text")
+   		.attr("x", 80).attr("y", 30)
+   		.text("Monthly Job Change");
 
-//  g.append("g")
-//      .attr("transform", "translate(0," + height + ")")
-//      .call(d3.axisBottom(x))
-//    .select(".domain")
-//      .remove();
-//
-//  g.append("g")
-//      .call(d3.axisLeft(y))
-//    .append("text")
-//      .attr("fill", "#000")
-//      .attr("transform", "rotate(-90)")
-//      .attr("y", 6)
-//      .attr("dy", "0.71em")
-//      .attr("text-anchor", "end")
-//      .text("Price ($)");
-//
-// var dateFilter = new Date("2007-01-01");
-//  g.append("path")
-//      .datum(data)
-//               .filter(function(d) { return d.Date > dateFilter })
-//      .attr("fill", "none")
-//      .attr("stroke", "steelblue")
-//      .attr("stroke-linejoin", "round")
-//      .attr("stroke-linecap", "round")
-//      .attr("stroke-width", 1.5)
-//      .attr("d", line);
-//
-//      // g.append("path")
-//      //       .attr("class", "line")
-//      //       .attr("d", line(data));
-//
-//        // Add the scatterplot
-//        g.selectAll("dot")
-//            .data(data)
-//          .enter().append("circle")
-//          .filter(function(d) { return d.Date > "2007-01-01" })
-//            .style("fill", "red")
-//            .attr("r", 3.5)
-//            .attr("cx", function(d) { return x(d.Date); })
-//            .attr("cy", function(d) { return y(d.JobChange); });
+// x axis
+svg.append("text")
+    .attr("x", width/2 + margin.left).attr("y", svg.attr("height") - 30)
+    .text("Date");
+
+// y axis
+svg.append("text")
+    // .attr("x", 30).attr("y", height/2 + margin.top)
+    .attr("x", 0).attr("y", 0)
+    .text("JobChange")
+    .attr("text-anchor", "middle")
+    .attr("transform", "translate("+ (margin.left/2) +","+(height/2 + margin.top)+")rotate(-90)");
+
+
  });
 
 
