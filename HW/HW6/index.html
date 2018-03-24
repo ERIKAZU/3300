@@ -55,14 +55,15 @@ svg { border: solid #ccc 1px; }
           data[i].Month = (data[i].Period).replace("M" , "");
           data[i].Date = (data[i].Period).replace("M" , "");
           data[i].Date = new Date((data[i].Year).concat( "-", data[i].Month, "-01"," 00:00:00 EST"));
-          //console.log(data[i].Date);
+          var dateFilter = new Date("2007-01-01");
+          // console.log(data[i].Date > dateFilter);
 
       }
 // var svg = d3.select("svg"),
-          margin = {top: 20, right: 20, bottom: 30, left: 50},
-          width = +svg.attr("width") - margin.left - margin.right,
-          height = +svg.attr("height") - margin.top - margin.bottom,
-          g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+margin = {top: 20, right: 20, bottom: 30, left: 50},
+width = +svg.attr("width") - margin.left - margin.right,
+height = +svg.attr("height") - margin.top - margin.bottom,
+g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 var x = d3.scaleTime()
               .rangeRound([0, width]);
 var y = d3.scaleLinear()
@@ -76,31 +77,89 @@ var line = d3.line()
  x.domain(d3.extent(data, function(d) { return d.Date; }));
  y.domain(d3.extent(data, function(d) { return d.JobChange; }));
 
- g.append("g")
-     .attr("transform", "translate(0," + height + ")")
-     .call(d3.axisBottom(x))
-   .select(".domain")
-     .remove();
 
- g.append("g")
-     .call(d3.axisLeft(y))
-   .append("text")
-     .attr("fill", "#000")
-     .attr("transform", "rotate(-90)")
-     .attr("y", 6)
-     .attr("dy", "0.71em")
-     .attr("text-anchor", "end")
-     .text("Price ($)");
+ var dateFilter = new Date("2007-01-01");
+ // Add the valueline path.
+   svg.append("path")
+       .data([data])
+       // .filter(function(d) { return d.Date > dateFilter })
+       .attr("class", "line")
+       .attr("fill", "none")
+       .attr("stroke", "black")
+       .attr("d", line);
 
- g.append("path")
-     .datum(data)
-     .attr("fill", "none")
-     .attr("stroke", "steelblue")
-     .attr("stroke-linejoin", "round")
-     .attr("stroke-linecap", "round")
-     .attr("stroke-width", 1.5)
-     .attr("d", line);
-  });
+
+
+
+
+
+   // Add the scatterplot
+   svg.selectAll("dot")
+       .data(data)
+     .enter().append("circle")
+       .filter(function(d) { return d.Date > dateFilter })  // <== This line
+       .style("fill", function(d){
+         if(d.Preliminary){
+           return "#CD5E53";
+         }
+         return "#86B6BB";})                          // <== and this one
+       .attr("r", 3)
+       .attr("cx", function(d) { return x(d.Date); })
+       .attr("cy", function(d) { return y(d.JobChange); });
+
+   // Add the X Axis
+   svg.append("g")
+       .attr("transform", "translate(0," + height + ")")
+       .call(d3.axisBottom(x));
+
+   // Add the Y Axis
+   svg.append("g")
+       .call(d3.axisLeft(y));
+
+
+//  g.append("g")
+//      .attr("transform", "translate(0," + height + ")")
+//      .call(d3.axisBottom(x))
+//    .select(".domain")
+//      .remove();
+//
+//  g.append("g")
+//      .call(d3.axisLeft(y))
+//    .append("text")
+//      .attr("fill", "#000")
+//      .attr("transform", "rotate(-90)")
+//      .attr("y", 6)
+//      .attr("dy", "0.71em")
+//      .attr("text-anchor", "end")
+//      .text("Price ($)");
+//
+// var dateFilter = new Date("2007-01-01");
+//  g.append("path")
+//      .datum(data)
+//               .filter(function(d) { return d.Date > dateFilter })
+//      .attr("fill", "none")
+//      .attr("stroke", "steelblue")
+//      .attr("stroke-linejoin", "round")
+//      .attr("stroke-linecap", "round")
+//      .attr("stroke-width", 1.5)
+//      .attr("d", line);
+//
+//      // g.append("path")
+//      //       .attr("class", "line")
+//      //       .attr("d", line(data));
+//
+//        // Add the scatterplot
+//        g.selectAll("dot")
+//            .data(data)
+//          .enter().append("circle")
+//          .filter(function(d) { return d.Date > "2007-01-01" })
+//            .style("fill", "red")
+//            .attr("r", 3.5)
+//            .attr("cx", function(d) { return x(d.Date); })
+//            .attr("cy", function(d) { return y(d.JobChange); });
+ });
+
+
 
 
 
