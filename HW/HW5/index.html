@@ -63,16 +63,6 @@ svg { border: solid #ccc 1px; }
 
 	<script id="p1">
 
-	// var svg = d3.select("#p1_svg");
-	// svg.append("text")
-	// .attr("x", 100).attr("y", 30)
-	// .style("fill", "#ccc")
-	// .text("problem 1");
-
-	//http://blockbuilder.org/bsurnida/c4fcc315afca2f78d27832bcd5e4984e
-
-// var number = d3.range(1000).map(d3.randomBates(10));
-// plotHistogram("p1_plots", number);
 
 	function plotHistogram(element_id, number){
 
@@ -305,7 +295,7 @@ plotHistogram("cau_mean", mean_cau);
 
   <div class="slider_div">
   <input type="range" min="0" max="360" value="180" class="slider" id="hue_slider">
-  <input type="range" min="0" max="100" value="50" class="slider" id="opa_slider">
+  <input type="range" min="0" max="1000" value="500" class="slider" id="opa_slider">
   </div>
 
 </p>
@@ -319,7 +309,6 @@ function grid_position() {
     var pos_array = new Array();
     var xpos = 20; var ypos = 20;
     var spacing = 40;
-
 
     for (var row = 0; row < 11; row++) {
         pos_array.push( new Array() );
@@ -357,30 +346,26 @@ function showCircles(hue,opacity){
           .style("stroke", "#eee");
 }
 
+// original display
 showCircles(220,0.5);
 
-document.getElementById("hue_slider").addEventListener("click", function(){
+// event listener
+d3.select("#hue_slider").on("mouseout",function
+(){
   svg2.selectAll("*").remove();
   var hue = document.getElementById("hue_slider").value;
   var opa = document.getElementById("opa_slider").value;
-  showCircles(hue,opa/100);
+  showCircles(hue,opa/1000);
 });
 
-document.getElementById("opa_slider").addEventListener("click", function(){
+d3.select("#opa_slider").on("mouseout",function
+(){
   svg2.selectAll("*").remove();
   var hue = document.getElementById("hue_slider").value;
   var opa = document.getElementById("opa_slider").value;
-  showCircles(hue,opa/100);
+  showCircles(hue,opa/1000);
 });
-
-// hue_slider.onchange = function() {
-//
-//     // sliderDiv.innerHTML = this.value;
-// }​;
-
-
 
 </script>
-
 </body>
 </html>
