@@ -50,9 +50,9 @@ svg { border: solid #ccc 1px; }
    var svg = d3.select("#problem1").append("svg")
          .attr("width", svg_width)
          .attr("height", svg_width)
-    // var g1 = svg.append("g").attr("class", "wrapper")
-    //      .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
-    //
+    var g1 = svg.append("g").attr("class", "wrapper")
+         .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
+
 
 
    //Some random data
@@ -94,14 +94,16 @@ plot_innner(40);
 plot_outer_arc();
 
 function plot_innner(r){
-  svg
-	.append("circle").attr("cx",svg_width/2).attr("cy",svg_width/2)
+	var g2 = svg.append("g").attr("class", "center_cir");
+
+
+  g2.append("circle").attr("cx",svg_width/2).attr("cy",svg_width/2)
   .attr("r",r).attr("fill","#B9B4AB");
 }
 
 function plot_outer_arc(){
   //Create the donut slices and also the invisible arcs for the text
-  svg.selectAll(".donutArcs")
+  g1.selectAll(".donutArcs")
     .data(pie(donutData))
     .enter().append("path")
     .attr("class", "donutArcs transCenter")
@@ -136,7 +138,7 @@ function plot_outer_arc(){
     }//if
 
     //Create a new invisible arc that the text can flow along
-    svg.append("path")
+    g1.append("path")
       .attr("class", "hiddenDonutArcs transCenter")
       .attr("id", "donutArc"+i)
       .attr("d", newArc)
@@ -144,7 +146,7 @@ function plot_outer_arc(){
   });
 
   //Append the label names on the outside
-  svg.selectAll(".donutText")
+  g1.selectAll(".donutText")
     .data(pie(donutData))
      .enter().append("text")
     .attr("class", "donutText")
@@ -158,8 +160,8 @@ function plot_outer_arc(){
     .attr("xlink:href",function(d,i){return "#donutArc"+i;})
     .text(function(d){ return d.data.name;});
 
-svg.selectAll(".transCenter")
-.attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
+// g1.selectAll(".transCenter")
+// .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
 
 
 }
