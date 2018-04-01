@@ -55,17 +55,17 @@ svg { border: solid #ccc 1px; }
 
 
 
-   //Some random data
-   var donutData = [
-     {name: "Antelope", 	value: 15},
-     {name: "Bear", 		value: 9},
-     {name: "Cheetah", 	value: 19},
-     {name: "Dolphin", 	value: 12},
-     {name: "Elephant",	value: 14},
-     {name: "Flamingo", 	value: 21},
-     {name: "Giraffe", value: 18},
-     {name: "Other", 	value: 8}
-   ];
+   // //Some random data
+   // var donutData = [
+   //   {name: "Antelope", 	value: 15},
+   //   {name: "Bear", 		value: 9},
+   //   {name: "Cheetah", 	value: 19},
+   //   {name: "Dolphin", 	value: 12},
+   //   {name: "Elephant",	value: 14},
+   //   {name: "Flamingo", 	value: 21},
+   //   {name: "Giraffe", value: 18},
+   //   {name: "Other", 	value: 8}
+   // ];
 
    //////////////////////////////////////////////////////////////
    //////http://bl.ocks.org/nbremer/b603c3e0f7a74794da87/////////
@@ -90,14 +90,55 @@ svg { border: solid #ccc 1px; }
      .padAngle(.01)
      .sort(null);
 
-plot_innner(100);
-plot_outer_arc();
+
+
+		 var cScale = d3.scaleLinear().domain([0, 100]).range([0, 2 * Math.PI]);
+
+		 data = [[0,50,"#AA8888"], [50,75,"#88BB88"], [75,100,"#8888CC"]]
+
+		 var color = d3.scaleBand()
+		 	.domain(["Lorem ipsum", "dolor sit", "amet", "consectetur", "adipisicing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt"])
+		 	.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"])
+
+		 var arc = d3.arc()
+		 .innerRadius(180)
+		 .outerRadius(200)
+		 .startAngle(function(d){return cScale(d[0]);})
+		 .endAngle(function(d){return cScale(d[1]);});
+
+		 g1.selectAll("path")
+		 .data(data)
+		 .enter()
+		 .append("path")
+		 .attr("d", arc)
+		 .style("fill", function(d){return d[2];});
+
+
+plot_innner(10);
+// plot_outer_arc();
 
 function plot_innner(r){
 	var g2 = svg.append("g").attr("class", "center_cir");
   g2.append("circle").attr("cx",svg_width/2).attr("cy",svg_width/2)
   .attr("r",r).attr("fill","#A0A4A6");
 }
+
+
+function smallCircle(){
+	//Append the label names on the outside
+	g1.selectAll(".smallCircle")
+		.data(pie(donutData))
+		 .enter().append("text")
+		.attr("class", "donutText")
+		//Move the labels below the arcs for those slices with an end angle greater than 90 degrees
+		.attr("dy", function(d,i) {
+			return (d.endAngle > 90 * Math.PI/180 ? 18 : -11);
+		})
+		 .append("circle")
+		 .attr("cx",svg_width/2).attr("cy",svg_width/2)
+	   .attr("r",4).attr("fill","#5C7DAD");
+}
+
 
 function plot_outer_arc(){
   //Create the donut slices and also the invisible arcs for the text
