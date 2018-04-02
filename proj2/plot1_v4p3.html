@@ -150,6 +150,37 @@ var i = 0;
 
 
 
+
+function flyCircle(data){
+
+	// var circleWrapper = svg.append("g")
+	// 			.attr("class", "circleWrapper");
+  //
+
+	var c2 = svg.append("circle")
+	.attr('cx', data[0][0])          
+	.attr('cy', data[0][1])
+			.attr("fill", "red")
+			.attr("r", 5);
+
+
+				var timeCircle = svg.append("circle")
+		        .attr("fill", "steelblue")
+		        .attr("r", 5);
+
+				timeCircle
+				        .attr('cx', data[0][0])          // position the circle at 40 on the x axis
+				        .attr('cy', data[0][1]) // position the circle at 250 on the y axis
+				        .transition()             // apply a transition
+				       // .ease(easement)           // control the speed of the transition
+				        .duration(1700)           // apply it over 2000 milliseconds
+				        .attr('cx', 0)
+								.attr('cy', 0)         // move the circle to 920 on the x axis
+				        .transition();             // apply a transition
+}
+
+
+
 	function change(data) {
 
 
@@ -168,8 +199,9 @@ var i = 0;
 			.outerRadius(radius * 0.9)
 			.innerRadius(radius * 0.8);
 
-			var centers = pie(data).map(arc.centroid);
-    console.log(centers);
+		var centers = pie(data).map(arc.centroid);
+		flyCircle(centers);
+    //console.log(centers);
 
 
 		var outerArc = d3.svg.arc()

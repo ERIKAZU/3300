@@ -150,6 +150,86 @@ var i = 0;
 
 
 
+
+function flyCircle(data){
+
+
+	// var flyCircleData = [];
+	// 		for (var i = 0; i < steps; i++) {
+	// 			flyCircleData.push({
+	// 				id: i,
+	// 				fixedAngle: (i/steps)*(2*Math.PI)+0.01
+	// 			})
+	// 		}
+
+	var circleWrapper = svg.append("g")
+				.attr("class", "circleWrapper");
+
+			//Since we can only do a blur in the x and y direction the group should be rotated
+			//so the coordinated system turns along with the direction the circle
+			//will be flying out from
+			var flyCircles = circleWrapper.selectAll(".flyCircle")
+				.data(data)
+				.enter().append("circle")
+				.attr("class", "flyCircle")
+				.attr("cx", function(d) { return d[0];})
+				.attr("cy", function(d) { return d[1];})
+				.attr("r", 6)
+				.style("fill", "#E39070");
+
+			svg.append("circle")
+			.attr("cx", 0)
+			.attr("cy", 0)
+			.attr("r", 100)
+			.style("fill", "grey");
+
+			repeat(data);
+
+			// //Append circle at center
+			// circleWrapper.append("circle")
+			// 		.attr("class", "centerCircle")
+			// 		.attr("cx", 400)
+			// 		.attr("cy", 300)
+			// 		.attr("r", 25)
+			// 		.style("fill","#E39070");
+}
+
+
+
+//Continuously moves the circles outward and inward
+function repeat(data) {
+
+	var dur = 500,
+  del = 200;
+	steps = data.length;
+
+
+	//Move circles in an out
+	d3.selectAll(".flyCircle")
+		.transition("flyOut").duration(dur)
+		.delay(function(d,i) { return 5000+d.id*del; })
+		.ease("elastic")
+		.attr("cx", 0)
+		.transition("flyIn").duration(dur/3)
+		.delay(function(d,i) { return 5000+steps*del + d.id*del; })
+		.ease("exp")
+		.attr("cx", 0)
+		.call(endall, repeat);
+
+		//svg.selectAll(".flyCircle").remove();
+
+}//repeat
+
+//Function to only run once after the last transition ends
+function endall(transition, callback) {
+	var n = 0;
+	transition
+		.each(function() { ++n; })
+		.each("end", function() { if (!--n) callback.apply(this, arguments); });
+}//endall
+
+
+
 	function change(data) {
 
 
@@ -168,8 +248,9 @@ var i = 0;
 			.outerRadius(radius * 0.9)
 			.innerRadius(radius * 0.8);
 
-			var centers = pie(data).map(arc.centroid);
-    console.log(centers);
+		var centers = pie(data).map(arc.centroid);
+		flyCircle(centers);
+    //console.log(centers);
 
 
 		var outerArc = d3.svg.arc()
