@@ -80,11 +80,7 @@ svg { border: solid #ccc 1px; }
 	}
 	</style>
 	<body>
-	<form>
-	<label><input type="radio" name="dataset" id="dataset" value="total" checked> Total</label>
-	<label><input type="radio" name="dataset" id="dataset" value="option1"> Option 1</label>
-	<label><input type="radio" name="dataset" id="dataset" value="option2"> Option 2</label>
-	</form>
+
 
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script>
@@ -92,6 +88,8 @@ svg { border: solid #ccc 1px; }
 	//////////////////////////////////////////////////////////////
 	//////http://bl.ocks.org/juan-cb/1984c7f2b446fffeedde/////////
 	//////////////////////////////////////////////////////////////
+//http://bl.ocks.org/nbremer/077ef487fefcff72a02605422298e2b3
+
 
 	d3.select("input[value=\"total\"]").property("checked", true);
 
@@ -144,32 +142,7 @@ svg { border: solid #ccc 1px; }
 		.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
 
-	datasetTotal = [
-			{label:"Category 1", value:19},
-	        {label:"Category 2", value:5},
-	        {label:"Category 3", value:13},
-	        {label:"Category 4", value:17},
-	        {label:"Category 5", value:19},
-	        {label:"Category 6", value:27}
-	        ];
 
-	datasetOption1 = [
-			{label:"Category 1", value:22},
-	        {label:"Category 2", value:33},
-	        {label:"Category 3", value:4},
-	        {label:"Category 4", value:15},
-	        {label:"Category 5", value:36},
-	        {label:"Category 6", value:0}
-	        ];
-
-	datasetOption2 = [
-			{label:"Category 1", value:10},
-	        {label:"Category 2", value:20},
-	        {label:"Category 3", value:30},
-	        {label:"Category 4", value:5},
-	        {label:"Category 5", value:12},
-	        {label:"Category 6", value:23}
-	        ];
 
 	// change(datasetTotal);
 changeRandom();
@@ -181,9 +154,11 @@ changeRandom();
 		  return Math.floor(Math.random() * Math.floor(max));
 		}
 
-var i = 1;
+
+//https://stackoverflow.com/questions/3583724/how-do-i-add-a-delay-in-a-javascript-loop
+var i = 0;
 	function changeRandom(){
-var max = 16;
+		var max = 16;
 		setTimeout(function () {    //  call a 3s setTimeout when the loop is called
 			var one = getRandomInt(max);
 		 var two = getRandomInt(max);
@@ -199,38 +174,16 @@ var max = 16;
 						 {label:"Category 5", value:five},
 						 {label:"Category 6", value:six}
 						 ];
-						 change(datasetOption_random);
+			change(datasetOption_random);
 
 						           //  your code here
 			i++;                     //  increment the counter
 			if (i < 10) {            //  if the counter < 10, call the loop function
-
-
-
 				changeRandom();          //  ..  again which will trigger another
 			}                        //  ..  setTimeout()
 		}, 1000);
-
-
-
 }
 
-	// function selectDataset()
-	// {
-	// 	var value = this.value;
-	// 	if (value == "total")
-	// 	{
-	// 		change(datasetTotal);
-	// 	}
-	// 	else if (value == "option1")
-	// 	{
-	// 		change(datasetOption1);
-	// 	}
-	// 	else if (value == "option2")
-	// 	{
-	// 		change(datasetOption2);
-	// 	}
-	// }
 
 	function change(data) {
 
