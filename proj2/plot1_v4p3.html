@@ -137,7 +137,7 @@ var i = 0;
 						 {label:"Category 5", value:five},
 						 {label:"Category 6", value:six}
 						 ];
-			change(datasetOption_random);
+			change(datasetOption_random,i);
 
 						           //  your code here
 			i++;                     //  increment the counter
@@ -151,17 +151,17 @@ var i = 0;
 
 
 
-function flyCircle(data){
+function flyCircle(data,i){
 
 	// var circleWrapper = svg.append("g")
 	// 			.attr("class", "circleWrapper");
   //
 
-	var c2 = svg.append("circle")
-	.attr('cx', data[0][0])          
-	.attr('cy', data[0][1])
-			.attr("fill", "red")
-			.attr("r", 5);
+	// var c2 = svg.append("circle")
+	// .attr('cx', data[0][0])
+	// .attr('cy', data[0][1])
+	// 		.attr("fill", "red")
+	// 		.attr("r", 5);
 
 
 				var timeCircle = svg.append("circle")
@@ -173,10 +173,11 @@ function flyCircle(data){
 				        .attr('cy', data[0][1]) // position the circle at 250 on the y axis
 				        .transition()             // apply a transition
 				       // .ease(easement)           // control the speed of the transition
-				        .duration(1700)           // apply it over 2000 milliseconds
+				        .duration(6000)           // apply it over 2000 milliseconds
 				        .attr('cx', 0)
-								.attr('cy', 0)         // move the circle to 920 on the x axis
-				        .transition();             // apply a transition
+								.attr('cy', 0);         // move the circle to 920 on the x axis
+
+       // apply a transition
 }
 
 
@@ -199,8 +200,7 @@ function flyCircle(data){
 			.outerRadius(radius * 0.9)
 			.innerRadius(radius * 0.8);
 
-		var centers = pie(data).map(arc.centroid);
-		flyCircle(centers);
+
     //console.log(centers);
 
 
@@ -227,6 +227,7 @@ function flyCircle(data){
 	        .attr("class", "slice");
 
 
+					var centers = pie(data).map(arc.centroid);
 
 	    slice.transition().duration(1000)
 	        .attrTween("d", function(d) {
@@ -236,7 +237,10 @@ function flyCircle(data){
 	            return function(t) {
 	                return arc(interpolate(t));
 	            };
-	        })
+	        }).on("end", flyCircle(centers));
+
+
+
 	    slice.on("mousemove", function(d){
 	            div.style("left", d3.event.pageX+10+"px");
 	            div.style("top", d3.event.pageY-25+"px");
@@ -353,6 +357,9 @@ function flyCircle(data){
 
 	    polyline.exit()
 	        .remove();
+
+
+
 	};
 
 	</script>
