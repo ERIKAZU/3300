@@ -163,19 +163,20 @@ function flyCircle(data,i){
 	// 		.attr("fill", "red")
 	// 		.attr("r", 5);
 
-
 				var timeCircle = svg.append("circle")
 		        .attr("fill", "steelblue")
 		        .attr("r", 5);
 
 				timeCircle
 				        .attr('cx', data[0][0])          // position the circle at 40 on the x axis
-				        .attr('cy', data[0][1]) // position the circle at 250 on the y axis
+				        .attr('cy', data[0][1])
+								.style("opacity", 0.9)// position the circle at 250 on the y axis
 				        .transition()             // apply a transition
 				       // .ease(easement)           // control the speed of the transition
-				        .duration(6000)           // apply it over 2000 milliseconds
+				        .duration(1000)           // apply it over 2000 milliseconds
 				        .attr('cx', 0)
-								.attr('cy', 0);         // move the circle to 920 on the x axis
+								.attr('cy', 0)
+								.style("opacity", 0);         // move the circle to 920 on the x axis
 
        // apply a transition
 }
@@ -237,7 +238,9 @@ function flyCircle(data,i){
 	            return function(t) {
 	                return arc(interpolate(t));
 	            };
-	        }).on("end", flyCircle(centers));
+	        });
+			setTimeout(function(){flyCircle(centers)},1000);
+
 
 
 
