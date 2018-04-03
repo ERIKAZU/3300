@@ -1,0 +1,383 @@
+<html>
+
+<head>
+<title>Min Zheng (mz474)</title>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<style>
+body { font-family: 'Alegreya Sans', Calibri, sans-serif; }
+svg { border: solid #ccc 1px; }
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+<p id="problem1">
+
+
+
+	<div id="p1_plot">
+	</div>
+
+  <div id="normal_mean">
+  </div>
+
+	<style>
+
+	body {
+	  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	  width: 960px;
+	  height: 500px;
+	  position: relative;
+	}
+
+	svg {
+		width: 100%;
+		height: 100%;
+	}
+
+	path.slice{
+		stroke-width:2px;
+	}
+
+	polyline{
+		opacity: .3;
+		stroke: black;
+		stroke-width: 2px;
+		fill: none;
+	}
+
+	.labelValue
+	{
+		font-size: 60%;
+		opacity: .5;
+
+	}
+
+	.toolTip {
+	    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	    position: absolute;
+	    display: none;
+	    width: auto;
+	    height: auto;
+	    background: none repeat scroll 0 0 white;
+	    border: 0 none;
+	    border-radius: 8px 8px 8px 8px;
+	    box-shadow: -3px 3px 15px #888888;
+	    color: black;
+	    font: 12px sans-serif;
+	    padding: 5px;
+	    text-align: center;
+	}
+	text {
+	  font: 12px sans-serif;
+	}
+	</style>
+	<body>
+
+
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script>
+
+	//////////////////////////////////////////////////////////////
+	//////http://bl.ocks.org/juan-cb/1984c7f2b446fffeedde/////////
+	//////////////////////////////////////////////////////////////
+//http://bl.ocks.org/nbremer/077ef487fefcff72a02605422298e2b3
+
+
+	d3.select("input[value=\"total\"]").property("checked", true);
+
+	var svg = d3.select("body")
+		.append("svg")
+		.append("g")
+
+	svg.append("g")
+		.attr("class", "slices");
+	svg.append("g")
+		.attr("class", "labelName");
+	svg.append("g")
+		.attr("class", "labelValue");
+	svg.append("g")
+		.attr("class", "lines");
+
+	var width = 960,
+	    height = 450,
+		radius = Math.min(width, height) / 2;
+
+
+changeRandom();
+
+		function getRandomInt(max) {
+		  return Math.floor(Math.random() * Math.floor(max));
+		}
+
+
+//https://stackoverflow.com/questions/3583724/how-do-i-add-a-delay-in-a-javascript-loop
+var i = 0;
+	function changeRandom(){
+		var max = 16;
+		setTimeout(function () {    //  call a 3s setTimeout when the loop is called
+			var one = getRandomInt(max);
+		 var two = getRandomInt(max);
+		 var three = getRandomInt(max);
+		 var four = getRandomInt(max);
+		 var five = getRandomInt(max);
+		 var six = 100 - one - two- three - four - five;
+		 datasetOption_random = [
+				 {label:"Category 1", value:one},
+						 {label:"Category 2", value:two},
+						 {label:"Category 3", value:three},
+						 {label:"Category 4", value:four},
+						 {label:"Category 5", value:five},
+						 {label:"Category 6", value:six}
+						 ];
+			change(datasetOption_random,i);
+
+						           //  your code here
+			i++;                     //  increment the counter
+			if (i < 10) {            //  if the counter < 10, call the loop function
+				changeRandom();          //  ..  again which will trigger another
+			}                        //  ..  setTimeout()
+		}, 1000);
+}
+
+
+
+
+
+function flyCircle(data,i){
+
+	// var circleWrapper = svg.append("g")
+	// 			.attr("class", "circleWrapper");
+  //
+
+	// var c2 = svg.append("circle")
+	// .attr('cx', data[0][0])
+	// .attr('cy', data[0][1])
+	// 		.attr("fill", "red")
+	// 		.attr("r", 5);
+
+
+				var timeCircle = svg.append("circle")
+		        .attr("fill", "steelblue")
+		        .attr("r", 5);
+
+				// var timeCircle =	svg.append("line")
+        //                 	.attr("x1", 5)
+        //                   .attr("y1", 5)
+        //                  	.attr("x2", 50)
+        //                 	.attr("y2", 50);
+
+				timeCircle
+				        .attr('cx', data[0][0])          // position the circle at 40 on the x axis
+				        .attr('cy', data[0][1]) // position the circle at 250 on the y axis
+				        .transition()             // apply a transition
+				       // .ease(easement)           // control the speed of the transition
+				        .duration(1000)           // apply it over 2000 milliseconds
+				        .attr('cx', 0)
+								.attr('cy', 0);         // move the circle to 920 on the x axis
+
+       // apply a transition
+}
+
+
+
+	function change(data) {
+
+
+		var pie = d3.layout.pie()
+			.sort(null)
+			.value(function(d) {
+				return d.value;
+			});
+
+
+
+
+
+
+		var arc = d3.svg.arc()
+			.outerRadius(radius * 0.9)
+			.innerRadius(radius * 0.8);
+
+
+    //console.log(centers);
+
+
+		var outerArc = d3.svg.arc()
+			.innerRadius(radius * 0.9)
+			.outerRadius(radius * 0.9);
+
+
+		var div = d3.select("body").append("div").attr("class", "toolTip");
+
+		svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+		var color = d3.scale.ordinal()
+			.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+
+		/* ------- PIE SLICES -------*/
+		var slice = svg.select(".slices").selectAll("path.slice")
+	        .data(pie(data), function(d){ return d.data.label });
+
+	    slice.enter()
+	        .insert("path")
+	        .style("fill", function(d) { return color(d.data.label); })
+	        .attr("class", "slice");
+
+
+		var centers = pie(data).map(arc.centroid);
+
+	   slice.transition().duration(1000)
+	        .attrTween("d", function(d) {
+	            this._current = this._current || d;
+	            var interpolate = d3.interpolate(this._current, d);
+	            this._current = interpolate(0);
+	            return function(t) {
+	                return arc(interpolate(t));
+	            };
+	        });
+
+	    setTimeout(function() { flyCircle(centers) }, 1000);
+
+
+	    slice.on("mousemove", function(d){
+	            div.style("left", d3.event.pageX+10+"px");
+	            div.style("top", d3.event.pageY-25+"px");
+	            div.style("display", "inline-block");
+	            div.html((d.data.label)+"<br>"+(d.data.value)+"%");
+	        });
+	    slice
+	        .on("mouseout", function(d){
+	            div.style("display", "none");
+	        });
+
+
+
+
+
+	    slice.exit()
+	        .remove();
+
+	    // var legend = svg.selectAll('.legend')
+	    //     .data(color.domain())
+	    //     .enter()
+	    //     .append('g')
+	    //     .attr('class', 'legend')
+	    //     .attr('transform', function(d, i) {
+	    //         var height = legendRectSize + legendSpacing;
+	    //         var offset =  height * color.domain().length / 2;
+	    //         var horz = -3 * legendRectSize;
+	    //         var vert = i * height - offset;
+	    //         return 'translate(' + horz + ',' + vert + ')';
+	    //     });
+      //
+	    // legend.append('rect')
+	    //     .attr('width', legendRectSize)
+	    //     .attr('height', legendRectSize)
+	    //     .style('fill', color)
+	    //     .style('stroke', color);
+      //
+	    // legend.append('text')
+	    //     .attr('x', legendRectSize + legendSpacing)
+	    //     .attr('y', legendRectSize - legendSpacing)
+	    //     .text(function(d) { return d; });
+
+	    /* ------- TEXT LABELS -------*/
+
+	    var text = svg.select(".labelName").selectAll("text")
+	        .data(pie(data), function(d){ return d.data.label });
+
+	    text.enter()
+	        .append("text")
+	        .attr("dy", ".35em")
+	        .text(function(d) {
+
+	            return (d.data.label+": "+d.value+"%");
+	        });
+
+	    function midAngle(d){
+	        return d.startAngle + (d.endAngle - d.startAngle)/2;
+	    }
+
+	    text.transition().duration(1000)
+	        .attrTween("transform", function(d) {
+	            this._current = this._current || d;
+	            var interpolate = d3.interpolate(this._current, d);
+	            this._current = interpolate(0);
+	            return function(t) {
+	                var d2 = interpolate(t);
+	                var pos = outerArc.centroid(d2);
+	                //pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+									var extend = 1.25;
+									pos[0] *= extend;
+									pos[1] *= extend;
+									var midAngle = d2.endAngle < Math.PI ? d2.startAngle/2 + d2.endAngle/2 : d2.startAngle/2 + d2.endAngle/2 + Math.PI;
+	                return "translate("+ pos +") rotate(-90) rotate(" + (midAngle * 180/Math.PI) + ")";
+	            };
+	        })
+					.attr('text-anchor','middle')
+	        // .styleTween("text-anchor", function(d){
+	        //     this._current = this._current || d;
+	        //     var interpolate = d3.interpolate(this._current, d);
+	        //     this._current = interpolate(0);
+	        //     return function(t) {
+	        //         var d2 = interpolate(t);
+	        //         return midAngle(d2) < Math.PI ? "start":"end";
+	        //     };
+	        // })
+	        .text(function(d) {
+	            return (d.data.label+": "+d.value+"%");
+	        });
+
+
+	    text.exit()
+	        .remove();
+
+	    /* ------- SLICE TO TEXT POLYLINES -------*/
+
+	    var polyline = svg.select(".lines").selectAll("polyline")
+	        .data(pie(data), function(d){ return d.data.label });
+
+	    polyline.enter()
+	        .append("polyline");
+
+	    polyline.transition().duration(1000)
+	        .attrTween("points", function(d){
+	            this._current = this._current || d;
+	            var interpolate = d3.interpolate(this._current, d);
+	            this._current = interpolate(0);
+	            return function(t) {
+	                var d2 = interpolate(t);
+	                var pos = outerArc.centroid(d2);
+	                pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+									//console.log(arc.centroid(d2));
+	                return [arc.centroid(d2), outerArc.centroid(d2)];
+
+	            };
+	        });
+
+
+
+
+	    polyline.exit()
+	        .remove();
+
+
+
+	};
+
+	</script>
+
+
+</script>
+</body>
+</html>
