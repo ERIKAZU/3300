@@ -121,8 +121,9 @@ changeRandom();
 //https://stackoverflow.com/questions/3583724/how-do-i-add-a-delay-in-a-javascript-loop
 var i = 0;
 	function changeRandom(){
-		var max = 16;
-		setTimeout(function () {    //  call a 3s setTimeout when the loop is called
+		// var max = 16;
+		setTimeout(function () {
+					var max = 16;    //  call a 3s setTimeout when the loop is called
 			var one = getRandomInt(max);
 		 var two = getRandomInt(max);
 		 var three = getRandomInt(max);
@@ -137,7 +138,7 @@ var i = 0;
 						 {label:"Category 5", value:five},
 						 {label:"Category 6", value:six}
 						 ];
-			change(datasetOption_random,i);
+			change(datasetOption_random);
 
 						           //  your code here
 			i++;                     //  increment the counter
@@ -151,34 +152,25 @@ var i = 0;
 
 
 
-function flyCircle(data,i){
+function flyCircle(data){
 
-	// var circleWrapper = svg.append("g")
-	// 			.attr("class", "circleWrapper");
-  //
-
-	// var c2 = svg.append("circle")
-	// .attr('cx', data[0][0])
-	// .attr('cy', data[0][1])
-	// 		.attr("fill", "red")
-	// 		.attr("r", 5);
-
-				var timeCircle = svg.append("circle")
-		        .attr("fill", "steelblue")
-		        .attr("r", 5);
-
-				timeCircle
-				        .attr('cx', data[0][0])          // position the circle at 40 on the x axis
-				        .attr('cy', data[0][1])
-								.style("opacity", 0.9)// position the circle at 250 on the y axis
-				        .transition()             // apply a transition
-				       // .ease(easement)           // control the speed of the transition
-				        .duration(1000)           // apply it over 2000 milliseconds
-				        .attr('cx', 0)
-								.attr('cy', 0)
-								.style("opacity", 0);         // move the circle to 920 on the x axis
-
-       // apply a transition
+//console.log("here");
+for (var i = 0; i < data.colors.length; i++){
+	//console.log(data.colors[i]);
+	var timeCircle = svg.append("circle")
+			        .attr("fill", function() {return data.colors[i];})
+			        .attr("r", function() {return data.r[i];});
+	timeCircle
+					.attr('cx', function() {return data.centers[i][0];} )          // position the circle at 40 on the x axis
+					.attr('cy', function() {return data.centers[i][1];})
+					.style("opacity", 0.9)// position the circle at 250 on the y axis
+					.transition()             // apply a transition
+				 // .ease(easement)           // control the speed of the transition
+					.duration(1000)           // apply it over 2000 milliseconds
+					.attr('cx', 0)
+					.attr('cy', 0)
+					.style("opacity", 0);         // move the circle to 920 on the x axis
+}
 }
 
 
@@ -198,8 +190,8 @@ function flyCircle(data,i){
 
 
 		var arc = d3.svg.arc()
-			.outerRadius(radius * 0.9)
-			.innerRadius(radius * 0.8);
+			.outerRadius(radius * 0.8)
+			.innerRadius(radius * 0.76);
 
 
     //console.log(centers);
@@ -227,9 +219,36 @@ function flyCircle(data,i){
 	        .style("fill", function(d) { return color(d.data.label); })
 	        .attr("class", "slice");
 
+			// var circleData = [];
+			var centers = pie(data).map(arc.centroid);
+			// circleData.push(centers);
+			var colors = [];
+			var r = [];
 
-					var centers = pie(data).map(arc.centroid);
+			var circleData;
+			// circleData.centers = centers;
+			var rscale = d3.scale.linear()
+		  .domain([0,d3.max(data, function(d) { return +d.value;} )])
+		  .range([3,20]);
 
+
+			for (var i = 0; i < centers.length; i++){
+				colors.push(color(data[i].label));
+				r.push(rscale(data[i].value));
+			}
+
+			var circleData = {
+				colors:colors,
+				r:r,
+				centers:centers
+			};
+			// circleData.push({
+      //
+			// })
+			// circleData.push(colors);
+			// circleData.push(r);
+
+			console.log(circleData);
 	    slice.transition().duration(1000)
 	        .attrTween("d", function(d) {
 	            this._current = this._current || d;
@@ -239,7 +258,7 @@ function flyCircle(data,i){
 	                return arc(interpolate(t));
 	            };
 	        });
-			setTimeout(function(){flyCircle(centers)},1000);
+			setTimeout(function(){flyCircle(circleData)},1000);
 
 
 
@@ -288,78 +307,75 @@ function flyCircle(data,i){
 
 	    /* ------- TEXT LABELS -------*/
 
-	    var text = svg.select(".labelName").selectAll("text")
-	        .data(pie(data), function(d){ return d.data.label });
-
-	    text.enter()
-	        .append("text")
-	        .attr("dy", ".35em")
-	        .text(function(d) {
-
-	            return (d.data.label+": "+d.value+"%");
-	        });
-
-	    function midAngle(d){
-	        return d.startAngle + (d.endAngle - d.startAngle)/2;
-	    }
-
-	    text.transition().duration(1000)
-	        .attrTween("transform", function(d) {
-	            this._current = this._current || d;
-	            var interpolate = d3.interpolate(this._current, d);
-	            this._current = interpolate(0);
-	            return function(t) {
-	                var d2 = interpolate(t);
-	                var pos = outerArc.centroid(d2);
-	                pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
-	                return "translate("+ pos +")";
-	            };
-	        })
-	        .styleTween("text-anchor", function(d){
-	            this._current = this._current || d;
-	            var interpolate = d3.interpolate(this._current, d);
-	            this._current = interpolate(0);
-	            return function(t) {
-	                var d2 = interpolate(t);
-	                return midAngle(d2) < Math.PI ? "start":"end";
-	            };
-	        })
-	        .text(function(d) {
-	            return (d.data.label+": "+d.value+"%");
-	        });
-
-
-	    text.exit()
-	        .remove();
-
-	    /* ------- SLICE TO TEXT POLYLINES -------*/
-
-	    var polyline = svg.select(".lines").selectAll("polyline")
-	        .data(pie(data), function(d){ return d.data.label });
-
-	    polyline.enter()
-	        .append("polyline");
-
-	    polyline.transition().duration(1000)
-	        .attrTween("points", function(d){
-	            this._current = this._current || d;
-	            var interpolate = d3.interpolate(this._current, d);
-	            this._current = interpolate(0);
-	            return function(t) {
-	                var d2 = interpolate(t);
-	                var pos = outerArc.centroid(d2);
-	                pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
-									//console.log(arc.centroid(d2));
-	                return [arc.centroid(d2), outerArc.centroid(d2), pos];
-
-	            };
-	        });
+			var text = svg.select(".labelName").selectAll("text")
+        .data(pie(data), function(d){ return d.data.label });
 
 
 
+    text.enter()
+        .append("text")
+        .attr("dy", ".35em")
+        .text(function(d) {
+            return (d.data.label+": "+d.value+"%");
+        });
 
-	    polyline.exit()
-	        .remove();
+    function midAngle(d){
+        return d.startAngle + (d.endAngle - d.startAngle)/2;
+    }
+
+			text
+         .transition().duration(1000)
+         .attrTween("transform", function(d) {
+             this._current = this._current || d;
+             var interpolate = d3.interpolate(this._current, d);
+             this._current = interpolate(0);
+             return function(t) {
+                 var d2 = interpolate(t);
+                 var pos = outerArc.centroid(d2);
+                 pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+                 return "translate("+ pos +")";
+             };
+         })
+         .styleTween("text-anchor", function(d){
+             this._current = this._current || d;
+             var interpolate = d3.interpolate(this._current, d);
+             this._current = interpolate(0);
+             return function(t) {
+                 var d2 = interpolate(t);
+                 return midAngle(d2) < Math.PI ? "start":"end";
+             };
+         })
+         .text(function(d) {
+             return (d.data.label+": "+d.value+"%");
+         });
+
+
+     text.exit()
+         .remove();
+
+     /* ------- SLICE TO TEXT POLYLINES -------*/
+
+     var polyline = svg.select(".lines").selectAll("polyline")
+         .data(pie(data), function(d){ return d.data.label });
+
+     polyline.enter()
+         .append("polyline");
+
+     polyline.transition().duration(1000)
+         .attrTween("points", function(d){
+             this._current = this._current || d;
+             var interpolate = d3.interpolate(this._current, d);
+             this._current = interpolate(0);
+             return function(t) {
+                 var d2 = interpolate(t);
+                 var pos = outerArc.centroid(d2);
+                 pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+                 return [arc.centroid(d2), outerArc.centroid(d2), pos];
+             };
+         });
+
+     polyline.exit()
+         .remove();
 
 
 
