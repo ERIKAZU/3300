@@ -237,7 +237,8 @@ function flyCircle(data,i){
 	            return function(t) {
 	                return arc(interpolate(t));
 	            };
-	        }).on("end", flyCircle(centers));
+	        }).on;
+				flyCircle(centers);
 
 
 
