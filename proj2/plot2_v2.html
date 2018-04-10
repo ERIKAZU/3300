@@ -1,130 +1,236 @@
-<!DOCTYPE html>
+<html>
+
 <head>
-  <meta charset="utf-8">
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-  <style>
-    body { margin:10;position:fixed;top:0;right:0;bottom:0;left:0; }
-  </style>
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+<style>
+body { font-family: 'Alegreya Sans', Calibri, sans-serif; }
+svg { border: solid #ccc 1px; }
+</style>
+
+<style>
+
+/* reference on nice switch: */
+/* https://www.w3schools.com/howto/howto_css_switch.asp */
+.switch_out {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch_out input {display:none;}
+
+/* The slider */
+.switch {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FB8480;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.switch:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .switch {
+  background-color: #2196F3;
+}
+
+input:focus + .switch {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .switch:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.switch.round {
+  border-radius: 34px;
+}
+
+.switch.round:before {
+  border-radius: 50%;
+}
+
+
+</style>
+
 </head>
 
+
 <body>
-  <div id="vis"></div>
-  <script>
 
-const width = 600;
-const height = 200;
-const base = d3.select("#vis");
-const chart = base.append("canvas")
-  .attr("width", width)
-  .attr("height", height)
-	.style('padding-left', '50px')
-const context = chart.node().getContext("2d");
 
-// Create an array of objects
-// containing an array of x/y coordinates and a label
-function circleize(arr) {
-  const columns = 6;
-  const radius = 15;
-  return arr.map(function(d) {
-    let circles = d3.range(d.amount).map(function(i) {
-      return {
-        x: i % columns * radius,
-        y: (height - ((i / columns) >> 0) * radius)
-      }
-    });
-    return {
-      label: d.label,
-      dots: circles
-    };
-  });
+
+  <div class="slider_div span_line">
+  <p>Your age:</p>
+  <span><input type="range" min="10" max="80" value="20" class="slider" id="age_slider"></span>
+  </div>
+</br>
+
+  <div>
+  <p>Your gender:</p>
+  <label class="switch_out">
+    <input type="checkbox" id="gender_box">
+    <div class="switch round"></div>
+  </label>
+  </div>
+
+</br>
+
+
+  <div id="ij">
+
+  </div>
+
+
+<script>
+
+var svg2 = d3.select("#ij")
+.append("svg").attr("width", 500).attr("height", 500);
+
+
+function assignColor(cut_age,curID){
+  if (curID <= cut_age){
+    return "#CED3D3";
+  }
+  else return "#B5C45E";
 }
-// Function to create our custom data containers
-function drawCustom(data,exit) {
-  let x = d3.scaleBand().rangeRound([0, width])
-      .domain(data.map(d => d.label));
+// returns the upper right poisiton of the circle. need to shift.
+function gen_grid_data(cut_age,radius,spacing) {
+    var pos_array = new Array();
+    var xpos = radius; var ypos = radius;
 
-  var data = circleize(data);
-  let exitdata = circleize(exit);
-
-  // clear canvas
-  context.fillStyle = "#fff";
- 	context.rect(0,0,chart.attr("width"),chart.attr("height"));
-  context.fill();
-
-  for (var i=0; i<data.length; i++) {
-    let node = data[i];
-    let exitnode = exitdata[i];
-
-    // Just for reference
-    context.fillStyle = 'steelblue';
-    context.font = "10px Arial";
-		context.beginPath();
-    context.fillText(node.label,x(node.label),80);
-		context.fill();
-		context.closePath();
-
-    // Two for loops
-    // One for exit poll data underneath
-    for (var y=0; y<exitnode.dots.length; y++) {
-      var nexit = exitnode.dots[y];
-      context.fillStyle = 'lightgrey';
-      context.beginPath();
-      context.arc(((nexit.x +10) + x(exitnode.label)),(nexit.y-20), 5, 0,  2 * Math.PI, true)
-    	context.fill();
-			context.closePath();
+    var curID = 1;
+    for (var row = 0; row < 10; row++) {
+        pos_array.push( new Array() );
+        for (var column = 0; column < 10; column++) {
+            pos_array[row].push({
+                x: xpos,
+                y: ypos,
+                color: assignColor(cut_age,curID)
+            })
+            curID++;
+            xpos += spacing;
+        }
+        xpos = radius;
+        ypos += spacing;
     }
-    // One for called seats data
-		for (var z=0; z<node.dots.length; z++) {
-      var n = node.dots[z];
-      context.fillStyle = 'steelblue';
-      context.beginPath();
-      context.arc(((n.x +10) + x(node.label)),(n.y-20), 5, 0,  2 * Math.PI, true)
-    	context.fill();
-			context.closePath();
-    }
-  }
+    //console.log(pos_array);
+    return pos_array;
+}
 
-  }
-//drawCustom(data,exit);
-setInterval(function() {
-  function n() {return Math.random() * (40 - 1) + 1}
-  newdata = [
-    {
-      label: 'foo',
-      amount: n()
-    },
-    {
-      label: 'bar',
-      amount: n()
-    },
-    {
-      label: 'lib',
-      amount: n()
-    },
-    {
-      label: 'lol',
-      amount: n()
+// get the falling circles data
+function gen_rand_grid_data(cut_age,radius,spacing) {
+    var pos_array = new Array();
+    var xpos = radius; var ypos = radius;
+
+    var curID = 1;
+    for (var row = 0; row < 10; row++) {
+        pos_array.push( new Array() );
+        for (var column = 0; column < 10; column++) {
+          
+            pos_array[row].push({
+                x: xpos,
+                y: ypos,
+                color: assignColor(cut_age,curID)
+            })
+            curID++;
+            xpos += spacing;
+        }
+        xpos = radius;
+        ypos += spacing;
     }
-  ];
-  exit = [
-    {
-      label: 'foo',
-      amount: n()
-    },
-    {
-      label: 'bar',
-      amount: n()
-    },
-    {
-      label: 'lib',
-      amount: n()
-    },
-    {
-      label: 'lol',
-      amount: n()
-    }
-  ];
-  drawCustom(newdata,exit);
-}, 500);
-  </script>
+    //console.log(pos_array);
+    return pos_array;
+}
+
+
+function showCircles(cut_age){
+  var radius = 15;
+  var spacing = 45;
+
+  var grid_data = gen_grid_data(cut_age,radius,spacing);
+  var row = svg2.selectAll(".row")
+      .data(grid_data)
+      .enter().append("g")
+      .attr("class", "row");
+
+  var column = row.selectAll(".circle")
+          .data(function(d) { return d; })
+          .enter().append("circle")
+          .attr("class","circle")
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return  d.y; })
+          .attr("r", radius)
+          .style("fill", function(d){return d.color;})
+          .style("stroke", "#eee");
+}
+
+// original display: cut_age = 100
+showCircles(100);
+
+// event listener
+// age slider listener
+d3.select("#age_slider").on("change",function
+(){
+  svg2.selectAll("*").remove();
+  var age = document.getElementById("age_slider").value;
+  var gender = document.getElementById("gender_box").value;
+  var x = getRandomInt(100);
+  console.log(x);
+  showCircles(x);
+
+});
+
+// gender switch listener
+d3.select("#gender_box").on("change",update_gender);
+update_gender();
+
+function update_gender(){
+  // console.log("y");
+  if(d3.select("#gender_box").property("checked")){
+					console.log("yes");
+				} else {
+					console.log("no");
+				}
+  svg2.selectAll("*").remove();
+  var age = document.getElementById("age_slider").value;
+  var gender = document.getElementById("gender_box").value;
+  var x = getRandomInt(100);
+  console.log(x);
+  showCircles(x);
+}
+
+
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+
+
+
+</script>
 </body>
+</html>

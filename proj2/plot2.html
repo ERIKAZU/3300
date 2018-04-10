@@ -12,7 +12,8 @@ svg { border: solid #ccc 1px; }
 
 <style>
 
-
+/* reference on nice switch: */
+/* https://www.w3schools.com/howto/howto_css_switch.asp */
 .switch_out {
   position: relative;
   display: inline-block;
@@ -82,11 +83,13 @@ input:checked + .switch:before {
 
 
   <div class="slider_div span_line">
+  <p>Your age:</p>
   <span><input type="range" min="10" max="80" value="20" class="slider" id="age_slider"></span>
   </div>
 </br>
 
   <div>
+  <p>Your gender:</p>
   <label class="switch_out">
     <input type="checkbox" id="gender_box">
     <div class="switch round"></div>
