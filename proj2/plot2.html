@@ -1,0 +1,122 @@
+<html>
+
+<head>
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+<style>
+body { font-family: 'Alegreya Sans', Calibri, sans-serif; }
+svg { border: solid #ccc 1px; }
+</style>
+
+<style>
+
+.bar rect {
+  fill: #454952;
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<p id="problem2">
+
+
+
+	<div id="ij">
+
+	</div>
+
+  <div class="slider_div">
+  <input type="range" min="0" max="360" value="180" class="slider" id="hue_slider">
+  <input type="range" min="0" max="1000" value="500" class="slider" id="opa_slider">
+  </div>
+
+</p>
+<script>
+
+var svg2 = d3.select("#ij")
+.append("svg").attr("width", 500).attr("height", 500);
+
+
+function assignColor(curID){
+  if (curID <= 74){
+    return "#CED3D3";
+  }
+  else return "#B5C45E";
+}
+// returns the upper right poisiton of the circle. need to shift.
+function gen_grid_data(radius,spacing) {
+    var pos_array = new Array();
+    var xpos = radius; var ypos = radius;
+
+    var curID = 1;
+    for (var row = 0; row < 10; row++) {
+        pos_array.push( new Array() );
+        for (var column = 0; column < 10; column++) {
+            pos_array[row].push({
+                x: xpos,
+                y: ypos,
+                color: assignColor(curID)
+            })
+            curID++;
+            xpos += spacing;
+        }
+        xpos = radius;
+        ypos += spacing;
+    }
+    //console.log(pos_array);
+    return pos_array;
+}
+
+
+function showCircles(){
+  var radius = 15;
+  var spacing = 45;
+
+  var grid_data = gen_grid_data(radius,spacing);
+  var row = svg2.selectAll(".row")
+      .data(grid_data)
+      .enter().append("g")
+      .attr("class", "row");
+
+  var column = row.selectAll(".circle")
+          .data(function(d) { return d; })
+          .enter().append("circle")
+          .attr("class","circle")
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return  d.y; })
+          .attr("r", radius)
+          .style("fill", function(d){return d.color;})
+          .style("stroke", "#eee");
+}
+
+// original display
+showCircles();
+
+// event listener
+d3.select("#hue_slider").on("mouseout",function
+(){
+  svg2.selectAll("*").remove();
+  var hue = document.getElementById("hue_slider").value;
+  var opa = document.getElementById("opa_slider").value;
+  showCircles();
+});
+
+d3.select("#opa_slider").on("mouseout",function
+(){
+  svg2.selectAll("*").remove();
+  var hue = document.getElementById("hue_slider").value;
+  var opa = document.getElementById("opa_slider").value;
+  showCircles();
+});
+
+</script>
+</body>
+</html>

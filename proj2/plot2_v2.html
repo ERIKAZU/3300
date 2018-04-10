@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <style>
+    body { margin:10;position:fixed;top:0;right:0;bottom:0;left:0; }
+  </style>
+</head>
+
+<body>
+  <div id="vis"></div>
+  <script>
+
+const width = 600;
+const height = 200;
+const base = d3.select("#vis");
+const chart = base.append("canvas")
+  .attr("width", width)
+  .attr("height", height)
+	.style('padding-left', '50px')
+const context = chart.node().getContext("2d");
+
+// Create an array of objects
+// containing an array of x/y coordinates and a label
+function circleize(arr) {
+  const columns = 6;
+  const radius = 15;
+  return arr.map(function(d) {
+    let circles = d3.range(d.amount).map(function(i) {
+      return {
+        x: i % columns * radius,
+        y: (height - ((i / columns) >> 0) * radius)
+      }
+    });
+    return {
+      label: d.label,
+      dots: circles
+    };
+  });
+}
+// Function to create our custom data containers
+function drawCustom(data,exit) {
+  let x = d3.scaleBand().rangeRound([0, width])
+      .domain(data.map(d => d.label));
+
+  var data = circleize(data);
+  let exitdata = circleize(exit);
+
+  // clear canvas
+  context.fillStyle = "#fff";
+ 	context.rect(0,0,chart.attr("width"),chart.attr("height"));
+  context.fill();
+
+  for (var i=0; i<data.length; i++) {
+    let node = data[i];
+    let exitnode = exitdata[i];
+
+    // Just for reference
+    context.fillStyle = 'steelblue';
+    context.font = "10px Arial";
+		context.beginPath();
+    context.fillText(node.label,x(node.label),80);
+		context.fill();
+		context.closePath();
+
+    // Two for loops
+    // One for exit poll data underneath
+    for (var y=0; y<exitnode.dots.length; y++) {
+      var nexit = exitnode.dots[y];
+      context.fillStyle = 'lightgrey';
+      context.beginPath();
+      context.arc(((nexit.x +10) + x(exitnode.label)),(nexit.y-20), 5, 0,  2 * Math.PI, true)
+    	context.fill();
+			context.closePath();
+    }
+    // One for called seats data
+		for (var z=0; z<node.dots.length; z++) {
+      var n = node.dots[z];
+      context.fillStyle = 'steelblue';
+      context.beginPath();
+      context.arc(((n.x +10) + x(node.label)),(n.y-20), 5, 0,  2 * Math.PI, true)
+    	context.fill();
+			context.closePath();
+    }
+  }
+
+  }
+//drawCustom(data,exit);
+setInterval(function() {
+  function n() {return Math.random() * (40 - 1) + 1}
+  newdata = [
+    {
+      label: 'foo',
+      amount: n()
+    },
+    {
+      label: 'bar',
+      amount: n()
+    },
+    {
+      label: 'lib',
+      amount: n()
+    },
+    {
+      label: 'lol',
+      amount: n()
+    }
+  ];
+  exit = [
+    {
+      label: 'foo',
+      amount: n()
+    },
+    {
+      label: 'bar',
+      amount: n()
+    },
+    {
+      label: 'lib',
+      amount: n()
+    },
+    {
+      label: 'lol',
+      amount: n()
+    }
+  ];
+  drawCustom(newdata,exit);
+}, 500);
+  </script>
+</body>

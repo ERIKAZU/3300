@@ -111,20 +111,49 @@ svg { border: solid #ccc 1px; }
 		radius = Math.min(width, height) / 2;
 
 
-changeRandom();
+//changeRandom();
+
+for(var i = 0; i < 5; i++){
+	setTimeout(changeRandom2,3000 * i);
+}
 
 		function getRandomInt(max) {
 		  return Math.floor(Math.random() * Math.floor(max));
 		}
 
+// var prev_r = 20;
+// for (var i = 0; i < 5; i++){
+// 	var max = 16;    //  call a 3s setTimeout when the loop is called
+// var one = getRandomInt(max);
+// var two = getRandomInt(max);
+// var three = getRandomInt(max);
+// var four = getRandomInt(max);
+// var five = getRandomInt(max);
+// var six = 100 - one - two- three - four - five;
+// datasetOption_random = [
+//  {label:"Category 1", value:one},
+// 		 {label:"Category 2", value:two},
+// 		 {label:"Category 3", value:three},
+// 		 {label:"Category 4", value:four},
+// 		 {label:"Category 5", value:five},
+// 		 {label:"Category 6", value:six}
+// 		 ];
+// change(datasetOption_random);
+// var cur_r = prev_r + getRandomInt(max);
+// center_circle(prev_r, cur_r);
+// prev_r = cur_r;
+// 	setTimeout(function(){},1000);
+//
+// }
 
 //https://stackoverflow.com/questions/3583724/how-do-i-add-a-delay-in-a-javascript-loop
 var i = 0;
-	function changeRandom(){
+var prev_r = 20;
+function changeRandom(){
 		// var max = 16;
 		setTimeout(function () {
-					var max = 16;    //  call a 3s setTimeout when the loop is called
-			var one = getRandomInt(max);
+		 var max = 16;    //  call a 3s setTimeout when the loop is called
+		 var one = getRandomInt(max);
 		 var two = getRandomInt(max);
 		 var three = getRandomInt(max);
 		 var four = getRandomInt(max);
@@ -139,18 +168,50 @@ var i = 0;
 						 {label:"Category 6", value:six}
 						 ];
 			change(datasetOption_random);
+			var cur_r = prev_r + getRandomInt(max);
+			center_circle(prev_r, cur_r);
+			prev_r = cur_r;
 
 						           //  your code here
 			i++;                     //  increment the counter
-			if (i < 10) {            //  if the counter < 10, call the loop function
+			if (i < 5) {            //  if the counter < 10, call the loop function
 				changeRandom();          //  ..  again which will trigger another
 			}                        //  ..  setTimeout()
-		}, 1000);
+		}, 3000);
+}
+
+function changeRandom2 () {
+	var max = 16;    //  call a 3s setTimeout when the loop is called
+	var one = getRandomInt(max);
+	var two = getRandomInt(max);
+	var three = getRandomInt(max);
+	var four = getRandomInt(max);
+	var five = getRandomInt(max);
+	var six = 100 - one - two- three - four - five;
+	datasetOption_random = [
+			{label:"Category 1", value:one},
+					{label:"Category 2", value:two},
+					{label:"Category 3", value:three},
+					{label:"Category 4", value:four},
+					{label:"Category 5", value:five},
+					{label:"Category 6", value:six}
+					];
+	 change(datasetOption_random);
+	 var cur_r = prev_r + getRandomInt(max);
+	 center_circle(prev_r, cur_r);
+	 prev_r = cur_r;
 }
 
 
-
-
+function center_circle(prev_r, cur_r){
+	var center_circle = svg.append("circle")
+							.attr('cx',0).attr('cy',0)
+			        .attr("fill", "grey")
+			        .attr("r", prev_r)
+							.transition()
+							.duration(500)
+							.attr("r", cur_r);
+}
 
 function flyCircle(data){
 
