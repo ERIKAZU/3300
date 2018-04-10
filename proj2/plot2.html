@@ -12,8 +12,63 @@ svg { border: solid #ccc 1px; }
 
 <style>
 
-.bar rect {
-  fill: #454952;
+
+.switch_out {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch_out input {display:none;}
+
+/* The slider */
+.switch {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FB8480;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.switch:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .switch {
+  background-color: #2196F3;
+}
+
+input:focus + .switch {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .switch:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.switch.round {
+  border-radius: 34px;
+}
+
+.switch.round:before {
+  border-radius: 50%;
 }
 
 
@@ -25,34 +80,41 @@ svg { border: solid #ccc 1px; }
 <body>
 
 
-<p id="problem2">
 
+  <div class="slider_div span_line">
+  <span><input type="range" min="10" max="80" value="20" class="slider" id="age_slider"></span>
+  </div>
+</br>
 
-
-	<div id="ij">
-
-	</div>
-
-  <div class="slider_div">
-  <input type="range" min="0" max="360" value="180" class="slider" id="hue_slider">
-  <input type="range" min="0" max="1000" value="500" class="slider" id="opa_slider">
+  <div>
+  <label class="switch_out">
+    <input type="checkbox" id="gender_box">
+    <div class="switch round"></div>
+  </label>
   </div>
 
-</p>
+</br>
+
+
+  <div id="ij">
+
+  </div>
+
+
 <script>
 
 var svg2 = d3.select("#ij")
 .append("svg").attr("width", 500).attr("height", 500);
 
 
-function assignColor(curID){
-  if (curID <= 74){
+function assignColor(cut_age,curID){
+  if (curID <= cut_age){
     return "#CED3D3";
   }
   else return "#B5C45E";
 }
 // returns the upper right poisiton of the circle. need to shift.
-function gen_grid_data(radius,spacing) {
+function gen_grid_data(cut_age,radius,spacing) {
     var pos_array = new Array();
     var xpos = radius; var ypos = radius;
 
@@ -63,7 +125,7 @@ function gen_grid_data(radius,spacing) {
             pos_array[row].push({
                 x: xpos,
                 y: ypos,
-                color: assignColor(curID)
+                color: assignColor(cut_age,curID)
             })
             curID++;
             xpos += spacing;
@@ -76,11 +138,11 @@ function gen_grid_data(radius,spacing) {
 }
 
 
-function showCircles(){
+function showCircles(cut_age){
   var radius = 15;
   var spacing = 45;
 
-  var grid_data = gen_grid_data(radius,spacing);
+  var grid_data = gen_grid_data(cut_age,radius,spacing);
   var row = svg2.selectAll(".row")
       .data(grid_data)
       .enter().append("g")
@@ -97,25 +159,20 @@ function showCircles(){
           .style("stroke", "#eee");
 }
 
-// original display
-showCircles();
+// original display: cut_age = 100
+showCircles(100);
 
 // event listener
 d3.select("#hue_slider").on("mouseout",function
 (){
   svg2.selectAll("*").remove();
-  var hue = document.getElementById("hue_slider").value;
-  var opa = document.getElementById("opa_slider").value;
-  showCircles();
+  var age = document.getElementById("age_slider").value;
+  var gender = document.getElementById("gender_box").value;
+
+  showCircles(30);
 });
 
-d3.select("#opa_slider").on("mouseout",function
-(){
-  svg2.selectAll("*").remove();
-  var hue = document.getElementById("hue_slider").value;
-  var opa = document.getElementById("opa_slider").value;
-  showCircles();
-});
+
 
 </script>
 </body>
