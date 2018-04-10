@@ -163,16 +163,42 @@ function showCircles(cut_age){
 showCircles(100);
 
 // event listener
-d3.select("#hue_slider").on("mouseout",function
+// age slider listener
+d3.select("#age_slider").on("change",function
 (){
   svg2.selectAll("*").remove();
   var age = document.getElementById("age_slider").value;
   var gender = document.getElementById("gender_box").value;
+  var x = getRandomInt(100);
+  console.log(x);
+  showCircles(x);
 
-  showCircles(30);
 });
 
+// gender switch listener
+d3.select("#gender_box").on("change",update_gender);
+update_gender();
 
+function update_gender(){
+  // console.log("y");
+  if(d3.select("#gender_box").property("checked")){
+					console.log("yes");
+				} else {
+					console.log("no");
+				}
+  svg2.selectAll("*").remove();
+  var age = document.getElementById("age_slider").value;
+  var gender = document.getElementById("gender_box").value;
+  var x = getRandomInt(100);
+  console.log(x);
+  showCircles(x);
+}
+
+
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
 
 </script>
 </body>
