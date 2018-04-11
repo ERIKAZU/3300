@@ -95,15 +95,15 @@ input:checked + .switch:before {
 
 	body {
 	  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	  width: 960px;
-	  height: 500px;
+	  /* width: 960px;
+	  height: 500px; */
 	  position: relative;
 	}
 
-	svg {
+	/* svg {
 		width: 100%;
 		height: 100%;
-	}
+	} */
 
 	path.slice{
 		stroke-width:2px;
@@ -155,10 +155,12 @@ input:checked + .switch:before {
 
 
 	// d3.select("input[value=\"total\"]").property("checked", true);
-
-	var svg = d3.select("body")
-		.append("svg")
-		.append("g")
+var svg_box = d3.select("body")
+  .append("svg").attr("width",960).attr("height",500);
+  var svg = svg_box.append("g")
+;	// var svg = d3.select("body")
+	// 	.append("svg")
+	// 	.append("g")
 
 	svg.append("g")
 		.attr("class", "slices");
@@ -364,7 +366,7 @@ for (var i = 0; i < data.colors.length; i++){
 			};
 
 
-			console.log(circleData);
+			//console.log(circleData);
 	    slice.transition().duration(1000)
 	        .attrTween("d", function(d) {
 	            this._current = this._current || d;
