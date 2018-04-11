@@ -81,15 +81,14 @@ input:checked + .switch:before {
 <body>
 
 
-
   <div class="slider_div span_line">
-  <p>Your age:</p>
+  <p id="age_slider_text">Your age: 20</p>
   <span><input type="range" min="10" max="80" value="20" step="10" class="slider" id="age_slider"></span>
   </div>
 </br>
 
   <div>
-  <p>Your gender:</p>
+  <p id="gender_slider_text">Your gender: Female</p>
   <label class="switch_out">
     <input type="checkbox" id="gender_box">
     <div class="switch round"></div>
@@ -210,6 +209,7 @@ function showCircles(grid_data){
   //                 .style("fill", function(d){return d.color;})
   //                 .style("stroke", "#eee");
 }
+
 /////////////////////////////////
 //////////// START //////////////
 /////////////////////////////////
@@ -276,6 +276,8 @@ d3.select("#age_slider").on("change",function
   svg2.selectAll("*").remove();
   var age = document.getElementById("age_slider").value;
   var gender = document.getElementById("gender_box").value;
+  document.getElementById("age_slider_text").innerHTML = "Your age: " + age;
+
   var x = getRandomInt(100);
 
   var grid_data = gen_grid_data(x);
@@ -291,16 +293,21 @@ d3.select("#age_slider").on("change",function
 d3.select("#gender_box").on("change",update_gender);
 
 
+function getGender(){
+  if(d3.select("#gender_box").property("checked")){
+          return "Male";
+        } else {
+          return "Female";
+        }
+}
+
 function update_gender(){
   //console.log("huh");
-  if(d3.select("#gender_box").property("checked")){
-					console.log("yes");
-				} else {
-					console.log("no");
-				}
+
   svg2.selectAll("*").remove();
   var age = document.getElementById("age_slider").value;
   var gender = document.getElementById("gender_box").value;
+  document.getElementById("gender_slider_text").innerHTML = "Your gender: " + getGender();
   var x = getRandomInt(100);
 
   var grid_data = gen_grid_data(x);
