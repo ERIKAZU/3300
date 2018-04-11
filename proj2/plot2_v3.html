@@ -240,11 +240,11 @@ var grid_data = gen_grid_data(cut_age);
 var dropping = gen_green_data(cut_age);
 //console.log(dropping);
 showCircles(grid_data);
-drop_rand(dropping);
+// drop_rand(dropping);
 
 
 function drop_rand(dropping) {
-var num_to_drop = Math.floor(0.5*dropping.length);
+var num_to_drop = Math.floor(0.3*dropping.length);
 var num_to_drop = dropping.length;
 for (var i = 0; i < num_to_drop; i++){
   var s = dropping[i];
@@ -289,7 +289,7 @@ d3.select("#age_slider").on("change",function
 
 // gender switch listener
 d3.select("#gender_box").on("change",update_gender);
-update_gender();
+
 
 function update_gender(){
   //console.log("huh");
