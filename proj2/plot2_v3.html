@@ -84,7 +84,7 @@ input:checked + .switch:before {
 
   <div class="slider_div span_line">
   <p>Your age:</p>
-  <span><input type="range" min="10" max="80" value="20" class="slider" id="age_slider"></span>
+  <span><input type="range" min="10" max="80" value="20" step="10" class="slider" id="age_slider"></span>
   </div>
 </br>
 
@@ -107,7 +107,7 @@ input:checked + .switch:before {
 <script>
 
 var svg2 = d3.select("#ij")
-.append("svg").attr("width", 500).attr("height", 500);
+.append("svg").attr("width", 500).attr("height", 800);
 
 
 function assignColor(cut_age,curID){
@@ -147,13 +147,13 @@ function gen_green_data(cut_age) {
 
     var curID = 1;
     for (var row = 0; row < 10; row++) {
-        pos_array.push( new Array() );
+        // pos_array.push( new Array() );
         for (var column = 0; column < 10; column++) {
-            if (curID <= cut_age){
-              pos_array[row].push({
+            if (curID > cut_age){
+              pos_array.push({
                   x: xpos,
                   y: ypos,
-                  color: "#8BA106"
+                  color: "B5C45E"
               })
             }
             curID++;
@@ -163,7 +163,9 @@ function gen_green_data(cut_age) {
         ypos += spacing;
     }
     //shuffle array
-    return shuffleArray(pos_array);
+    shuffleArray(pos_array);
+    console.log(pos_array);
+    return pos_array;
 }
 
 //https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array/2450976#2450976
@@ -178,29 +180,93 @@ function shuffleArray(array) {
 
 function showCircles(grid_data){
 
-  var row = svg2.selectAll(".row")
+  var row1 = svg2.selectAll(".row1")
       .data(grid_data)
       .enter().append("g")
-      .attr("class", "row");
+      .attr("class", "row1");
 
-  var column = row.selectAll(".circle")
+  var column1 = row1.selectAll(".circle_org")
           .data(function(d) { return d; })
           .enter().append("circle")
-          .attr("class","circle")
+          .attr("class","circle_org")
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return  d.y; })
           .attr("r", radius)
           .style("fill", function(d){return d.color;})
           .style("stroke", "#eee");
+  //
+  // var row2 = svg2.selectAll(".row2")
+  //             .data(green_data)
+  //             .enter().append("g")
+  //             .attr("class", "row2");
+  //
+  // var column2 = row2.selectAll(".circle_add")
+  //                 .data(function(d) { return d; })
+  //                 .enter().append("circle")
+  //                 .attr("class","circle_add")
+  //                 .attr("cx", function(d) { return d.x; })
+  //                 .attr("cy", function(d) { return  d.y; })
+  //                 .attr("r", radius)
+  //                 .style("fill", function(d){return d.color;})
+  //                 .style("stroke", "#eee");
 }
+/////////////////////////////////
+//////////// START //////////////
+/////////////////////////////////
+var defs = svg2.append('defs');
+var filter = defs.append('filter').attr('id','gooey');
+filter.append('feGaussianBlur')
+  .attr('in','SourceGraphic')
+  .attr('stdDeviation','10')
+  .attr('result','blur');
+filter.append('feColorMatrix')
+  .attr('in','blur')
+  .attr('mode','matrix')
+  .attr('values','1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7')
+  .attr('result','gooey');
+filter.append('feBlend')
+  .attr('in','SourceGraphic')
+  .attr('in2','gooey');
+
+
 
 // original display: cut_age = 100
 var radius = 15;
 var spacing = 45;
 var cut_age = 100;
 var grid_data = gen_grid_data(cut_age);
-console.log(grid_data);
+// console.log(grid_data);
+// showCircles(grid_data);
+var dropping = gen_green_data(cut_age);
+//console.log(dropping);
 showCircles(grid_data);
+drop_rand(dropping);
+
+
+function drop_rand(dropping) {
+var num_to_drop = Math.floor(0.5*dropping.length);
+var num_to_drop = dropping.length;
+for (var i = 0; i < num_to_drop; i++){
+  var s = dropping[i];
+  console.log(s);
+  svg2.append("circle")
+    .attr("cx", s.x)
+    .attr("cy",s.y)
+    .attr("r", 12)
+    .style("fill", s.color)
+    .transition().duration(1000)
+      .attr("cy", s.y+getRandomInt(300))
+      .delay(getRandomInt(1000))
+      // .style("fill", "#CED3D3")
+    .transition().duration(300)
+    .attr("r", 0);
+
+}
+    // (function repeat() {
+
+    //     .each("end", repeat);
+    // })();
+}//update
 
 
 // event listener
@@ -213,8 +279,11 @@ d3.select("#age_slider").on("change",function
   var x = getRandomInt(100);
 
   var grid_data = gen_grid_data(x);
+  var dropping = gen_green_data(x);
   //console.log(x);
   showCircles(grid_data);
+  showCircles(grid_data);
+  drop_rand(dropping);
 
 });
 
@@ -223,7 +292,7 @@ d3.select("#gender_box").on("change",update_gender);
 update_gender();
 
 function update_gender(){
-  // console.log("y");
+  //console.log("huh");
   if(d3.select("#gender_box").property("checked")){
 					console.log("yes");
 				} else {
@@ -233,8 +302,14 @@ function update_gender(){
   var age = document.getElementById("age_slider").value;
   var gender = document.getElementById("gender_box").value;
   var x = getRandomInt(100);
-  console.log(x);
-  showCircles(x);
+
+  var grid_data = gen_grid_data(x);
+  var dropping = gen_green_data(x);
+  //console.log(x);
+  showCircles(grid_data);
+  showCircles(grid_data);
+  drop_rand(dropping);
+
 }
 
 
