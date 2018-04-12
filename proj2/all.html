@@ -4,82 +4,92 @@
 
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
 
 <style>
-body { font-family: 'Alegreya Sans', Calibri, sans-serif; }
+
+body {
+  font-family: 'Lora', serif;
+  margin: 50px 50px 30px 80px;
+}
+
 svg { border: solid #ccc 1px; }
-</style>
 
-<style>
-
-/* reference on nice switch: */
-/* https://www.w3schools.com/howto/howto_css_switch.asp */
-.switch_out {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+.text_align_left{
+  text-align: left;
 }
 
-/* Hide default HTML checkbox */
-.switch_out input {display:none;}
-
-/* The slider */
-.switch {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #FB8480;
-  -webkit-transition: .4s;
-  transition: .4s;
+.text_align_right{
+  text-align: right;
 }
 
-.switch:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+.Variant {
+  font-weight: 600; color: #555;
 }
 
-input:checked + .switch {
-  background-color: #2196F3;
-}
-
-input:focus + .switch {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .switch:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.switch.round {
-  border-radius: 34px;
-}
-
-.switch.round:before {
-  border-radius: 50%;
+.inplot_text{
+  fill:#FF80AB;
+  color:#FF80AB;
 }
 
 
 </style>
+
 
 </head>
 
 <body>
 
+<div style = "float:left">
+  <p id="title" style = "font-weight: 300;
+    font-size: 36pt;
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-bottom: 0px;"
+    class="text_align_left">
+  How much time you have left &
+  <br />
 
+  How you spend it
+
+  <text style="font-size: 12px">Presented by <a href="https://github.com/ERIKAZU/3300/tree/master/proj2">Team </a></text>
+  </p>
+</div>
+
+<!-- <div style = "float:left">
+  <p id="title" style = "font-weight: 100;
+    font-size: 40pt;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    margin-left: 20px;" class="text_align_right">
+  &
+</p>
+</div> -->
+
+<div style = "display:inline-block">
+<p id="title_h2" style="font-weight: thin;
+    font-size: 18pt;
+padding-left: 0px;
+color:#999">
+  We are all going to die someday. Explore the average <span class="Variant">death age, death cause</span> of U.S. residents, and think about <span class="Variant"> how you will spend </span> your time left.</p>
+
+
+<h2>Overivew</h2>
+
+<!-- reference:http://bl.ocks.org/michellechandra/0b2ce4923dc9b5809922 -->
+</div>
+
+
+
+<!-- <div>
+  <p id="title" style = "font-weight: 100;
+    font-size: 20pt;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    margin-left: 20px;" class="text_align_right">
+
+</p>
+</div> -->
 
 <p id="problem1">
 
@@ -93,12 +103,12 @@ input:checked + .switch:before {
 
 	<style>
 
-	body {
+	/* body {
 	  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	  /* width: 960px;
-	  height: 500px; */
+	  width: 960px;
+	  height: 500px;
 	  position: relative;
-	}
+	} */
 
 	/* svg {
 		width: 100%;
@@ -667,7 +677,7 @@ for (var i = 0; i < data.colors.length; i++){
       }
       //shuffle array
       shuffleArray(pos_array);
-      console.log(pos_array);
+      //console.log(pos_array);
       return pos_array;
   }
 
@@ -738,7 +748,7 @@ for (var i = 0; i < data.colors.length; i++){
   var num_to_drop = dropping.length;
   for (var i = 0; i < num_to_drop; i++){
     var s = dropping[i];
-    console.log(s);
+    //console.log(s);
     svg2.append("circle")
       .attr("cx", s.x)
       .attr("cy",s.y)
