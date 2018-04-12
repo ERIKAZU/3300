@@ -170,8 +170,15 @@ var svg_box = d3.select("body")
 
 //changeRandom();
 
-for(var i = 0; i < 5; i++){
-	setTimeout(changeRandom2,3000 * i);
+for(var j = 0; j < 5; j++){
+doSetTimeOut(j);
+}
+
+function doSetTimeOut(j){
+  setTimeout(function(){
+    showPlot(j);
+    // console.log(j);
+  },3000 * j);
 }
 
 		function getRandomInt(max) {
@@ -180,8 +187,8 @@ for(var i = 0; i < 5; i++){
 
 
 //https://stackoverflow.com/questions/3583724/how-do-i-add-a-delay-in-a-javascript-loop
-var i = 0;
-var prev_r = 20;
+// var i = 0;
+// var prev_r = 20;
 // function changeRandom(){
 // 		// var max = 16;
 // 		setTimeout(function () {
@@ -213,8 +220,38 @@ var prev_r = 20;
 // 		}, 3000);
 // }
 
+
+function get_rand_category(){
+  var max = 16;
+	var one = getRandomInt(max);
+	var two = getRandomInt(max);
+	var three = getRandomInt(max);
+	var four = getRandomInt(max);
+	var five = getRandomInt(max);
+	var six = 100 - one - two- three - four - five;
+	datasetOption_random = [
+			{label:"Category 1", value:one},
+					{label:"Category 2", value:two},
+					{label:"Category 3", value:three},
+					{label:"Category 4", value:four},
+					{label:"Category 5", value:five},
+					{label:"Category 6", value:six}
+					];
+  return datasetOption_random;
+}
+
+function showPlot(i){
+  var rads = [20,40,60,80,90];
+    // console.log(rads);
+  change(get_rand_category());
+  // console.log(i);
+  center_circle(rads[i], rads[i+1]);
+}
+
+
+
 function changeRandom2 () {
-	var max = 16;    //  call a 3s setTimeout when the loop is called
+	var max = 16;
 	var one = getRandomInt(max);
 	var two = getRandomInt(max);
 	var three = getRandomInt(max);
