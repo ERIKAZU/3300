@@ -182,6 +182,33 @@ var svg_box = d3.select("body")
 
 
 //changeRandom();
+// datasetOption_random = [
+//     {label:"Category 1", value:one},
+//         {label:"Category 2", value:two},
+//         {label:"Category 3", value:three},
+//         {label:"Category 4", value:four},
+//         {label:"Category 5", value:five},
+//         {label:"Category 6", value:six}
+//         ];
+
+var death_cos_data;
+d3.json("death_cause.json", function (error, data) {
+  death_cos_data = data;
+  // data.forEach(function(d) {
+  //     d.population = +d.population;
+  //     d["land area"] = +d["land area"];
+  //   });
+  for(var j = 0; j < death_cos_data.length; j++){
+    var thisAge = death_cos_data[j];
+
+    console.log(thisAge.label);
+  }
+
+
+
+});
+
+
 
 for(var j = 0; j < 10; j++){
 doSetTimeOut(j);
