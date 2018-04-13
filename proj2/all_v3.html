@@ -143,14 +143,15 @@ color:#999">
 	    padding: 5px;
 	    text-align: center;
 	}
-	text {
-	  font: 12px;
-	}
+text{
+  text-anchor: middle;
+  	    text-align: center;
+}
 	</style>
 	<body>
 
 
-	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="http://d3js.org/d3.v4.min.js"></script>
 	<script>
 
 	//////////////////////////////////////////////////////////////
@@ -181,42 +182,73 @@ var svg_box = d3.select("body")
 		radius1 = Math.min(width, height) / 2;
 
 
-//changeRandom();
-// datasetOption_random = [
-//     {label:"Category 1", value:one},
-//         {label:"Category 2", value:two},
-//         {label:"Category 3", value:three},
-//         {label:"Category 4", value:four},
-//         {label:"Category 5", value:five},
-//         {label:"Category 6", value:six}
-//         ];
-
-var death_cos_data;
-d3.json("death_cause.json", function (error, data) {
-  death_cos_data = data;
-  // data.forEach(function(d) {
-  //     d.population = +d.population;
-  //     d["land area"] = +d["land area"];
-  //   });
-  for(var j = 0; j < death_cos_data.length; j++){
-    var thisAge = death_cos_data[j];
-
-    console.log(thisAge.label);
-  }
 
 
 
-});
 
-
-
-for(var j = 0; j < 10; j++){
+// loop one series of data
+for(var j = 0; j < 9; j++){
 doSetTimeOut(j);
 }
 
 function doSetTimeOut(j){
   setTimeout(function(){
-    showPlot(j);
+    var prev_r,cur_r;
+    var death_cos_data;
+    d3.json("death_cause.json", function (error, data) {
+
+      var tot_r_scale = d3.scaleSqrt()
+      .domain([0,d3.max(data,function(d){return d.tot;})])
+      .range([0, 0.72*radius1]);
+
+      if(j == 0){
+        prev_r = 0;
+      }
+      else {
+        prev_r = tot_r_scale(data[j - 1].tot);
+      }
+
+      cur_r = tot_r_scale(data[j].tot);
+
+      center_circle(prev_r,cur_r);
+
+      //changeRandom();
+      // datasetOption_random = [
+      //     {label:"Category 1", value:one},
+      //         {label:"Category 2", value:two},
+      //         {label:"Category 3", value:three},
+      //         {label:"Category 4", value:four},
+      //         {label:"Category 5", value:five},
+      //         {label:"Category 6", value:six}
+      //         ];
+      var thisAge = data[j];
+      //printAge(data[j].label);
+     var age_top_cos = thisAge.top_causes;
+
+       var sum = 0;
+       for (entry of age_top_cos){
+
+         entry.value = Math.round(100*entry.value/thisAge.tot);
+        sum += entry.value;
+
+       }
+       console.log(sum);
+
+     age_top_cos.push({
+       "label":"Other",
+       "value": 100-sum
+     });
+     console.log(age_top_cos);
+
+      change(age_top_cos);
+      // data.forEach(function(d) {
+      //     d.population = +d.population;
+      //     d["land area"] = +d["land area"];
+      //   });
+
+
+        //console.log(thisAge.label);
+    });
     // console.log(j);
   },3000 * j);
 }
@@ -225,40 +257,19 @@ function doSetTimeOut(j){
 		  return Math.floor(Math.random() * Math.floor(max));
 		}
 
+// print text in the center of the box
+function printAge(s){
+  svg.selectAll(".centerText").remove();
+  var text_center = svg.append("text")
+              .attr("class","centerText")
+              .attr('x',0).attr('y',20)
+              .text("Age:" + s)
+              .style(  "text-anchor", "middle")
+              .style("font-size","50px")
+     		 		  .style("fill", "black");
+}
 
-//https://stackoverflow.com/questions/3583724/how-do-i-add-a-delay-in-a-javascript-loop
-// var i = 0;
-// var prev_r = 20;
-// function changeRandom(){
-// 		// var max = 16;
-// 		setTimeout(function () {
-// 		 var max = 16;    //  call a 3s setTimeout when the loop is called
-// 		 var one = getRandomInt(max);
-// 		 var two = getRandomInt(max);
-// 		 var three = getRandomInt(max);
-// 		 var four = getRandomInt(max);
-// 		 var five = getRandomInt(max);
-// 		 var six = 100 - one - two- three - four - five;
-// 		 datasetOption_random = [
-// 				 {label:"Category 1", value:one},
-// 						 {label:"Category 2", value:two},
-// 						 {label:"Category 3", value:three},
-// 						 {label:"Category 4", value:four},
-// 						 {label:"Category 5", value:five},
-// 						 {label:"Category 6", value:six}
-// 						 ];
-// 			change(datasetOption_random);
-// 			var cur_r = prev_r + getRandomInt(max);
-// 			center_circle(prev_r, cur_r);
-// 			prev_r = cur_r;
-//
-// 						           //  your code here
-// 			i++;                     //  increment the counter
-// 			if (i < 5) {            //  if the counter < 10, call the loop function
-// 				changeRandom();          //  ..  again which will trigger another
-// 			}                        //  ..  setTimeout()
-// 		}, 3000);
-// }
+
 
 
 function get_rand_category(){
@@ -280,13 +291,7 @@ function get_rand_category(){
   return datasetOption_random;
 }
 
-function showPlot(i){
-  var rads = [20,40,60,80,90];
-    // console.log(rads);
-  change(get_rand_category());
-  // console.log(i);
-  center_circle(rads[i], rads[i+1]);
-}
+
 
 
 
@@ -349,14 +354,14 @@ for (var i = 0; i < data.colors.length; i++){
 	function change(data) {
 
 
-		var pie = d3.layout.pie()
+		var pie = d3.pie()
 			.sort(null)
 			.value(function(d) {
 				return d.value;
 			});
 
 
-		var arc = d3.svg.arc()
+		var arc = d3.arc()
 			.outerRadius(radius1 * 0.8)
 			.innerRadius(radius1 * 0.72);
 
@@ -364,7 +369,7 @@ for (var i = 0; i < data.colors.length; i++){
     //console.log(centers);
 
 
-		var outerArc = d3.svg.arc()
+		var outerArc = d3.arc()
 			.innerRadius(radius1 * 0.9)
 			.outerRadius(radius1 * 0.9);
 
@@ -373,7 +378,7 @@ for (var i = 0; i < data.colors.length; i++){
 
 		svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-		var color = d3.scale.ordinal()
+		var color = d3.scaleOrdinal()
 			.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
 
@@ -394,7 +399,7 @@ for (var i = 0; i < data.colors.length; i++){
 
 			var circleData;
 			// circleData.centers = centers;
-			var rscale = d3.scale.linear()
+			var rscale = d3.scaleLinear()
 		  .domain([0,d3.max(data, function(d) { return +d.value;} )])
 		  .range([3,20]);
 
@@ -437,35 +442,9 @@ for (var i = 0; i < data.colors.length; i++){
 	        });
 
 
-
-
-
 	    slice.exit()
 	        .remove();
 
-	    // var legend = svg.selectAll('.legend')
-	    //     .data(color.domain())
-	    //     .enter()
-	    //     .append('g')
-	    //     .attr('class', 'legend')
-	    //     .attr('transform', function(d, i) {
-	    //         var height = legendRectSize + legendSpacing;
-	    //         var offset =  height * color.domain().length / 2;
-	    //         var horz = -3 * legendRectSize;
-	    //         var vert = i * height - offset;
-	    //         return 'translate(' + horz + ',' + vert + ')';
-	    //     });
-      //
-	    // legend.append('rect')
-	    //     .attr('width', legendRectSize)
-	    //     .attr('height', legendRectSize)
-	    //     .style('fill', color)
-	    //     .style('stroke', color);
-      //
-	    // legend.append('text')
-	    //     .attr('x', legendRectSize + legendSpacing)
-	    //     .attr('y', legendRectSize - legendSpacing)
-	    //     .text(function(d) { return d; });
 
 	    /* ------- TEXT LABELS -------*/
 
