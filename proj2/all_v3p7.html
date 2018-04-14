@@ -248,7 +248,7 @@ function doSetTimeOut(j){
          "value": 100-sum
        });
 
-
+      console.log(thisAge.tot);
       change(age_top_cos);
       // data.forEach(function(d) {
       //     d.population = +d.population;
@@ -275,54 +275,6 @@ function printAge(s){
               .style(  "text-anchor", "middle")
               .style("font-size","50px")
      		 		  .style("fill", "black");
-}
-
-
-
-
-function get_rand_category(){
-  var max = 16;
-	var one = getRandomInt(max);
-	var two = getRandomInt(max);
-	var three = getRandomInt(max);
-	var four = getRandomInt(max);
-	var five = getRandomInt(max);
-	var six = 100 - one - two- three - four - five;
-	datasetOption_random = [
-			{label:"Category 1", value:one},
-					{label:"Category 2", value:two},
-					{label:"Category 3", value:three},
-					{label:"Category 4", value:four},
-					{label:"Category 5", value:five},
-					{label:"Category 6", value:six}
-					];
-  return datasetOption_random;
-}
-
-
-
-
-
-function changeRandom2 () {
-	var max = 16;
-	var one = getRandomInt(max);
-	var two = getRandomInt(max);
-	var three = getRandomInt(max);
-	var four = getRandomInt(max);
-	var five = getRandomInt(max);
-	var six = 100 - one - two- three - four - five;
-	datasetOption_random = [
-			{label:"Category 1", value:one},
-					{label:"Category 2", value:two},
-					{label:"Category 3", value:three},
-					{label:"Category 4", value:four},
-					{label:"Category 5", value:five},
-					{label:"Category 6", value:six}
-					];
-	 change(datasetOption_random);
-	 var cur_r = prev_r + getRandomInt(max);
-	 center_circle(prev_r, cur_r);
-	 prev_r = cur_r;
 }
 
 
@@ -361,6 +313,8 @@ for (var i = 0; i < data.colors.length; i++){
 
 	function change(data) {
 
+      console.log(data);
+
 
 		var pie = d3.pie()
 			.sort(null)
@@ -374,7 +328,6 @@ for (var i = 0; i < data.colors.length; i++){
 			.innerRadius(radius1 * 0.72);
 
 
-    //console.log(centers);
 
 
 		var outerArc = d3.arc()
@@ -432,7 +385,7 @@ for (var i = 0; i < data.colors.length; i++){
 	                return arc(interpolate(t));
 	            };
 	        });
-      console.log(circleData);
+      // console.log(circleData);
 			setTimeout(function(){flyCircle(circleData)},1000);
 
 
