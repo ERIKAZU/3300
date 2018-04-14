@@ -218,7 +218,7 @@ function plotGraph1Main() {
   d3.json("death_cause.json", function(error, data) {
     // radius for the center circle
     var prev_r, cur_r;
-    var prev_r_list = [], cur_r_list = [];
+    var prev_r_list = [0], cur_r_list = [0];
     var age_top_cos_list = {};
     var age_string_list = [];
     // operator that maps domain (max total death number) to range (radius)
@@ -229,6 +229,7 @@ function plotGraph1Main() {
 
     // preprocess graph data
     for(var ageStage = 0; ageStage < 9; ageStage++) {
+      console.log(data[ageStage].tot);
       var thisAge = data[ageStage];
       if (ageStage == 0) {
         prev_r = 0;
@@ -265,52 +266,32 @@ function plotGraph1Main() {
          "value": 100-sum}
        );
       age_top_cos_list[ageStage] = age_top_cos;
-      //console.log(thisAge.tot);
     }
-    function plotGraphAnimation(age_top_cos_list, age_string_list,
-                                prev_r_list, cur_r_list, idx) {
+    console.log(prev_r_list);
+    console.log(cur_r_list);
+    function plotGraphAnimation(idx, doFlyCircle) {
       center_circle(prev_r_list[idx], cur_r_list[idx]);
       printAge(age_string_list[idx]);
-      changePieChart(age_top_cos_list[idx]);
+      changePieChart(age_top_cos_list[idx], doFlyCircle);
     }
+    var idx = 0;
+    var animDuration = 3000;
     function dirtyAnimation() {
       changePieChart(age_top_cos_list[0]);
+      setTimeout(function() {plotGraphAnimation(0, true);}, animDuration * 0);
+      setTimeout(function() {plotGraphAnimation(1, true);}, animDuration * 1);
+      setTimeout(function() {plotGraphAnimation(2, true);}, animDuration * 2);
+      setTimeout(function() {plotGraphAnimation(3, true);}, animDuration * 3);
+      setTimeout(function() {plotGraphAnimation(4, true);}, animDuration * 4);
+      setTimeout(function() {plotGraphAnimation(5, true);}, animDuration * 5);
+      setTimeout(function() {plotGraphAnimation(6, true);}, animDuration * 6);
+      setTimeout(function() {plotGraphAnimation(7, true);}, animDuration * 7);
+      setTimeout(function() {plotGraphAnimation(8, true);}, animDuration * 8);
       setTimeout(function() {
-        plotGraphAnimation(age_top_cos_list, age_string_list, prev_r_list, cur_r_list, 0)},
-        3000 * 0
-      );
-      setTimeout(function() {
-        plotGraphAnimation(age_top_cos_list, age_string_list, prev_r_list, cur_r_list, 1)},
-        3000 * 1
-      );
-      setTimeout(function() {
-        plotGraphAnimation(age_top_cos_list, age_string_list, prev_r_list, cur_r_list, 2)},
-        3000 * 2
-      );
-      setTimeout(function() {
-        plotGraphAnimation(age_top_cos_list, age_string_list, prev_r_list, cur_r_list, 3)},
-        3000 * 3
-      );
-      setTimeout(function() {
-        plotGraphAnimation(age_top_cos_list, age_string_list, prev_r_list, cur_r_list, 4)},
-        3000 * 4
-      );
-      setTimeout(function() {
-        plotGraphAnimation(age_top_cos_list, age_string_list, prev_r_list, cur_r_list, 5)},
-        3000 * 5
-      );
-      setTimeout(function() {
-        plotGraphAnimation(age_top_cos_list, age_string_list, prev_r_list, cur_r_list, 6)},
-        3000 * 6
-      );
-      setTimeout(function() {
-        plotGraphAnimation(age_top_cos_list, age_string_list, prev_r_list, cur_r_list, 7)},
-        3000 * 7
-      );
-      setTimeout(function() {
-        plotGraphAnimation(age_top_cos_list, age_string_list, prev_r_list, cur_r_list, 8)},
-        3000 * 8
-      );
+        center_circle(prev_r_list[9], cur_r_list[9]);
+        changePieChart(age_top_cos_list[8], false);
+        printAge(age_string_list[8]);
+      }, animDuration * 9);
     }
     dirtyAnimation();
   });
@@ -365,7 +346,7 @@ function flyCircle(circleData) {
 }
 
 /** main function to control the transition of the pie chart **/
-function changePieChart(data) {
+function changePieChart(data, doFlyCircle) {
   //console.log(data);
   // the pie chart
 	var pie = d3.pie()
@@ -416,8 +397,10 @@ function changePieChart(data) {
       return arc(interpolate(t));
     };
   });
-  // make circles fly from arc to center after the arc transition
-	setTimeout(function() {flyCircle(circleData)}, 1000);
+  if (doFlyCircle) {
+    // make circles fly from arc to center after the arc transition
+  	setTimeout(function() {flyCircle(circleData)}, 1000);
+  }
   /**************************************************************/
 
   // display category info when mouse hoover over arc slice
