@@ -218,7 +218,7 @@ function plotGraph1Main() {
   d3.json("death_cause.json", function(error, data) {
     // declare data variables used for animation
     var prev_r, cur_r;
-    var prev_r_list = [0], cur_r_list = [0];
+    var prev_r_list = [], cur_r_list = [];
     var age_top_cos_list = {};
     var age_string_list = [];
     var total_dead_num_list = [];
@@ -296,12 +296,12 @@ function plotGraph1Main() {
       setTimeout(function() {plotGraphAnimation(5, true);}, animDuration * 5);
       setTimeout(function() {plotGraphAnimation(6, true);}, animDuration * 6);
       setTimeout(function() {plotGraphAnimation(7, true);}, animDuration * 7);
-      setTimeout(function() {plotGraphAnimation(8, true);}, animDuration * 8);
-      setTimeout(function() {
-        center_circle(prev_r_list[9], cur_r_list[9]);
-        changePieChart(age_top_cos_list[8], false);
-        printAge(age_string_list[8]);
-      }, animDuration * 9);
+      setTimeout(function() {plotGraphAnimation(8, false);}, animDuration * 8);
+      // setTimeout(function() {
+      //   center_circle(prev_r_list[9], cur_r_list[9]);
+      //   changePieChart(age_top_cos_list[8], false);
+      //   printAge(age_string_list[8]);
+      // }, animDuration * 9);
     }
     dirtyAnimation();
   });
