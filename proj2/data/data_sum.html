@@ -15,7 +15,7 @@
 var mData;
 
 // Load data for every state!
-d3.csv("cat_2015_358cause.csv", function(data) {
+d3.csvParse("cat_2015_358cause.csv", function(data) {
      mData = data;
      var lines=data.split("\n");
      console.log(lines);
