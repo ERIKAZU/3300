@@ -271,7 +271,7 @@ function plotGraph1Main() {
       }
       // Put the rest as "Other" category
       age_top_cos.push(
-        {"label":"Other",
+        {"label":"Others",
          "value": 100-sum}
        );
       age_top_cos_list[ageStage] = age_top_cos;
@@ -286,7 +286,7 @@ function plotGraph1Main() {
     var idx = 0;
     var animDuration = 3000;
     function dirtyAnimation() {
-      changePieChart(age_top_cos_list[0]);
+      changePieChart(age_top_cos_list[0], false);
       setTimeout(function() {plotGraphAnimation(0, true);}, animDuration * 0);
       setTimeout(function() {plotGraphAnimation(1, true);}, animDuration * 1);
       setTimeout(function() {plotGraphAnimation(2, true);}, animDuration * 2);
