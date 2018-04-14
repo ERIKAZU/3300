@@ -671,7 +671,7 @@ color:#999">
 
       <!-- PLOT 2 -->
 
-
+    <script src="tip.js"></script>
 
       <style>
         /* reference on nice switch: */
@@ -740,6 +740,34 @@ color:#999">
         .switch.round:before {
           border-radius: 50%;
         }
+        .d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
       </style>
 
       </head>
@@ -793,7 +821,8 @@ color:#999">
               pos_array[row].push({
                 x: xpos,
                 y: ypos,
-                color: assignColor(cut_age, curID)
+                color: assignColor(cut_age, curID),
+                category: column
               })
               curID++;
               xpos += spacing;
@@ -819,7 +848,8 @@ color:#999">
                 pos_array.push({
                   x: xpos,
                   y: ypos,
-                  color: "B5C45E"
+                  color: "B5C45E",
+                  category: column
                 })
               }
               curID++;
@@ -869,7 +899,43 @@ color:#999">
             })
             .style("stroke", "#eee");
 
+
+
+            //https://stackoverflow.com/questions/35608147/selecting-all-elements-in-one-group-of-a-categorical-variable
+
+            svg2.selectAll(".circle_org")
+            .on('mouseover', function(d){
+              svg2.selectAll(".circle_org")
+              .filter(function(dot){
+                return (dot.category == d.category)
+              })
+              .transition()
+              .style("fill","pink");
+              tip_label.show(d);
+            })
+            .on('mouseout', function(d){
+              svg2.selectAll(".circle_org")
+              .filter(function(dot){
+                return (dot.category == d.category)
+              })
+              .transition()
+              .style("fill",d.color)
+              tip_label.hide(d);
+            });
+
+
         }
+
+
+
+      var tip_label = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+          return "<strong>Frequency:</strong> <span style='color:red'>" + d.category + "</span>";
+        })
+        svg2.call(tip_label);
+
 
         /////////////////////////////////
         //////////// START //////////////
