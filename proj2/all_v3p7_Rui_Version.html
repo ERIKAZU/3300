@@ -213,6 +213,7 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
+// the main function for plotting graph 1 for nine different age groups
 function plotGraph1Main() {
   d3.json("death_cause.json", function(error, data) {
     // radius for the center circle
@@ -264,19 +265,13 @@ function plotGraph1Main() {
          "value": 100-sum}
        );
       age_top_cos_list[ageStage] = age_top_cos;
-      console.log(thisAge.tot);
-      //center_circle(prev_r, cur_r);
+      //console.log(thisAge.tot);
     }
-    //console.log(age_top_cos_list);
     function plotGraphAnimation(age_top_cos_list, age_string_list,
                                 prev_r_list, cur_r_list, idx) {
       center_circle(prev_r_list[idx], cur_r_list[idx]);
       printAge(age_string_list[idx]);
       changePieChart(age_top_cos_list[idx]);
-      // console.log(prev_r_list);
-      // console.log(cur_r_list);
-      // console.log(group);
-      // console.log(age_string_list);
     }
     function dirtyAnimation() {
       changePieChart(age_top_cos_list[0]);
@@ -322,19 +317,6 @@ function plotGraph1Main() {
 }
 
 plotGraph1Main();
-// loop one series of data
-for(var j = 0; j < 9; j++) {
-  animatePlotOne(j);
-}
-
-// The main function for plot 1
-function animatePlotOne(j) {
-  setTimeout(
-    function() {
-
-    },
-    3000 * j);
-}
 
 // print age group text in the center of the box
 function printAge(ageString) {
@@ -384,7 +366,7 @@ function flyCircle(circleData) {
 
 /** main function to control the transition of the pie chart **/
 function changePieChart(data) {
-  console.log(data);
+  //console.log(data);
   // the pie chart
 	var pie = d3.pie()
     .sort(null)
