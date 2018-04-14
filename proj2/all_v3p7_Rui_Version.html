@@ -216,15 +216,25 @@ function getRandomInt(max) {
 // the main function for plotting graph 1 for nine different age groups
 function plotGraph1Main() {
   d3.json("death_cause.json", function(error, data) {
-    // radius for the center circle
+    // declare data variables used for animation
     var prev_r, cur_r;
     var prev_r_list = [0], cur_r_list = [0];
     var age_top_cos_list = {};
     var age_string_list = [];
+    var total_dead_num_list = [];
+
+    //calculate accumulative total deathNum by age group
+    for(var group = 0; group < 9; group++) {
+      var dead_num_sum = 0;
+      for(var i = 0; i <= group; i++) {
+        dead_num_sum += data[i].tot;
+      }
+      total_dead_num_list.push(dead_num_sum);
+    }
     // operator that maps domain (max total death number) to range (radius)
     var tot_r_scale =
       d3.scaleSqrt()
-        .domain([0, d3.max(data,function(d) { return d.tot; })])
+        .domain([0, total_dead_num_list[8]])
         .range([0, 0.72 * radius1]);
 
     // preprocess graph data
@@ -235,9 +245,9 @@ function plotGraph1Main() {
         prev_r = 0;
       }
       else {
-        prev_r = tot_r_scale(data[ageStage - 1].tot);
+        prev_r = tot_r_scale(total_dead_num_list[ageStage - 1]);
       }
-      cur_r = tot_r_scale(data[ageStage].tot);
+      cur_r = tot_r_scale(total_dead_num_list[ageStage]);
       prev_r_list.push(prev_r);
       cur_r_list.push(cur_r);
       age_string_list.push(thisAge.label);
@@ -348,6 +358,7 @@ function flyCircle(circleData) {
 /** main function to control the transition of the pie chart **/
 function changePieChart(data, doFlyCircle) {
   //console.log(data);
+  var pieAnimDuration = 1500;
   // the pie chart
 	var pie = d3.pie()
     .sort(null)
@@ -389,7 +400,7 @@ function changePieChart(data, doFlyCircle) {
   /**************************************************************/
 
   /**** animate the transition of the arcs in the pie chart *****/
-  slice.transition().duration(1000).attrTween("d", function(d) {
+  slice.transition().duration(pieAnimDuration).attrTween("d", function(d) {
     this._current = this._current || d;
     var interpolate = d3.interpolate(this._current, d);
     this._current = interpolate(0);
@@ -399,7 +410,7 @@ function changePieChart(data, doFlyCircle) {
   });
   if (doFlyCircle) {
     // make circles fly from arc to center after the arc transition
-  	setTimeout(function() {flyCircle(circleData)}, 1000);
+  	setTimeout(function() {flyCircle(circleData)}, pieAnimDuration);
   }
   /**************************************************************/
 
@@ -431,7 +442,7 @@ function changePieChart(data, doFlyCircle) {
       return d.startAngle + (d.endAngle - d.startAngle)/2;
   }
   // change label during transition
-	text.transition().duration(1000)
+	text.transition().duration(pieAnimDuration)
       .attrTween("transform", function(d) {
          this._current = this._current || d;
          var interpolate = d3.interpolate(this._current, d);
@@ -466,7 +477,7 @@ function changePieChart(data, doFlyCircle) {
      .data(pie(data), function(d){ return d.data.label });
 
   polyline.enter().append("polyline");
-  polyline.transition().duration(1000)
+  polyline.transition().duration(pieAnimDuration)
         .attrTween("points", function(d){
            this._current = this._current || d;
            var interpolate = d3.interpolate(this._current, d);
