@@ -183,6 +183,14 @@ var svg_box = d3.select("body")
 
 
 
+  var colorMap = d3.scaleOrdinal()
+      .domain(["Others","Unintentional Injury", "Congenital Anomalies", "Homicide", "Malignant Neoplasms", "Heart Disease", "Short Gestation", "SIDS","Maternal Pregnancy Comp.","Suicide","Liver Disease","Chronic Low. Respiratory Disease","Diabetes Mellitus","Cerebrovascular","Alzheimer's Disease"])
+    	.range(["#B9B8B1","#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00","#ECCE7C", "#AB6C2F", "#E3AB69", "#299F63", "#077036", "blue", "yellow"]);
+
+  var list_of_cat = ["Unintentional Injury", "Congenital Anomalies", "Homicide", "Malignant Neoplasms", "Heart Disease", "Short Gestation", "SIDS","Maternal Pregnancy Comp.","Suicide","Liver Disease","Chronic Low. Respiratory Disease","Diabetes Mellitus","Cerebrovascular","Alzheimer's Disease"];
+
+  var child = list_of_cat.indexOf("Others") > -1;
+
 
 // loop one series of data
 for(var j = 0; j < 9; j++){
@@ -210,15 +218,6 @@ function doSetTimeOut(j){
 
       center_circle(prev_r,cur_r);
 
-      //changeRandom();
-      // datasetOption_random = [
-      //     {label:"Category 1", value:one},
-      //         {label:"Category 2", value:two},
-      //         {label:"Category 3", value:three},
-      //         {label:"Category 4", value:four},
-      //         {label:"Category 5", value:five},
-      //         {label:"Category 6", value:six}
-      //         ];
       var thisAge = data[j];
       printAge(data[j].label);
       var age_top_cos = thisAge.top_causes;
@@ -230,13 +229,25 @@ function doSetTimeOut(j){
         sum += entry.value;
 
        }
-       console.log(sum);
+
+
+       for(cat of list_of_cat){
+
+         if ( age_top_cos[cat] == undefined){
+
+           age_top_cos.push({
+             "label": cat,
+             "value": 0
+           });
+           sum = sum + 0;
+         }
+       }
 
        age_top_cos.push({
          "label":"Other",
          "value": 100-sum
        });
-     console.log(age_top_cos);
+
 
       change(age_top_cos);
       // data.forEach(function(d) {
@@ -247,7 +258,6 @@ function doSetTimeOut(j){
 
         //console.log(thisAge.label);
     });
-    // console.log(j);
   },3000 * j);
 }
 
@@ -376,18 +386,20 @@ for (var i = 0; i < data.colors.length; i++){
 
 		svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-		var color = d3.scaleOrdinal()
-      .domain([1,2,3,4,5,6])
-			.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+		// var color = d3.scaleOrdinal()
+    //   .domain([1,2,3,4,5,6])
+		// 	.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
+    //slices only select current appearing
 
 		/* ------- PIE SLICES -------*/
+    console.log(pie(data));
 		var slice = svg.select(".slices").selectAll("path.slice")
-	        .data(pie(data), function(d,i){ console.log();return d.data.label; });
+	        .data(pie(data), function(d,i){ return d.data.label; });
 
 	    slice.enter()
 	        .insert("path")
-	        .style("fill", function(d,i) { console.log(color(i));return color(i); })
+	        .style("fill", function(d) {return colorMap(d.data.label); })
 	        .attr("class", "slice");
 
 			// var circleData = [];
@@ -398,13 +410,13 @@ for (var i = 0; i < data.colors.length; i++){
 
 			var circleData;
 			// circleData.centers = centers;
-			var rscale = d3.scaleLinear()
+			var rscale = d3.scaleSqrt()
 		  .domain([0,d3.max(data, function(d) { return +d.value;} )])
-		  .range([3,20]);
+		  .range([0,20]);
 
 
 			for (var i = 0; i < centers.length; i++){
-				colors.push(color(data[i].label));
+				colors.push(colorMap(data[i].label));
 				r.push(rscale(data[i].value));
 			}
 
@@ -425,6 +437,7 @@ for (var i = 0; i < data.colors.length; i++){
 	                return arc(interpolate(t));
 	            };
 	        });
+      console.log(circleData);
 			setTimeout(function(){flyCircle(circleData)},1000);
 
 
