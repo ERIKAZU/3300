@@ -690,7 +690,11 @@ color:#999">
         }
 
         // generate data for circles:
-        function gen_grid_data(cut_age) {
+        function gen_grid_data(cut_age,gender) {
+          var tot_lifetime = 81;
+          if (gender == "Male"){
+            tot_lifetime = 76;
+          }
           var pos_array = new Array();
           // circle pos is by its center
           var xpos = radius;
@@ -851,10 +855,12 @@ color:#999">
         // all circles are grey at start
         var radius = 15;
         var spacing = 45;
-        var cut_age = 100;
-        var grid_data = gen_grid_data(cut_age);
+        var cut_age = 20;
+        var grid_data = gen_grid_data(cut_age,gender);
+
         // var dropping = gen_green_data(cut_age);
         //console.log(dropping);
+
         showCircles(grid_data);
 
 
@@ -878,7 +884,6 @@ color:#999">
           }
         }
 
-
         // event listener:
         // age slider listener
         d3.select("#age_slider").on("change", function() {
@@ -889,16 +894,12 @@ color:#999">
           // update text on the slider
           document.getElementById("age_slider_text").innerHTML = "Your age: " + age;
 
-          // fake data
-          var x = getRandomInt(100);
-
-          var grid_data = gen_grid_data(x);
+          var grid_data = gen_grid_data(age,gender);
           // var dropping = gen_green_data(x);
           //console.log(x);
           showCircles(grid_data);
           // drop_rand(dropping);
         });
-
 
         // gender switch listener
         d3.select("#gender_box").on("change", update_gender);
@@ -917,10 +918,9 @@ color:#999">
           var gender = document.getElementById("gender_box").value;
           // update text on the slider
           document.getElementById("gender_slider_text").innerHTML = "Your gender: " + getGender();
-          // fake data
-          var x = getRandomInt(100);
 
-          var grid_data = gen_grid_data(x);
+
+          var grid_data = gen_grid_data(age,gender);
           showCircles(grid_data);
         }
 
