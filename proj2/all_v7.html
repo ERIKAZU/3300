@@ -144,6 +144,14 @@ color:#999">
         text-anchor: middle;
         text-align: center;
       }
+
+      .text_outline{
+        text-shadow:
+         -2px -2px 0 white,
+         2px -2px 0 white,
+         -2px 2px 0 white,
+         2px 2px 0 white;
+      }
     </style>
 
     <body>
@@ -159,6 +167,8 @@ color:#999">
         svg.append("g").attr("class", "labelName");
         svg.append("g").attr("class", "labelValue");
         svg.append("g").attr("class", "lines");
+
+
 
         var width = 960,
           height = 450,
@@ -184,7 +194,7 @@ color:#999">
               "Alzheimer's Disease"
             ])
           .range(
-            ["#B9B8B1",
+            ["#E8E8E8",
               "#ff8c00",
               "#8a89a6",
               "#7b6888",
@@ -335,11 +345,12 @@ color:#999">
         function printAge(ageString) {
           svg.selectAll(".centerText").remove();
           var text_center = svg.append("text")
-            .attr("class", "centerText")
+            .attr("class", "centerText text_outline")
             .attr('x', 0).attr('y', 20)
             .text("Age:" + ageString)
             .style("text-anchor", "middle")
             .style("font-size", "50px")
+            .style("font-weight","800px")
             .style("fill", "black");
         }
 
@@ -348,7 +359,7 @@ color:#999">
         function center_circle(prev_r, cur_r) {
           var center_circle = svg.append("circle")
             .attr('cx', 0).attr('cy', 0)
-            .attr("fill", "#CED3D3")
+            .attr("fill", "#B9B9B9")
             .attr("r", prev_r)
             .transition()
             .duration(500)
@@ -731,7 +742,7 @@ color:#999">
                 pos_array.push({
                   x: xpos,
                   y: ypos,
-                  color: "pink",
+                  color: "#ffcc00",
                   category: assignCategory(curID),
                   age: curID
                 })
@@ -742,21 +753,10 @@ color:#999">
             xpos = radius;
             ypos += spacing;
           }
-          //shuffle array
-          //shuffleArray(pos_array);
-          //console.log(pos_array);
+
           return pos_array;
         }
-        //
-        // // //https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array/2450976#2450976
-        // function shuffleArray(array) {
-        //   for (var i = array.length - 1; i > 0; i--) {
-        //     var j = Math.floor(Math.random() * (i + 1));
-        //     var temp = array[i];
-        //     array[i] = array[j];
-        //     array[j] = temp;
-        //   }
-        // }
+
 
         // given an actual age (e.g. 24), return the age group ([20, 24])
         function getAgeGroupRange(age) {
@@ -817,10 +817,9 @@ color:#999">
                   return (dot.category == d.category && d.category != -1) // select all that are in the same  category with the circle you are hovering on
                 })
                 .transition()
-                .style("fill", "pink");
-              console.log("Rui mouse over!");
-              console.log(d.category);
-              console.log(d.age);
+                .style("fill", "#ffcc00");
+              // console.log(d.category);
+              // console.log(d.age);
               if (d.category != -1) {
                 // show tooltip
                 tip_label.show(d);
@@ -841,7 +840,6 @@ color:#999">
               tip_label.hide(d);
             })
             .on('click', function(d) {
-              console.log("Rui click!");
               var ageGroup = getAgeGroupRange(d.age);
               var dropping = gen_dropping_data(ageGroup, getGender());
               drop_rand(dropping);
@@ -870,7 +868,6 @@ color:#999">
         svg2.call(tip_label);
 
         // define a filter on svg: that makes fancy effect when flying circles
-        // should we do this for plot 1??
         var defs = svg2.append('defs');
         var filter = defs.append('filter').attr('id', 'gooey');
         filter.append('feGaussianBlur')
@@ -902,10 +899,11 @@ color:#999">
             svg2.append("circle")
               .attr("cx", s.x)
               .attr("cy", s.y)
-              .attr("r", 12)
+              .attr("r", 15)
               .style("fill", s.color)
               .transition().duration(1000)
               .attr("cy", s.y + getRandomInt(300))
+              .attr("r", 10)
               .delay(getRandomInt(1000))
               // .style("fill", "#CED3D3")
               .transition().duration(300)
