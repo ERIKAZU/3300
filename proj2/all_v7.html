@@ -552,7 +552,6 @@ color:#999">
 
       <style>
         /* reference on nice switch: */
-
         /* https://www.w3schools.com/howto/howto_css_switch.asp */
 
         .switch_out {
@@ -561,15 +560,12 @@ color:#999">
           width: 60px;
           height: 34px;
         }
-
         /* Hide default HTML checkbox */
-
         .switch_out input {
           display: none;
         }
 
         /* The slider */
-
         .switch {
           position: absolute;
           cursor: pointer;
@@ -581,7 +577,6 @@ color:#999">
           -webkit-transition: .4s;
           transition: .4s;
         }
-
         .switch:before {
           position: absolute;
           content: "";
@@ -609,11 +604,9 @@ color:#999">
         }
 
         /* Rounded sliders */
-
         .switch.round {
           border-radius: 34px;
         }
-
         .switch.round:before {
           border-radius: 50%;
         }
@@ -628,7 +621,6 @@ color:#999">
         }
 
         /* Creates a small triangle extender for the tooltip */
-
         .d3-tip:after {
           box-sizing: border-box;
           display: inline;
@@ -642,7 +634,6 @@ color:#999">
         }
 
         /* Style northward tooltips differently */
-
         .d3-tip.n:after {
           margin: -1px 0 0 0;
           top: 100%;
@@ -651,10 +642,6 @@ color:#999">
       </style>
 
       </head>
-
-
-
-
 
       <div class="slider_div span_line">
         <p id="age_slider_text">Your age: 20</p>
@@ -672,11 +659,8 @@ color:#999">
 
       </br>
 
-
       <div id="ij">
-
       </div>
-
 
       <script>
         var svg2 = d3.select("#ij")
@@ -786,7 +770,6 @@ color:#999">
             .enter().append("g")
             .attr("class", "row1");
 
-
           var column1 = row1.selectAll(".circle_org")
             .data(function(d) {
               return d;
@@ -806,9 +789,9 @@ color:#999">
             .style("stroke", "#eee");
 
 
-            //define mouse hover event for circle by category
           //https://stackoverflow.com/questions/35608147/selecting-all-elements-in-one-group-of-a-categorical-variable
-
+          //define mouse hover event for circle by category
+          //on mouse hoover, highlight all the color dots representing that age category
           svg2.selectAll(".circle_org")
             .on('mouseover', function(d) {
               svg2.selectAll(".circle_org")
@@ -817,7 +800,10 @@ color:#999">
                 })
                 .transition()
                 .style("fill", "pink");
-              tip_label.show(d); // show tooltip
+              if (d.category != -1) {
+                // show tooltip
+                tip_label.show(d);
+              }
             })
             .on('mouseout', function(d) {
               svg2.selectAll(".circle_org")
@@ -844,11 +830,9 @@ color:#999">
           .attr('class', 'd3-tip')
           .offset([-10, 0])
           .html(function(d) {
-            return "<strong>Frequency:</strong> <span style='color:red'>" + d.category + "</span>";
-          })
+            return "<strong>Age Group:</strong> <span style='color:red'>" + d.category + "</span>";
+          });
         svg2.call(tip_label);
-
-
 
         // define a filter on svg: that makes fancy effect when flying circles
         // should we do this for plot 1??
