@@ -712,7 +712,7 @@ color:#999">
                 x: xpos,
                 y: ypos,
                 color: assignColor(cut_age, curID),
-                category: column
+                category: assignCategory(curID)
               })
               curID++;
               xpos += spacing;
@@ -722,6 +722,19 @@ color:#999">
           }
           //console.log(pos_array);
           return pos_array;
+        }
+
+        var ageGroup = [[15,19],[20,24],[25,34],[35,44],[45,54],[55,64],[65,74],[75,100]];
+        // assign category to circles based on ageGroup
+        function assignCategory(curID){
+          for (var i = 0; i < ageGroup.length; i++){
+
+            if (curID >= ageGroup[i][0] && curID <= ageGroup[i][1]){
+              return i;
+              break;//need this??
+            }
+          }
+          return -1;// not assign to group, will not be highlighted
         }
 
         // get all the falling circles data
@@ -800,7 +813,7 @@ color:#999">
             .on('mouseover', function(d) {
               svg2.selectAll(".circle_org")
                 .filter(function(dot) {
-                  return (dot.category == d.category) // select all that are in the same  category with the circle you are hovering on
+                  return (dot.category == d.category && d.category != -1) // select all that are in the same  category with the circle you are hovering on
                 })
                 .transition()
                 .style("fill", "pink");
