@@ -5,9 +5,9 @@
 </head>
 
 <style>
-circle {
+/* circle {
   fill: orange;
-}
+} */
 </style>
 
 <body>
@@ -51,10 +51,28 @@ var width = 400, height = 400
         return time_use_r_scale(d.Duration);
       }))
       .on('tick', ticked);
-  //
-  // for (var c = 0; c < data.length; c++){
-  //   d. =
-  // }
+
+
+      var bubble_colorMap = d3.scaleOrdinal()
+        .domain(
+          ["Personal Care, including Sleep",
+            "Household Activities",
+            "Working",
+            "Education",
+            "Leisure and Sports",
+            "Purchasing",
+            "Phone Calls, E-mail"
+          ])
+        .range(
+          [
+            "#ff8c00",
+            "#8a89a6",
+            "#7b6888",
+            "#6b486b",
+            "#a05d56",
+            "#D58054",
+            "#6F608E"
+          ]);
 
   function ticked() {
     var u = d3.select('svg')
@@ -68,10 +86,13 @@ var width = 400, height = 400
       })
       .merge(u)
       .attr('cx', function(d) {
-        return d.x
+        return d.x;
       })
       .attr('cy', function(d) {
-        return d.y
+        return d.y;
+      })
+      .style('fill', function(d) {
+        return bubble_colorMap(d.Activity);
       })
 
     u.exit().remove()
