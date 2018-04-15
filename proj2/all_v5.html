@@ -916,10 +916,18 @@ color:#999">
             .on('mouseout', function(d){
               svg2.selectAll(".circle_org")
               .filter(function(dot){
-                return (dot.category == d.category)
-              })
-              .transition()
-              .style("fill",d.color)
+                return (dot.category == d.category && dot.color == "#CED3D3")
+              }).transition()
+                .style("fill","#CED3D3");
+
+                svg2.selectAll(".circle_org")
+                .filter(function(dot){
+                  return (dot.category == d.category && dot.color == "#B5C45E")
+                }).transition()
+                  .style("fill","#B5C45E");
+
+
+
               tip_label.hide(d);
             });
 
