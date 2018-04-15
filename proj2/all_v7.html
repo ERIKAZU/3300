@@ -755,7 +755,7 @@ color:#999">
           }
         }
 
-        var ageGroup = [[15,19],[20,24],[25,34],[35,44],[45,54],[55,64],[65,74],[75,100]];
+
 
         // given an actual age (e.g. 24), return the age group ([20, 24])
         function getAgeGroupRange(age) {
@@ -770,6 +770,7 @@ color:#999">
 
         // assign category to circles based on ageGroup
         function assignCategory(curID){
+          var ageGroup = [[15,19],[20,24],[25,34],[35,44],[45,54],[55,64],[65,74],[75,100]];
           for (var i = 0; i < ageGroup.length; i++){
             if (curID >= ageGroup[i][0] && curID <= ageGroup[i][1]){
               return i;
@@ -816,6 +817,9 @@ color:#999">
                 })
                 .transition()
                 .style("fill", "pink");
+              console.log("Rui mouse over!");
+              console.log(d.category);
+              console.log(d.age);
               if (d.category != -1) {
                 // show tooltip
                 tip_label.show(d);
@@ -892,7 +896,6 @@ color:#999">
 
         showCircles(grid_data);
 
-
         function drop_rand(dropping) {
           var num_to_drop = Math.floor(0.3 * dropping.length);
           var num_to_drop = dropping.length;
@@ -923,7 +926,7 @@ color:#999">
           // update text on the slider
           document.getElementById("age_slider_text").innerHTML = "Your age: " + age;
 
-          var grid_data = gen_grid_data(age,gender);
+          var grid_data = gen_grid_data(age, gender);
           showCircles(grid_data);
 
           // var ageGroup = getAgeGroupRange(age); //[int, int]
