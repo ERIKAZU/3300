@@ -695,6 +695,7 @@ color:#999">
           if (gender == "Male"){
             tot_lifetime = 76;
           }
+
           var pos_array = new Array();
           // circle pos is by its center
           var xpos = radius;
@@ -703,8 +704,10 @@ color:#999">
           var curID = 1;
           // these two for loops may be changed to while to include curID requirement (e.g. need 76 circles in total)
           for (var row = 0; row < 10; row++) {
+            if(curID > tot_lifetime) break;
             pos_array.push(new Array());
             for (var column = 0; column < 10; column++) {
+              if(curID > tot_lifetime) break;
               pos_array[row].push({
                 x: xpos,
                 y: ypos,
@@ -856,7 +859,7 @@ color:#999">
         var radius = 15;
         var spacing = 45;
         var cut_age = 20;
-        var grid_data = gen_grid_data(cut_age,gender);
+        var grid_data = gen_grid_data(cut_age,"Female");
 
         // var dropping = gen_green_data(cut_age);
         //console.log(dropping);
@@ -890,7 +893,7 @@ color:#999">
           svg2.selectAll("*").remove();
           // need to get age and gender together
           var age = document.getElementById("age_slider").value;
-          var gender = document.getElementById("gender_box").value;
+          var gender = getGender();
           // update text on the slider
           document.getElementById("age_slider_text").innerHTML = "Your age: " + age;
 
@@ -903,6 +906,7 @@ color:#999">
 
         // gender switch listener
         d3.select("#gender_box").on("change", update_gender);
+
         function getGender() {
           if (d3.select("#gender_box").property("checked")) {
             return "Male";
@@ -915,7 +919,7 @@ color:#999">
         function update_gender() {
           svg2.selectAll("*").remove();
           var age = document.getElementById("age_slider").value;
-          var gender = document.getElementById("gender_box").value;
+          var gender = getGender();
           // update text on the slider
           document.getElementById("gender_slider_text").innerHTML = "Your gender: " + getGender();
 
