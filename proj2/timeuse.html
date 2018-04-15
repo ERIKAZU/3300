@@ -1,0 +1,279 @@
+<html>
+<head>
+<title>Activities breakdown</title>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
+
+<style>
+body {
+  font: 8px sans-serif;
+}
+
+svg {
+  margin: 1px;
+  display: block;
+  border-width: 4;
+}
+
+path.arc {
+  opacity: 0.9;
+  transition: opacity 0.5s;
+}
+
+path.arc:hover {
+  opacity: 0.7;
+}
+
+.axis line, .axis circle  {
+  stroke: white;
+  stroke-width: 1px
+}
+
+.axis circle {
+  fill: none;
+}
+
+.r.axis text {
+  text-anchor: end
+}
+
+
+</style>
+</head>
+
+<body>
+
+  <div class="slider_div span_line">
+        <p id="age_slider_text">Your age: 20</p>
+        <span><input type="range" min="10" max="80" value="20" step="10" class="slider" id="age_slider"></span>
+      </div>
+      </br>
+
+      <div>
+        <p id="gender_slider_text">Your gender: Female</p>
+        <label class="switch_out">
+      <input type="checkbox" id="gender_box">
+      <div class="switch round"></div>
+       </label>
+      </div>
+<div id = "arc"></div>
+<div id = "ij"></div>
+
+	<script>
+
+const width = 960,
+height = 500,
+chartRadius = height / 2 - 40;
+margin = {right:50, left:50};
+
+var svg = d3.select("#arc").append("svg")
+.attr("width", width)
+.attr("height", height)
+.append("g")
+.attr("border", 2)
+.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+
+var color = d3.scaleOrdinal()
+.range(["#81C7D4", "#F2CD5D", "#56ABD8", "#7BD389", "#A44A3F", "#86C166", "#854D27", "#AC84B5", "#C84630", "#A8A8A8","#001A23", "#FF934F", "#DA40A7", "#CF8BA9", "#6A4C9C", "#C84630", "#2F4858", "#5398BE"]);
+
+var defs = svg.append("defs");
+var linearGradient = defs.append("linearGradient")
+.attr("id", "linear-gradient");
+
+linearGradient.selectAll("stop")
+.data(color.range())
+.enter().append("stop")
+.attr("offset", function(d,i) { return  i/(color.range().length-1);})
+.attr("stop-color", function(d) { return d;});
+
+
+const PI = Math.PI,
+arcMinRadius = 20,
+arcPadding = 18,
+labelPadding = -5,
+numTicks = 8;
+
+
+var svg2 = d3.select("#ij")
+.append("svg").attr("width", 500).attr("height", 800).attr("border", 2);
+//var gender
+
+//var age
+
+        function getAgeGroupRange(age) {
+          var ageGroup = [[15,19],[20,24],[25,34],[35,44],[45,54],[55,64],[65,74],[75,100]];
+          for (var i = 0; i < ageGroup.length; i++){
+            if (age >= ageGroup[i][0] && age <= ageGroup[i][1]){
+              return ageGroup[i].toString().replace(",",'');
+            }
+          }
+          return [0,14];// not assign to group, will not be highlighted
+        }
+
+        // event listener:
+        // age slider listener
+        d3.select("#age_slider").on("change", function() {
+          svg2.selectAll("*").remove();
+          // need to get age and gender together
+          var age = document.getElementById("age_slider").value;
+          var gender = getGender();
+          // update text on the slider
+          document.getElementById("age_slider_text").innerHTML = "Your age: " + age;
+
+          // var ageGroup = getAgeGroupRange(age); //[int, int]
+          // var dropping = gen_dropping_data(ageGroup, gender);
+          // drop_rand(dropping);
+        });
+
+        // gender switch listener
+        d3.select("#gender_box").on("change", update_gender);
+
+        function getGender() {
+          if (d3.select("#gender_box").property("checked")) {
+            return "M";
+          } else {
+            return "F";
+          }
+        }
+        var gender;
+        var age = document.getElementById("age_slider").value;
+        // update by gender
+        function update_gender() {
+          svg2.selectAll("*").remove();
+          var age = document.getElementById("age_slider").value;
+          gender = getGender();
+          console.log(gender);
+          // update text on the slider
+          document.getElementById("gender_slider_text").innerHTML = "Your gender: " + getGender();
+          // var grid_data = gen_grid_data(age,gender);
+          // showCircles(grid_data);
+        }
+
+
+var data;
+d3.csv("timeuse.csv", (error, rawdata) => {
+  console.log(rawdata)
+  data = rawdata.filter(function(d) {
+     gender = getGender();
+     console.log(getAgeGroupRange(age))
+     return (d.Gender == gender && d.Age == getAgeGroupRange(age));
+   });
+
+console.log(data);
+
+  //function(rawdata){
+    //var newdata;
+    //rawdate["gender"]=gender
+    //rawdata["Age"] = age
+  //}
+
+
+// var newdata = rawdata.filter(
+//   function(d) {
+//     return (d.Gender === gender);
+
+//   });
+
+
+// document.write(newdata);
+
+
+  scale = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.Duration) * 1.5])
+    .range([0, 0.5 * PI]);
+
+  ticks = scale.ticks(numTicks).slice(0, -1);
+  keys = data.map((d, i) => d.Activity);
+  //number of arcs
+  const numArcs = keys.length;
+  const arcWidth = (chartRadius - arcMinRadius - numArcs * arcPadding) / numArcs;
+
+  // var filter = g.append('defs').append('filter').attr('id','glow'),
+  //             feGaussianBlur = filter.append('feGaussianBlur').attr('stdDeviation','2.5').attr('result','coloredBlur'),
+  //             feMerge = filter.append('feMerge'),
+  //             feMergeNode_1 = feMerge.append('feMergeNode').attr('in','coloredBlur'),
+  //             feMergeNode_2 = feMerge.append('feMergeNode').attr('in','SourceGraphic');
+
+
+  radialAxis = svg.append("g")
+    .attr("class", "r axis")
+    .selectAll("g")
+    .data(data)
+    .enter()
+    .append("g");
+
+  radialAxis.append("circle")
+    .attr("r", (d, i) => getOuterRadius(i) + arcPadding);
+
+  // radialAxis.append("text")
+  //   .attr("x", labelPadding)
+  //   .attr("y", (d, i) => -getOuterRadius(i))
+  //   .text(d => d.Type);
+
+  
+  axialAxis = svg.append("g")
+    .attr("class", "a axis")
+    .selectAll("g")
+    .data(ticks)
+    .enter().append("g")
+    .attr('transform', d => 'rotate(' + (rad2deg(scale(d)) - 90) + ')');
+        // .attr("filter", "url(#glow)");
+
+  axialAxis.append('line')
+    .attr('x2', chartRadius);
+
+  axialAxis.append('text')
+    .attr('x', chartRadius -10)
+    .style('text-anchor', d => (scale(d) >= PI && scale(d) < 2 * PI ? 'end' : null))
+    .attr('transform', d => 'rotate(' + (90 - rad2deg(scale(d))) + ',' + (chartRadius + 10) + ',0)')
+    .text(d => d.Activity);
+  
+  var arcs = svg.append('g') 
+    .attr('class', 'data');
+    
+
+  
+  data.forEach( function (d, i) {
+    // console.log("for each")
+    // console.log(d)
+  var arc = d3.arc()
+      .innerRadius(getInnerRadius(i))
+      .outerRadius(getOuterRadius(i)+2.5*arcWidth)
+      .startAngle(0)
+      .endAngle(scale(d.Duration));
+    // console.log(arc(d))
+    arcs.append("path")
+      .attr("d", arc(d))
+      .style("fill", color(i));
+  })
+
+  function arcTween(d, i) {
+    interpolate = d3.interpolate(0, d.Duration);
+    console.log(interpolate)
+    return t => arc(interpolate(t), i);
+  }
+
+
+  function rad2deg(angle) {
+    return angle * 180 / PI;
+  }
+
+  function getInnerRadius(index) {
+    return arcMinRadius + (numArcs - (index + 1)) * (arcWidth + arcPadding);
+  }
+
+  function getOuterRadius(index) {
+    return getInnerRadius(index) + arcWidth;
+  }
+
+
+	
+	});	
+
+	</script>
+
+
+</body>
+</html>
