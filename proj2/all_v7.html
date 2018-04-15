@@ -831,9 +831,12 @@ color:#999">
           .html(function(d) {
             var ageText = "";
             if (d.category != -1) {
-              //console.log(ageGroup[d.category][0].toString());
-              ageText = ageGroup[d.category][0].toString() + "-" + ageGroup[d.category][1].toString();
+              ageText = ageGroup[d.category][0].toString() + " - " + ageGroup[d.category][1].toString();
             }
+            if (d.category == ageGroup.length-1) {
+              ageText = " > " + ageGroup[d.category][0].toString();
+            }
+            console.log(d.category);
             return "<strong>Age:</strong> <span style='color:red'>" + ageText + "</span>";
           });
         svg2.call(tip_label);
