@@ -1177,6 +1177,7 @@ color:#999">
                     })
                     .transition()
                     .style("opacity", 1);
+                  p3_highlight_legend(d, 400, 430);
                 }
               )
               .on('mouseout',
@@ -1262,6 +1263,40 @@ color:#999">
                 .style("font-weight","300px")
                 .style("fill", "white")
                 .style("opacity","0.7");
+
+            }
+
+            function p3_highlight_legend(selected_data, x, y_start){
+              console.log("A");
+              svg3.selectAll(".p3_highlight_legend").remove();
+
+              var p3_highlight_legend_group = svg3.append("g")
+                    .attr("transform", "translate("+ x +","+ y_start +")");
+
+              var p3_legends_highlight = p3_highlight_legend_group.selectAll(".p3_highlight_legend")
+              .data(filtered_gender_age_data)
+              .enter();
+
+
+              p3_legends_highlight.append("text")
+                .attr("class", "p3_highlight_legend")
+                .attr('x', 0).attr('y', function(d,i)
+                {return i * 30;})
+                .text(function(d){
+                  if (d.selected){
+                    console.log("here");
+                    return d.Activity   + ": " + d.Duration   + "hr/day";
+                  }
+                  else return "";
+                }
+              )
+                .style("text-anchor", "middle")
+                .style("font-size", "20px")
+                .style("font-weight","800px")
+                .style("fill", function(d){
+                  return bubble_colorMap(d.Activity);
+                })
+                .style("opacity",1);
 
             }
 
