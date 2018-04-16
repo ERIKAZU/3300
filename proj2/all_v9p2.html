@@ -563,17 +563,21 @@ color:#999">
 
               // remove all pie char elements
               svg.selectAll(".center_circle").remove();
-              svg.selectAll(".centerText").remove();
-
+              svg.selectAll(".centerText").attr("visibility", "hidden");
               svg.selectAll(".labelName").attr("visibility", "hidden");
-              // svg.selectAll(".slices").remove();
+              svg.selectAll(".slices").attr("visibility", "hidden");
               // svg.selectAll(".labelValue").remove();
-              // svg.selectAll(".lines").remove();
+              svg.selectAll(".lines").attr("visibility", "hidden");
+              d3.select("#play_ani_text").node().remove();
 
             }, 3000);
+          } else {
+            //svg.selectAll(".center_circle").attr("visibility", "visible");
+            svg.selectAll(".centerText").attr("visibility", "visible");
+            svg.selectAll(".labelName").attr("visibility", "visible");
+            svg.selectAll(".lines").attr("visibility", "visible");
+            svg.selectAll(".slices").attr("visibility", "visible");
           }
-
-
           /**************************************************************/
 
           // display category info when mouse hoover over arc slice
