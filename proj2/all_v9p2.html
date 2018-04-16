@@ -147,6 +147,14 @@ color:#999">
          -2px 2px 0 white,
          2px 2px 0 white;
       }
+
+      .text_outline_1{
+        text-shadow:
+         -1px -1px 0 white,
+         1px -1px 0 white,
+         -1px 1px 0 white,
+         1px 1px 0 white;
+      }
     </style>
 
     <body>
@@ -490,22 +498,22 @@ color:#999">
 
             var text_upper = svg.append("text")
               .attr("class", "centerText")
-              .attr('x', 0).attr('y', -20)
+              .attr('x', 0).attr('y', -28)
               .text("accumulative deaths:")
               .style("text-anchor", "middle")
-              .style("font-size", "30px")
-              .style("font-weight","300px")
-              .style("fill", "#809055");
+              .style("font-size", "20px")
+              .style("font-weight","600px")
+              .style("fill", "#BC6F6B");
 
 
             var text_down = svg.append("text")
               .attr("class", "centerText")
-              .attr('x', 0).attr('y', 50)
+              .attr('x', 0).attr('y', 64)
               .text(function(){return total_dead_num_list[idx];})
               .style("text-anchor", "middle")
-              .style("font-size", "30px")
-              .style("font-weight","300px")
-              .style("fill", "#826A5E");
+              .style("font-size", "32px")
+              .style("font-weight","600px")
+              .style("fill", "#BC6F6B");
         }
 
         // Increase the size of the center circle per transition as age goes up
