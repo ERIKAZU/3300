@@ -1229,10 +1229,10 @@ color:#999">
                   }
               )
               .on('click',
-                function(d) {
-                  //console.log(d);
-                  p3_highlight_legend(d, 400, 430, d.Activity);
-                }
+                // function(d) {
+                //   //console.log(d);
+                //   p3_highlight_legend(d, 400, 430, d.Activity);
+                // }
               );
             // this can manually speed up the force simulation
             // for (var i = 100; i > 0; --i) { simulation.tick();}
@@ -1275,13 +1275,29 @@ color:#999">
 
               // console.log("here");
               var first_line = filtered_gender_age_data[0];
+              var format_gender = d3.scaleOrdinal()
+                .domain(
+                  ["F","M"])
+                .range(
+                  ["Female",
+                    "Male"]);
+
+
+              function format_age(csvAge){
+                  if (csvAge.length == 4){
+                    return csvAge.substring(0,2) + "-" +csvAge.substring(2,4);
+                  }
+                  else {
+                    return csvAge + "+";
+                  }
+              }
 
               p3_legends.append("text")
                 .attr("class", "p3_legend_title")
                 .attr('x', 0).attr('y',
                 -40)
                 .text(function(){
-                  return first_line.Gender   + ", Age" + first_line.Age;
+                  return format_gender(first_line.Gender)   + ", Age: " + format_age(first_line.Age);
                 }
               )
                 .style("text-anchor", "middle")
@@ -1295,6 +1311,9 @@ color:#999">
                 .attr('x', 0).attr('y', function(d,i)
                 {return i * 30;})
                 .text(function(d){
+                  if(d == null || d == undefined) {
+                    return;
+                  }
                   return d.Activity   + ": " + d.Duration   + "hr/day";
                 }
               )
@@ -1307,13 +1326,13 @@ color:#999">
             }
 
             function p3_highlight_legend(selected_data, x, y_start, activityName){
-              console.log("A");
+              // console.log("A");
               svg3.selectAll(".p3_highlight_legend").remove();
 
               // if(selected_data == null || selected_data == undefined) {
               //   return;
               // }
-              console.log(filtered_gender_age_data);
+              console.log(selected_data);
               var p3_highlight_legend_group = svg3.append("g")
                     .attr("transform", "translate("+ x +","+ y_start +")");
 
