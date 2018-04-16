@@ -1173,7 +1173,6 @@ color:#999">
                 function(d) {
                   return time_use_r_scale(d.Duration);
                 })
-
               .attr('cx', function(d) {
                 return d.x - 300;
               })
@@ -1193,11 +1192,14 @@ color:#999">
                   svg3.selectAll("circle")
                     .filter(function(dot) {
                       // select all that are in the same category with the circle you are hovering on
+                      if (dot.Activity == d.Activity) {
+                        dot.selected = true;
+                      }
                       return (dot.Activity == d.Activity)
                     })
                     .transition()
                     .style("opacity", 1);
-                  p3_highlight_legend(d, 400, 430);
+                  p3_highlight_legend(d, 400, 430, d.Activity);
                 }
               )
               .on('mouseout',
@@ -1213,8 +1215,8 @@ color:#999">
               )
               .on('click',
                 function(d) {
-                  console.log(d);
-                  p3_highlight_legend(d, 400, 430);
+                  //console.log(d);
+                  p3_highlight_legend(d, 400, 430, d.Activity);
                 }
               );
             // this can manually speed up the force simulation
@@ -1224,8 +1226,6 @@ color:#999">
             function ticked() {
               //console.log(filtered_gender_age_data);
               var u = svg3.selectAll('circle');
-              //console.log(typeof(u));
-              //console.log(u);
 
               u.data(filtered_gender_age_data)
                 .enter()
@@ -1242,7 +1242,6 @@ color:#999">
 
             }
             //u.exit().remove();
-
             // add legend texts to the bubbles by side
             p3_add_legend(filtered_gender_age_data, 400, 430);
 
@@ -1292,7 +1291,7 @@ color:#999">
 
             }
 
-            function p3_highlight_legend(selected_data, x, y_start){
+            function p3_highlight_legend(selected_data, x, y_start, activityName){
               console.log("A");
               svg3.selectAll(".p3_highlight_legend").remove();
 
@@ -1304,17 +1303,17 @@ color:#999">
                     .attr("transform", "translate("+ x +","+ y_start +")");
 
               var p3_legends_highlight = p3_highlight_legend_group.selectAll(".p3_highlight_legend")
-              .data(filtered_gender_age_data)
-              .enter();
+                    .data(filtered_gender_age_data)
+                    .enter();
 
               p3_legends_highlight.append("text")
                 .attr("class", "p3_highlight_legend")
                 .attr('x', 0)
                 .attr('y', function(d,i) {return i * 30;})
                 .text(function(d){
-                  console.log(d.Activity + ":" + d.selected);
-                  if (d.selected){
-                    console.log("here");
+                  //console.log(d.Activity + ":" + d.selected);
+                  if (d.Activity == activityName){
+                    //console.log("here");
                     return d.Activity   + ": " + d.Duration + "hr/day";
                   }
                   else return "";
@@ -1328,9 +1327,6 @@ color:#999">
                 })
                 .style("opacity",1);
             }
-
-
-
 
           });
         }
