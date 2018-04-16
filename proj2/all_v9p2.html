@@ -85,7 +85,7 @@ color:#999">
 
 
     <p class="intro_text"><span class="Variant">Overivew</span></p>
-    <p class="intro_text"> We first want to give you an overview on the number of deaths in 2015, and how the major death causes change through different age groups. The white circle in the center represents the accumulation of people passed away by the certain age. </p>
+    <p class="intro_text"> We first want to give you an overview on the number of deaths in 2015, and how the major death causes change among different age groups. The white circle in the center represents the accumulation of people passed away by the certain age. </p>
 
     <!-- reference:http://bl.ocks.org/michellechandra/0b2ce4923dc9b5809922 -->
   </div>
@@ -166,11 +166,11 @@ color:#999">
         // draw the play button, on click, disappear
         function playButton(svg,  x, y) {
             // console.log("new button");
-            var messageText = svg.append("text")
-            .attr("id", "play_ani_text")
-            .attr("x", x + 20)
-            .attr("font-size","20px")
-            .attr("y", y).text("play animation");
+            // var messageText = svg.append("text")
+            // .attr("id", "play_ani_text")
+            // .attr("x", x + 20)
+            // .attr("font-size","20px")
+            // .attr("y", y).text("play animation");
 
               var button = svg.append("g")
                   .attr("transform", "translate("+ x +","+ y +")");
@@ -194,8 +194,8 @@ color:#999">
                         .style("fill","white")
                         .transition(100).style("fill","steelblue");
                     d3.select(this).remove();
-                    var text_to_remove = d3.select("#play_ani_text").node();
-                    text_to_remove.remove();
+                    // var text_to_remove = d3.select("#play_ani_text").node();
+                    // text_to_remove.remove();
 
                     // remove center explain text in svg
                     svg.selectAll(".p1_explain_texts").remove();
@@ -210,8 +210,8 @@ color:#999">
         // display the explain text, on click of play button, disappear
         function p1_add_text(svg,  x, y) {
 
-          var text_to_add = ["2712492 U.S.residents died in 2015.","The top 5 major causes overall are:",
-          "Heart Disease, Malignant Neoplasms, Chronic Low. Respiratory Disease","Unintentional Injury and Cerebrovascular"];
+          var text_to_add = ["2712492 U.S. residents died in 2015.","~27% of them were under 55 years old.","The top 5 major causes overall are:",
+          "Heart Disease, Malignant Neoplasms, Chronic Low. Respiratory Disease","Unintentional Injury and Cerebrovascular.","Click the button to play animation."];
 
             var p1_explain_text = svg.append("g")
                   .attr("transform", "translate("+ x +","+ y +")");
@@ -565,7 +565,7 @@ color:#999">
               //console.log(pieAnimDuration);
               // re-show explain text and play
               playButton(svg_box, 960/2 ,300);
-              p1_add_text(svg_box, 960/2 ,500/2);
+              p1_add_text(svg_box, 960/2 ,100);
 
               // remove all pie char elements
               svg.selectAll(".center_circle").remove();
@@ -574,7 +574,7 @@ color:#999">
               svg.selectAll(".slices").attr("visibility", "hidden");
               // svg.selectAll(".labelValue").remove();
               svg.selectAll(".lines").attr("visibility", "hidden");
-              d3.select("#play_ani_text").node().remove();
+              // d3.select("#play_ani_text").node().remove();
 
             }, 3000);
           } else {
@@ -1165,7 +1165,7 @@ color:#999">
             });
 
             var simulation = d3.forceSimulation(filtered_gender_age_data)
-              .force('charge', d3.forceManyBody().strength(20))
+              .force('charge', d3.forceManyBody().strength(15))
               .force('center', d3.forceCenter(width / 2, height / 2))
               .force('collision', d3.forceCollide().radius(function(d) {
                 return time_use_r_scale(d.Duration);
