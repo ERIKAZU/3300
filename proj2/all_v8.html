@@ -1034,6 +1034,11 @@ color:#999">
           return csv_age.substring(0,2).valueOf();
         }
 
+        // in csv it is "F/M"
+        function csv_gender_convert(gender_selected){
+          return gender_selected == "Male" ? "M" : "F";
+        }
+
 
         // var age_csv_map = d3.scale.ordinal()
         // 			.range(["1519","2024","","",])
