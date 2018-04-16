@@ -782,28 +782,37 @@ color:#999">
 
       <p class="intro_text"><span class="Variant">How much time is gone in your lifetime</span></p>
       <p class="intro_text"> Have you thought about how you would be spending your time left? When you select your age and gender, the grey dots represent how many years you have lived your life, whereas the green dots represent how much time you have left. In the U.S., the average lifetime is 81 years for women, and 76 years for men.</p>
-      <p class="intro_text"> Hover and click on an age range to explore how average people would spend their time during that age. How would you plan to spend your time for the rest of your life? </p>
+      <p class="intro_text"> Hover and click on an age range to explore how people are spending their time during that age. How would you plan to spend your time for the rest of your life? </p>
 
-      <div class="age_slider_div span_line">
-        <p id="age_slider_text">Your age: 20</p>
-        <span><input type="range" min="10" max="80" value="20" step="1" class="slider" id="age_slider"></span>
+      <div class="span_line" style="margin-bottom:30px;">
+
+        <div id="age_slider_div" style="width:40%; float:left;">
+          <p id="age_slider_text" style="
+          font-size: 15pt">Your age: 20</p>
+          <input type="range" min="10" max="80" value="20" step="1" class="slider" id="age_slider">
+        </div>
+
+      <!-- </br> -->
+
+        <div id="gener_switch_div" style="
+        width:40%; float:right;">
+          <p id="gender_slider_text" style="
+          font-size: 15pt;">Your gender: Female</p>
+          <label class="switch_out">
+            <input type="checkbox" id="gender_box">
+            <div class="switch round"></div>
+          </label>
+        </div>
+        <div style="clear:both"> </div>
+      </div>
+
       </div>
 
       </br>
 
-      <div class="gener_switch_div span_line">
-        <p id="gender_slider_text">Your gender: Female</p>
-        <label class="switch_out">
-          <input type="checkbox" id="gender_box">
-          <div class="switch round"></div>
-        </label>
-      </div>
-
-      </br>
-
-      <div class="dead_example span_line">
+      <!-- <div class="dead_example span_line">
         <p id="dead_example_text_id" class="dead_example_text"> someone died </p>
-      </div>
+      </div> -->
 
       <div id="ij">
       </div>
@@ -1347,7 +1356,7 @@ color:#999">
                 .text(function(d){
                   //console.log(d.Activity + ":" + d.selected);
                   if (d.Activity == activityName){
-                    //console.log("here");
+                    console.log(d.Activity);
                     return d.Activity   + ": " + d.Duration + "hr/day";
                   }
                   else return "";
