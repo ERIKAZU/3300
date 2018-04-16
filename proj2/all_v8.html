@@ -963,13 +963,15 @@ color:#999">
               tip_label.hide(d);
             })
             .on('click', function(d) {
-              var ageGroup = getAgeGroupRange(d.age);
-              var dropping = gen_dropping_data(ageGroup, getGender());
-              var gender_selected = getGender();
+              if(d.category != -1) {
+                var ageGroup = getAgeGroupRange(d.age);
+                var dropping = gen_dropping_data(ageGroup, getGender());
+                var gender_selected = getGender();
 
-              plot_time_use(gender_selected, ageGroup);
+                plot_time_use(gender_selected, ageGroup);
 
-              drop_rand(dropping);
+                drop_rand(dropping);
+              }
             });
         }
 
@@ -1110,20 +1112,24 @@ color:#999">
         // plot_time_use(selected_gender, selected_age_group);
 
         function plot_time_use(selected_gender, age_group) {
-          // console.log("plot_time_use() called");
           svg3.selectAll(".cluster_circle").remove();
           d3.csv("timeuse.csv", (error, rawData) => {
             var filtered_gender_age_data = rawData.filter(function(d) {
                return ( gender_convert_csv(d.Gender) == selected_gender
                  && age_convert_csv(d.Age) == age_group[0]);
             });
+            // insert additional attribute
+            for(item of filtered_gender_age_data) {
+              item["selected"] = false;
+            }
+            console.log(filtered_gender_age_data);
 
             var time_use_r_scale =
               d3.scaleSqrt()
                 .domain([d3.min(filtered_gender_age_data, function(d) {
                   return d.Duration;
                 }), d3.max(filtered_gender_age_data, function(d) {
-                  return +d.Duration;
+                  return + d.Duration;
                 })])
                 .range([0, 70]);
 
@@ -1134,9 +1140,52 @@ color:#999">
                 return time_use_r_scale(d.Duration);
               }))
               .on('tick', ticked);
-            for (var i = 100; i > 0; --i) {
-              simulation.tick();
-            }
+
+            var u = svg3
+              .selectAll('circle')
+              .data(filtered_gender_age_data);
+            u.enter()
+              .append('circle')
+              .attr("class", "cluster_circle")
+              .attr('r', function(d) {
+                return time_use_r_scale(d.Duration) > 5 ? time_use_r_scale(d.Duration) : 0;
+              })
+              .merge(u)
+              .attr('cx', function(d) {
+                return d.x - 300;
+              })
+              .attr('cy', function(d) {
+                return d.y + 300;
+              })
+              .style("opacity", 0.7)
+              .style('fill', function(d) {
+                return bubble_colorMap(d.Activity);
+              })
+              .on('mouseover',
+                function(d) {
+                  svg3.selectAll("circle")
+                    .filter(function(dot) {
+                      // select all that are in the same  category with the circle you are hovering on
+                      dot.selected = dot.Activity == d.Activity;
+                      return (dot.Activity == d.Activity)
+                    })
+                    .transition()
+                    .style("opacity", 1);
+                }
+              )
+              .on('mouseout',
+                function(d) {
+                  d.selected = false;
+                  svg3.selectAll("circle")
+                    .transition()
+                    .style("opacity", 0.8);
+                  }
+              )
+              .on('click',
+                function(d) { console.log(d); }
+              );
+            // this can manually speed up the force simulation
+            // for (var i = 100; i > 0; --i) { simulation.tick();}
 
             // animation/ force allign the circles
             function ticked() {
@@ -1146,8 +1195,6 @@ color:#999">
                 .data(filtered_gender_age_data);
 
               u.enter()
-                .append('circle')
-                .attr("class", "cluster_circle")
                 .attr('r', function(d) {
                   return time_use_r_scale(d.Duration) > 5 ? time_use_r_scale(d.Duration) : 0;
                 })
@@ -1157,38 +1204,11 @@ color:#999">
                 })
                 .attr('cy', function(d) {
                   return d.y + 300;
-                })
-                .style("opacity", 0.8)
-                .style('fill', function(d) {
-                  return bubble_colorMap(d.Activity);
-                })
-                .on('mouseover',
-                  function(d) {
-                    svg3.selectAll(".cluster_circle")
-                      .filter(function(dot) {
-                        return (dot.Activity == d.Activity) // select all that are in the same  category with the circle you are hovering on
-                      })
-                      .transition()
-                      .style("opacity", 1);
-                  }
-                )
-                .on('mouseout',
-                  function(d) {
-                  svg3.selectAll(".cluster_circle")
-                    .filter(function(dot) {
-                      return (dot.Activity == d.Activity) // select all that are in the same  category with the circle you are hovering on
-                    })
-                    .transition()
-                    .style("opacity", 0.8);
-                }
-                );
+                });
 
-                //svg2.selectAll(".cluster_circle")
-
-
-              //console.log(u);
-              u.exit().remove()
+              u.exit().remove();
             }
+            u.exit().remove();
           });
         }
       </script>
