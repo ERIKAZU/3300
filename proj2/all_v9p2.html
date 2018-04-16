@@ -1161,18 +1161,19 @@ color:#999">
                 return time_use_r_scale(d.Duration);
               }))
               .on('tick', ticked);
+            simulation.tick();
 
             var u = svg3
               .selectAll('circle')
               .data(filtered_gender_age_data);
             u.enter()
               .append('circle')
-              .attr("class", "cluster_circle")
+              //.attr("class", "cluster_circle")
               .attr('r',
                 function(d) {
                   return time_use_r_scale(d.Duration);
                 })
-              .merge(u)
+
               .attr('cx', function(d) {
                 return d.x - 300;
               })
@@ -1185,10 +1186,13 @@ color:#999">
               })
               .on('mouseover',
                 function(d) {
+                  if(d == null || d == undefined) {
+                    return;
+                  }
+                  d.selected = true;
                   svg3.selectAll("circle")
                     .filter(function(dot) {
-                      // select all that are in the same  category with the circle you are hovering on
-                      dot.selected = dot.Activity == d.Activity;
+                      // select all that are in the same category with the circle you are hovering on
                       return (dot.Activity == d.Activity)
                     })
                     .transition()
@@ -1198,6 +1202,9 @@ color:#999">
               )
               .on('mouseout',
                 function(d) {
+                  if(d == null || d == undefined) {
+                    return;
+                  }
                   d.selected = false;
                   svg3.selectAll("circle")
                     .transition()
@@ -1205,7 +1212,10 @@ color:#999">
                   }
               )
               .on('click',
-                function(d) { console.log(d); }
+                function(d) {
+                  console.log(d);
+                  p3_highlight_legend(d, 400, 430);
+                }
               );
             // this can manually speed up the force simulation
             // for (var i = 100; i > 0; --i) { simulation.tick();}
@@ -1213,11 +1223,12 @@ color:#999">
             // animation/ force allign the circles
             function ticked() {
               //console.log(filtered_gender_age_data);
-              var u = svg3
-                .selectAll('circle')
-                .data(filtered_gender_age_data);
+              var u = svg3.selectAll('circle');
+              //console.log(typeof(u));
+              //console.log(u);
 
-              u.enter()
+              u.data(filtered_gender_age_data)
+                .enter()
                 .attr('r', function(d) {
                   return time_use_r_scale(d.Duration);
                 })
@@ -1229,9 +1240,8 @@ color:#999">
                   return d.y + 300;
                 });
 
-              u.exit().remove();
             }
-            u.exit().remove();
+            //u.exit().remove();
 
             // add legend texts to the bubbles by side
             p3_add_legend(filtered_gender_age_data, 400, 430);
@@ -1286,6 +1296,10 @@ color:#999">
               console.log("A");
               svg3.selectAll(".p3_highlight_legend").remove();
 
+              // if(selected_data == null || selected_data == undefined) {
+              //   return;
+              // }
+              console.log(filtered_gender_age_data);
               var p3_highlight_legend_group = svg3.append("g")
                     .attr("transform", "translate("+ x +","+ y_start +")");
 
@@ -1293,15 +1307,15 @@ color:#999">
               .data(filtered_gender_age_data)
               .enter();
 
-
               p3_legends_highlight.append("text")
                 .attr("class", "p3_highlight_legend")
-                .attr('x', 0).attr('y', function(d,i)
-                {return i * 30;})
+                .attr('x', 0)
+                .attr('y', function(d,i) {return i * 30;})
                 .text(function(d){
+                  console.log(d.Activity + ":" + d.selected);
                   if (d.selected){
                     console.log("here");
-                    return d.Activity   + ": " + d.Duration   + "hr/day";
+                    return d.Activity   + ": " + d.Duration + "hr/day";
                   }
                   else return "";
                 }
@@ -1313,7 +1327,6 @@ color:#999">
                   return bubble_colorMap(d.Activity);
                 })
                 .style("opacity",1);
-
             }
 
 
