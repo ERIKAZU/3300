@@ -1310,6 +1310,8 @@ color:#999">
                   svg3.selectAll("circle")
                     .transition()
                     .style("opacity", 0.8);
+                  
+                  p3_remove_highlight_legend();
                   }
               )
               .on('click',
@@ -1344,7 +1346,11 @@ color:#999">
             //u.exit().remove();
             // add legend texts to the bubbles by side
             p3_add_legend(filtered_gender_age_data, 400, 430);
-            svg3.selectAll(".p3_highlight_legend").remove();
+            p3_remove_highlight_legend();
+
+            function p3_remove_highlight_legend() {
+              svg3.selectAll(".p3_highlight_legend").remove();
+            }
 
             function p3_add_legend(filtered_gender_age_data, x, y_start){
 
