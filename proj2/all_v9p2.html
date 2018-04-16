@@ -433,7 +433,7 @@ color:#999">
 
             function plotGraphAnimation(idx, doFlyCircle) {
               center_circle(prev_r_list[idx], cur_r_list[idx]);
-              printAge(age_string_list[idx]);
+              printAge(idx,age_string_list,total_dead_num_list);
               changePieChart(idx,age_top_cos_list[idx], doFlyCircle);
             }
             var idx = 0;
@@ -477,16 +477,35 @@ color:#999">
         // plotGraph1Main();
 
         // print age group text in the center of the box
-        function printAge(ageString) {
+        function printAge(idx,age_string_list,total_dead_num_list) {
           svg.selectAll(".centerText").remove();
           var text_center = svg.append("text")
             .attr("class", "centerText text_outline")
             .attr('x', 0).attr('y', 20)
-            .text("Age:" + ageString)
+            .text("Age:" + age_string_list[idx])
             .style("text-anchor", "middle")
             .style("font-size", "50px")
             .style("font-weight","800px")
             .style("fill", "black");
+
+            var text_upper = svg.append("text")
+              .attr("class", "centerText")
+              .attr('x', 0).attr('y', -20)
+              .text("accumulative deaths:")
+              .style("text-anchor", "middle")
+              .style("font-size", "30px")
+              .style("font-weight","300px")
+              .style("fill", "#809055");
+
+
+            var text_down = svg.append("text")
+              .attr("class", "centerText")
+              .attr('x', 0).attr('y', 50)
+              .text(function(){return total_dead_num_list[idx];})
+              .style("text-anchor", "middle")
+              .style("font-size", "30px")
+              .style("font-weight","300px")
+              .style("fill", "#826A5E");
         }
 
         // Increase the size of the center circle per transition as age goes up
