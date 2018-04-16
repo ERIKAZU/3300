@@ -1046,86 +1046,79 @@ color:#999">
         }
 
         // in csv it is "F/M"
-        function gender_convert_csv(gender_selected){
-
+        function gender_convert_csv(gender_selected) {
           return gender_selected == "M" ? "Male" : "Female";
         }
-
-
         // var age_csv_map = d3.scale.ordinal()
         // 			.range(["1519","2024","","",])
 
-        // plot_time_use(selected_gender,selected_age_group);
+        // plot_time_use(selected_gender, selected_age_group);
 
-        function plot_time_use(selected_gender,age_group){
-
+        function plot_time_use(selected_gender, age_group){
+          console.log("plot_time_use() called");
           svg3.selectAll(".cluster_circle").remove();
-          d3.csv("timeuse.csv", (error, rawdata) => {
-            //console.log(rawdata)
-            var filtered_gender_age_data = rawdata.filter(function(d) {
-//gender_convert_csv(d.Gender)
-
+          d3.csv("timeuse.csv", (error, rawData) => {
+            //console.log(rawData)
+            var filtered_gender_age_data = rawData.filter(function(d) {
+            // gender_convert_csv(d.Gender)
             // console.log(selected_gender);
             // console.log(gender_convert_csv(d.Gender));
-            // console.log( d.Gender);
+            // console.log(d.Gender);
                return ( gender_convert_csv(d.Gender) == selected_gender
                  && age_convert_csv(d.Age) == age_group[0]);
-             });
+            });
+            //console.log(filtered_gender_age_data);
 
-             console.log(filtered_gender_age_data);
-
-          //console.log(data);
-
-          var time_use_r_scale =
-            d3.scaleSqrt()
-            .domain([d3.min(filtered_gender_age_data, function(d) {
-              return d.Duration;
-            }), d3.max(filtered_gender_age_data, function(d) {
-              return +d.Duration;
-            })])
-            .range([0, 50]);
+            //console.log(data);
+            var time_use_r_scale =
+              d3.scaleSqrt()
+              .domain([d3.min(filtered_gender_age_data, function(d) {
+                return d.Duration;
+              }), d3.max(filtered_gender_age_data, function(d) {
+                return +d.Duration;
+              })])
+              .range([0, 50]);
 
             var simulation = d3.forceSimulation(filtered_gender_age_data)
               .force('charge', d3.forceManyBody().strength(5))
               .force('center', d3.forceCenter(width / 2, height / 2))
               .force('collision', d3.forceCollide().radius(function(d) {
-                // console.log(d.Duration);
-                 // console.log(time_use_r_scale(10));
+                    // console.log(d.Duration);
+                    // console.log(time_use_r_scale(10));
                 return time_use_r_scale(d.Duration);
               }))
               .on('tick', ticked);
 
-          // animation/ force allign the circles
-          function ticked() {
-            var u = svg3
-              .selectAll('circle')
-              .data(filtered_gender_age_data);
+            // animation/ force allign the circles
+            function ticked() {
+              var u = svg3
+                .selectAll('circle')
+                .data(filtered_gender_age_data);
 
-            u.enter()
-              .append('circle')
-              .attr("class","cluster_circle")
-              .attr('r', function(d) {
-                return time_use_r_scale(d.Duration) > 5 ? time_use_r_scale(d.Duration) : 0;
-              })
-              .merge(u)
-              .attr('cx', function(d) {
-                // console.log(d.x);
-                return d.x - 300;
-              })
-              .attr('cy', function(d) {
-                return d.y + 300;
-              })
-              .style('fill', function(d) {
-                return bubble_colorMap(d.Activity);
-              });
+              u.enter()
+                .append('circle')
+                .attr("class","cluster_circle")
+                .attr('r', function(d) {
+                  return time_use_r_scale(d.Duration) > 5 ? time_use_r_scale(d.Duration) : 0;
+                })
+                .merge(u)
+                .attr('cx', function(d) {
+                  // console.log(d.x);
+                  return d.x - 300;
+                })
+                .attr('cy', function(d) {
+                  return d.y + 300;
+                })
+                .style('fill', function(d) {
+                  return bubble_colorMap(d.Activity);
+                });
 
-            console.log(u);
+              //console.log(u);
 
-            u.exit().remove()
-          }
-        });
+              u.exit().remove()
+            }
+          });
         }
-
       </script>
     </body>
 
