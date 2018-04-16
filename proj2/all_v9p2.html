@@ -1236,7 +1236,7 @@ color:#999">
             for(item of filtered_gender_age_data) {
               item["selected"] = false;
             }
-            console.log(filtered_gender_age_data);
+            //console.log(filtered_gender_age_data);
 
             var time_use_r_scale =
               d3.scaleSqrt()
@@ -1264,7 +1264,7 @@ color:#999">
             var u = svg3
               .selectAll('circle')
               .data(filtered_gender_age_data);
-            console.log(u);
+            //console.log(u);
             u.enter()
               .append('circle')
               //.attr("class", "cluster_circle")
@@ -1298,7 +1298,7 @@ color:#999">
                     })
                     .transition()
                     .style("opacity", 1);
-                  //p3_highlight_legend(d, 400, 430, d.Activity);
+                  p3_highlight_legend(d, 400, 430, d.Activity);
                 }
               )
               .on('mouseout',
@@ -1326,6 +1326,7 @@ color:#999">
               //console.log(filtered_gender_age_data);
               var u = svg3.selectAll('circle');
 
+              if(u.size() == 0) return;
 
               u.data(filtered_gender_age_data)
                 .enter()
@@ -1339,7 +1340,6 @@ color:#999">
                 .attr('cy', function(d) {
                   return d.y + 300;
                 });
-
             }
             //u.exit().remove();
             // add legend texts to the bubbles by side
