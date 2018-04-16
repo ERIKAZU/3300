@@ -704,7 +704,7 @@ color:#999">
 
       <div class="slider_div span_line">
         <p id="age_slider_text">Your age: 20</p>
-        <span><input type="range" min="10" max="80" value="20" step="10" class="slider" id="age_slider"></span>
+        <span><input type="range" min="10" max="80" value="20" step="1" class="slider" id="age_slider"></span>
       </div>
       </br>
 
@@ -723,7 +723,7 @@ color:#999">
 
       <script>
         var svg2 = d3.select("#ij")
-          .append("svg").attr("width", 500).attr("height", 500);
+          .append("svg").attr("width", 500).attr("height", 800);
 
         // assign (grey/ green) by: if the circle is under your age selected
         function assignColor(cut_age, curID) {
@@ -890,6 +890,7 @@ color:#999">
             .on('click', function(d) {
               var ageGroup = getAgeGroupRange(d.age);
               var dropping = gen_dropping_data(ageGroup, getGender());
+              plot_time_use("F","2024");
               drop_rand(dropping);
             });
         }
@@ -1008,87 +1009,104 @@ color:#999">
       <div id="plot_3_div">
       </div>
       <script>
-      var svg3 = d3.select("#plot_3_div")
-        .append("svg").attr("width", 400).attr("height", 400);
-
-        d3.csv("timeuse.csv", (error, rawdata) => {
-          //console.log(rawdata)
-          data = rawdata.filter(function(d) {
-             var selected_gender = "F";
-             var selected_age_group = "2024";
-             return (d.Gender == selected_gender
-               && d.Age == selected_age_group);
-           });
-
-        //console.log(data);
-
-        var time_use_r_scale =
-          d3.scaleSqrt()
-          .domain([d3.min(data, function(d) {
-            return +d.Duration;
-          }), d3.max(data, function(d) {
-            return +d.Duration;
-          })])
-          .range([5, 50]);
-
-          var simulation = d3.forceSimulation(data)
-            .force('charge', d3.forceManyBody().strength(5))
-            .force('center', d3.forceCenter(width / 2, height / 2))
-            .force('collision', d3.forceCollide().radius(function(d) {
-              // console.log(d.Duration);
-               // console.log(time_use_r_scale(10));
-              return time_use_r_scale(d.Duration);
-            }))
-            .on('tick', ticked);
+      var svg3 = svg2
+        .append("svg").attr("width", 400).attr("height", 800);
 
 
-            var bubble_colorMap = d3.scaleOrdinal()
-              .domain(
-                ["Personal Care, including Sleep",
-                  "Household Activities",
-                  "Working",
-                  "Education",
-                  "Leisure and Sports",
-                  "Purchasing",
-                  "Phone Calls, E-mail"
-                ])
-              .range(
-                [
-                  "#ff8c00",
-                  "#8a89a6",
-                  "#7b6888",
-                  "#6b486b",
-                  "#a05d56",
-                  "#D58054",
-                  "#6F608E"
-                ]);
+      var bubble_colorMap = d3.scaleOrdinal()
+        .domain(
+          ["Personal Care, including Sleep",
+            "Household Activities",
+            "Working",
+            "Education",
+            "Leisure and Sports",
+            "Purchasing",
+            "Phone Calls, E-mail"
+          ])
+        .range([
+            "#ff8c00",
+            "#8a89a6",
+            "#7b6888",
+            "#6b486b",
+            "#a05d56",
+            "#D58054",
+            "#6F608E"
+          ]);
 
-        // animation/ force allign the circles
-        function ticked() {
-          var u = svg3
-            .selectAll('circle')
-            .data(data)
+        var selected_gender = "M";
+        var selected_age_group = "2024";
 
-          u.enter()
-            .append('circle')
-            .attr('r', function(d) {
-              return time_use_r_scale(d.Duration)
-            })
-            .merge(u)
-            .attr('cx', function(d) {
-              // console.log(d.x);
-              return d.x - 300;
-            })
-            .attr('cy', function(d) {
-              return d.y;
-            })
-            .style('fill', function(d) {
-              return bubble_colorMap(d.Activity);
-            })
-
-          u.exit().remove()
+         // in csv it is "2024", return the start of age group
+        function csv_age_to_ageRange(csv_age){
+          return csv_age.substring(0,2).valueOf();
         }
-      });
+
+
+        // var age_csv_map = d3.scale.ordinal()
+        // 			.range(["1519","2024","","",])
+
+        // plot_time_use(selected_gender,selected_age_group);
+
+        function plot_time_use(selected_gender,selected_age_group){
+          svg3.selectAll(".cluster_circle").remove();
+          d3.csv("timeuse.csv", (error, rawdata) => {
+            //console.log(rawdata)
+            data = rawdata.filter(function(d) {
+
+               return (d.Gender == selected_gender
+                 && d.Age == selected_age_group);
+             });
+
+          //console.log(data);
+
+          var time_use_r_scale =
+            d3.scaleSqrt()
+            .domain([d3.min(data, function(d) {
+              return +d.Duration;
+            }), d3.max(data, function(d) {
+              return +d.Duration;
+            })])
+            .range([5, 50]);
+
+            var simulation = d3.forceSimulation(data)
+              .force('charge', d3.forceManyBody().strength(5))
+              .force('center', d3.forceCenter(width / 2, height / 2))
+              .force('collision', d3.forceCollide().radius(function(d) {
+                // console.log(d.Duration);
+                 // console.log(time_use_r_scale(10));
+                return time_use_r_scale(d.Duration);
+              }))
+              .on('tick', ticked);
+
+          // animation/ force allign the circles
+          function ticked() {
+            var u = svg3
+              .selectAll('circle')
+              .data(data)
+
+            u.enter()
+              .append('circle')
+              .attr("class","cluster_circle")
+              .attr('r', function(d) {
+                return time_use_r_scale(d.Duration)
+              })
+              .merge(u)
+              .attr('cx', function(d) {
+                // console.log(d.x);
+                return d.x - 300;
+              })
+              .attr('cy', function(d) {
+                return d.y + 300;
+              })
+              .style('fill', function(d) {
+                return bubble_colorMap(d.Activity);
+              })
+
+            u.exit().remove()
+          }
+        });
+        }
+
 
 
 
