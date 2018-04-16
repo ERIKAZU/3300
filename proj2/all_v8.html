@@ -903,7 +903,10 @@ color:#999">
             .on('click', function(d) {
               var ageGroup = getAgeGroupRange(d.age);
               var dropping = gen_dropping_data(ageGroup, getGender());
-              plot_time_use("F","2024");
+              var gender_selected = getGender();
+
+              plot_time_use(gender_selected, ageGroup);
+
               drop_rand(dropping);
             });
         }
@@ -1030,13 +1033,14 @@ color:#999">
         var selected_age_group = "2024";
 
          // in csv it is "2024", return the start of age group
-        function csv_age_to_ageRange(csv_age){
+        function age_convert_csv(csv_age){
           return csv_age.substring(0,2).valueOf();
         }
 
         // in csv it is "F/M"
-        function csv_gender_convert(gender_selected){
-          return gender_selected == "Male" ? "M" : "F";
+        function gender_convert_csv(gender_selected){
+
+          return gender_selected == "M" ? "Male" : "Female";
         }
 
 
@@ -1045,28 +1049,35 @@ color:#999">
 
         // plot_time_use(selected_gender,selected_age_group);
 
-        function plot_time_use(selected_gender,selected_age_group){
+        function plot_time_use(selected_gender,age_group){
+
           svg3.selectAll(".cluster_circle").remove();
           d3.csv("timeuse.csv", (error, rawdata) => {
             //console.log(rawdata)
-            data = rawdata.filter(function(d) {
+            var filtered_gender_age_data = rawdata.filter(function(d) {
+//gender_convert_csv(d.Gender)
 
-               return (d.Gender == selected_gender
-                 && d.Age == selected_age_group);
+            // console.log(selected_gender);
+            // console.log(gender_convert_csv(d.Gender));
+            // console.log( d.Gender);
+               return ( gender_convert_csv(d.Gender) == selected_gender
+                 && age_convert_csv(d.Age) == age_group[0]);
              });
+
+             console.log(filtered_gender_age_data);
 
           //console.log(data);
 
           var time_use_r_scale =
             d3.scaleSqrt()
-            .domain([d3.min(data, function(d) {
-              return +d.Duration;
-            }), d3.max(data, function(d) {
+            .domain([d3.min(filtered_gender_age_data, function(d) {
+              return d.Duration;
+            }), d3.max(filtered_gender_age_data, function(d) {
               return +d.Duration;
             })])
-            .range([5, 50]);
+            .range([0, 50]);
 
-            var simulation = d3.forceSimulation(data)
+            var simulation = d3.forceSimulation(filtered_gender_age_data)
               .force('charge', d3.forceManyBody().strength(5))
               .force('center', d3.forceCenter(width / 2, height / 2))
               .force('collision', d3.forceCollide().radius(function(d) {
@@ -1080,13 +1091,13 @@ color:#999">
           function ticked() {
             var u = svg3
               .selectAll('circle')
-              .data(data)
+              .data(filtered_gender_age_data);
 
             u.enter()
               .append('circle')
               .attr("class","cluster_circle")
               .attr('r', function(d) {
-                return time_use_r_scale(d.Duration)
+                return time_use_r_scale(d.Duration) > 5 ? time_use_r_scale(d.Duration) : 0;
               })
               .merge(u)
               .attr('cx', function(d) {
@@ -1098,7 +1109,9 @@ color:#999">
               })
               .style('fill', function(d) {
                 return bubble_colorMap(d.Activity);
-              })
+              });
+
+            console.log(u);
 
             u.exit().remove()
           }
