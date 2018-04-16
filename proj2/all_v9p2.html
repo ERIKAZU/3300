@@ -1344,8 +1344,10 @@ color:#999">
             //u.exit().remove();
             // add legend texts to the bubbles by side
             p3_add_legend(filtered_gender_age_data, 400, 430);
+            svg3.selectAll(".p3_highlight_legend").remove();
 
             function p3_add_legend(filtered_gender_age_data, x, y_start){
+
               svg3.selectAll(".p3_legend_grey").remove();
               svg3.selectAll(".p3_legend_title").remove();
 
@@ -1412,7 +1414,8 @@ color:#999">
               // if(selected_data == null || selected_data == undefined) {
               //   return;
               // }
-              console.log(selected_data);
+              //console.log(selected_data);
+              //console.log(filtered_gender_age_data);
               var p3_highlight_legend_group = svg3.append("g")
                     .attr("transform", "translate("+ x +","+ y_start +")");
 
@@ -1425,10 +1428,13 @@ color:#999">
                 .attr('x', 0)
                 .attr('y', function(d,i) {return i * 30;})
                 .text(function(d){
+                  //console.log("d.Activity = " + d.Activity);
+                  //console.log("selected_data.Activity = " + selected_data.Activity);
+                  //console.log("d.Activity == selected_data.Activity : " + d.Activity == selected_data.Activity);
                   //console.log(d.Activity + ":" + d.selected);
-                  if (d.Activity == activityName){
-                    console.log(d.Activity);
-                    return d.Activity   + ": " + d.Duration + "hr/day";
+                  if (d.Activity == selected_data.Activity) {
+                    //console.log(d.Activity);
+                    return selected_data.Activity   + ": " + selected_data.Duration + "hr/day";
                   }
                   else return "";
                 }
