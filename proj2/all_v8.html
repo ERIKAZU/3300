@@ -845,6 +845,7 @@ color:#999">
           document.getElementById("gender_slider_text").innerHTML = "Your gender: " + getGender();
           var grid_data = gen_grid_data(age,gender);
           showCircles(grid_data);
+          svg3 = svg2.append("svg").attr("width", 400).attr("height", 800);
         }
         /**************************************/
 
@@ -957,7 +958,7 @@ color:#999">
 
           var grid_data = gen_grid_data(age, gender);
           showCircles(grid_data);
-
+          svg3 = svg2.append("svg").attr("width", 400).attr("height", 800);
           // var ageGroup = getAgeGroupRange(age); //[int, int]
           // var dropping = gen_dropping_data(ageGroup, gender);
           // drop_rand(dropping);
@@ -1014,6 +1015,7 @@ color:#999">
       <div id="plot_3_div">
       </div>
       <script>
+
       var svg3 = svg2
         .append("svg").attr("width", 400).attr("height", 800);
 
@@ -1054,56 +1056,47 @@ color:#999">
 
         // plot_time_use(selected_gender, selected_age_group);
 
-        function plot_time_use(selected_gender, age_group){
+        function plot_time_use(selected_gender, age_group) {
           console.log("plot_time_use() called");
           svg3.selectAll(".cluster_circle").remove();
           d3.csv("timeuse.csv", (error, rawData) => {
-            //console.log(rawData)
             var filtered_gender_age_data = rawData.filter(function(d) {
-            // gender_convert_csv(d.Gender)
-            // console.log(selected_gender);
-            // console.log(gender_convert_csv(d.Gender));
-            // console.log(d.Gender);
                return ( gender_convert_csv(d.Gender) == selected_gender
                  && age_convert_csv(d.Age) == age_group[0]);
             });
-            //console.log(filtered_gender_age_data);
 
-            //console.log(data);
             var time_use_r_scale =
               d3.scaleSqrt()
-              .domain([d3.min(filtered_gender_age_data, function(d) {
-                return d.Duration;
-              }), d3.max(filtered_gender_age_data, function(d) {
-                return +d.Duration;
-              })])
-              .range([0, 50]);
+                .domain([d3.min(filtered_gender_age_data, function(d) {
+                  return d.Duration;
+                }), d3.max(filtered_gender_age_data, function(d) {
+                  return +d.Duration;
+                })])
+                .range([0, 50]);
 
             var simulation = d3.forceSimulation(filtered_gender_age_data)
               .force('charge', d3.forceManyBody().strength(5))
               .force('center', d3.forceCenter(width / 2, height / 2))
               .force('collision', d3.forceCollide().radius(function(d) {
-                    // console.log(d.Duration);
-                    // console.log(time_use_r_scale(10));
                 return time_use_r_scale(d.Duration);
               }))
               .on('tick', ticked);
 
             // animation/ force allign the circles
             function ticked() {
+              console.log(filtered_gender_age_data);
               var u = svg3
                 .selectAll('circle')
                 .data(filtered_gender_age_data);
 
               u.enter()
                 .append('circle')
-                .attr("class","cluster_circle")
+                .attr("class", "cluster_circle")
                 .attr('r', function(d) {
                   return time_use_r_scale(d.Duration) > 5 ? time_use_r_scale(d.Duration) : 0;
                 })
                 .merge(u)
                 .attr('cx', function(d) {
-                  // console.log(d.x);
                   return d.x - 300;
                 })
                 .attr('cy', function(d) {
@@ -1114,7 +1107,6 @@ color:#999">
                 });
 
               //console.log(u);
-
               u.exit().remove()
             }
           });
