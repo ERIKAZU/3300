@@ -154,15 +154,16 @@ color:#999">
 
         // append play button: http://bl.ocks.org/erkal/9871048
         // draw play button
-        playButton(svg_box, 20 ,30);
+        playButton(svg_box, 960/2 ,300);
+        p1_add_text(svg_box, 960/2 ,500/2);
 
         // draw the play button, on click, disappear
         function playButton(svg,  x, y) {
             // console.log("new button");
             var messageText = svg.append("text")
             .attr("id", "play_ani_text")
-            .attr("x", 40)
-            .attr("y", 20).text("play animation");
+            .attr("x", x)
+            .attr("y", y).text("play animation");
 
               var button = svg.append("g")
                   .attr("transform", "translate("+ x +","+ y +")");
@@ -189,12 +190,64 @@ color:#999">
                     var text_to_remove = d3.select("#play_ani_text").node();
                     text_to_remove.remove();
                     setTimeout(function() {
-                      console.log("should delete button");
-
                       plotGraph1Main();
                     }, 200);
-
                   });
+        }
+
+
+        // display the explain text, on click of play button, disappear
+        function p1_add_text(svg,  x, y) {
+            // console.log("new button");
+            var messageText = svg.append("text")
+            .attr("id", "play_ani_text")
+            .attr("x", 40)
+            .attr("y", 20).text("play animation");
+
+            var text_to_add = ["abglajgnkslagnlagn","eagtaohgioashgioa","aoshtiy"];
+
+            var p1_explain_text = svg.append("g")
+                  .attr("transform", "translate("+ x +","+ y +")");
+
+            var texts = p1_explain_text.selectAll(".p1_explain_text")
+            .data(text_to_add)
+            .enter();
+
+            texts.append("text")
+            .text(function(d){
+              return d;
+            })
+            .attr("y",function(d,i){
+              return i * 20;
+            })
+              // button
+              //   .append("circle")
+              //     .attr("r", 25)
+              //     .attr("cx", 20)
+              //     .attr("cy", 25)
+              //     .style("fill", "steelblue");
+              //
+              // button
+              //   .append("path")
+              //     .attr("d", "M15 10 L15 40 L35 25 Z")
+              //     .style("fill", "white");
+              //
+              //
+              // button
+              //     .on("mousedown", function() {
+              //       d3.select(this).select("circle")
+              //           .style("fill","white")
+              //           .transition(100).style("fill","steelblue");
+              //       d3.select(this).remove();
+              //       var text_to_remove = d3.select("#play_ani_text").node();
+              //       text_to_remove.remove();
+              //       setTimeout(function() {
+              //         console.log("should delete button");
+              //
+              //         plotGraph1Main();
+              //       }, 200);
+              //
+              //     });
         }
 
         svg.append("g").attr("class", "slices");
@@ -1102,9 +1155,60 @@ color:#999">
                 .attr('cy', function(d) {
                   return d.y + 300;
                 })
+                .style("opacity", 0.8)
                 .style('fill', function(d) {
                   return bubble_colorMap(d.Activity);
                 });
+
+                svg2.selectAll(".cluster_circle")
+                  .on('mouseover',
+                  // function(d){console.log(d.Activity);}
+                  function(d) {
+                    svg3.selectAll(".cluster_circle")
+                      .filter(function(dot) {
+                        return (dot.Activity == d.Activity) // select all that are in the same  category with the circle you are hovering on
+                      })
+                      .transition()
+                      .style("opacity", 1);
+                    // console.log(d.category);
+                    // console.log(d.age);
+                    // if (d.category != -1) {
+                    //   // show tooltip
+                    //   tip_label.show(d);
+                    // }
+                  }
+                )
+                  .on('mouseout',
+                  // function(d){console.log(d.Activity);}
+                  function(d) {
+                    svg3.selectAll(".cluster_circle")
+                      .filter(function(dot) {
+                        return (dot.Activity == d.Activity) // select all that are in the same  category with the circle you are hovering on
+                      })
+                      .transition()
+                      .style("opacity", 0.8);
+                    // console.log(d.category);
+                    // console.log(d.age);
+                    // if (d.category != -1) {
+                    //   // show tooltip
+                    //   tip_label.show(d);
+                    // }
+                  }
+                  // function(d) {
+                  //   svg2.selectAll(".circle_org")
+                  //     .filter(function(dot) {
+                  //       return (dot.category == d.category && dot.color == "#CED3D3")
+                  //     }).transition()
+                  //     .style("fill", "#CED3D3"); // return to its original color
+                  //
+                  //   svg2.selectAll(".circle_org")
+                  //     .filter(function(dot) {
+                  //       return (dot.category == d.category && dot.color == "#B5C45E")
+                  //     }).transition()
+                  //     .style("fill", "#B5C45E"); // return to its original color
+                  //   tip_label.hide(d);
+                  // }
+                );
 
               //console.log(u);
               u.exit().remove()
