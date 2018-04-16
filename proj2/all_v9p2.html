@@ -1223,8 +1223,7 @@ color:#999">
         // plot_time_use(selected_gender, selected_age_group);
 
         function plot_time_use(selected_gender, age_group) {
-          //svg3.selectAll("circle").remove();
-          svg3.selectAll(".cluster_circle").remove();
+          svg3.selectAll("circle").remove();
 
           d3.csv("timeuse.csv", (error, rawData) => {
 
@@ -1236,7 +1235,6 @@ color:#999">
             for(item of filtered_gender_age_data) {
               item["selected"] = false;
             }
-            //console.log(filtered_gender_age_data);
 
             var time_use_r_scale =
               d3.scaleSqrt()
@@ -1248,7 +1246,7 @@ color:#999">
                 .range([0, 70]);
 
             // filter again to remove those tiny bubbles
-            var filtered_gender_age_data = filtered_gender_age_data.filter(function(d) {
+            filtered_gender_age_data = filtered_gender_age_data.filter(function(d) {
                return ( time_use_r_scale(d.Duration) > 5);
             });
 
@@ -1264,10 +1262,8 @@ color:#999">
             var u = svg3
               .selectAll('circle')
               .data(filtered_gender_age_data);
-            //console.log(u);
             u.enter()
               .append('circle')
-              //.attr("class", "cluster_circle")
               .attr('r',
                 function(d) {
                   return time_use_r_scale(d.Duration);
@@ -1310,25 +1306,27 @@ color:#999">
                   svg3.selectAll("circle")
                     .transition()
                     .style("opacity", 0.8);
-                  
+
                   p3_remove_highlight_legend();
                   }
               )
               .on('click',
                 function(d) {
-                  //console.log(d);
-                  //p3_highlight_legend(d, 400, 430, d.Activity);
+                  console.log(d);
                 }
               );
             // this can manually speed up the force simulation
-            // for (var i = 100; i > 0; --i) { simulation.tick();}
+            // for (var i = 500; i > 0; --i) { simulation.tick();}
 
             // animation/ force allign the circles
             function ticked() {
-              //console.log(filtered_gender_age_data);
               var u = svg3.selectAll('circle');
 
               if(u.size() == 0) return;
+              if(u.size() != filtered_gender_age_data.length) return;
+
+              // console.log(u.size());
+              // console.log(filtered_gender_age_data.length);
 
               u.data(filtered_gender_age_data)
                 .enter()
@@ -1344,8 +1342,10 @@ color:#999">
                 });
             }
             //u.exit().remove();
+
             // add legend texts to the bubbles by side
             p3_add_legend(filtered_gender_age_data, 400, 430);
+
             p3_remove_highlight_legend();
 
             function p3_remove_highlight_legend() {
@@ -1414,14 +1414,8 @@ color:#999">
             }
 
             function p3_highlight_legend(selected_data, x, y_start, activityName){
-              // console.log("A");
               svg3.selectAll(".p3_highlight_legend").remove();
 
-              // if(selected_data == null || selected_data == undefined) {
-              //   return;
-              // }
-              //console.log(selected_data);
-              //console.log(filtered_gender_age_data);
               var p3_highlight_legend_group = svg3.append("g")
                     .attr("transform", "translate("+ x +","+ y_start +")");
 
@@ -1429,22 +1423,19 @@ color:#999">
                     .data(filtered_gender_age_data)
                     .enter();
 
+              console.log(filtered_gender_age_data);
+              console.log(p3_legends_highlight);
+
               p3_legends_highlight.append("text")
                 .attr("class", "p3_highlight_legend")
                 .attr('x', 0)
                 .attr('y', function(d,i) {return i * 30;})
                 .text(function(d){
-                  //console.log("d.Activity = " + d.Activity);
-                  //console.log("selected_data.Activity = " + selected_data.Activity);
-                  //console.log("d.Activity == selected_data.Activity : " + d.Activity == selected_data.Activity);
-                  //console.log(d.Activity + ":" + d.selected);
                   if (d.Activity == selected_data.Activity) {
-                    //console.log(d.Activity);
                     return selected_data.Activity   + ": " + selected_data.Duration + "hr/day";
                   }
                   else return "";
-                }
-              )
+                })
                 .style("text-anchor", "middle")
                 .style("font-size", "20px")
                 .style("font-weight","800px")
