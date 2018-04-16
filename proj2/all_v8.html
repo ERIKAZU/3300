@@ -898,7 +898,7 @@ color:#999">
           document.getElementById("gender_slider_text").innerHTML = "Your gender: " + getGender();
           var grid_data = gen_grid_data(age,gender);
           showCircles(grid_data);
-          svg3 = svg2.append("svg").attr("width", 400).attr("height", 800);
+          svg3 = svg2.append("svg").attr("width", 800).attr("height", 800);
         }
         /**************************************/
 
@@ -1209,6 +1209,60 @@ color:#999">
               u.exit().remove();
             }
             u.exit().remove();
+
+            // add legend texts to the bubbles by side
+            p3_add_legend(filtered_gender_age_data, 300, 430);
+
+            function p3_add_legend(filtered_gender_age_data, x, y_start){
+
+              svg3.selectAll(".p3_legend_grey").remove();
+              svg3.selectAll(".p3_legend_title").remove();
+              // var y_start = 430;
+
+
+              var p3_legend_text = svg3.append("g")
+                    .attr("transform", "translate("+ x +","+ y_start +")");
+
+              var p3_legends = p3_legend_text.selectAll(".p3_legend_text")
+              .data(filtered_gender_age_data)
+              .enter();
+
+              // console.log("here");
+              var first_line = filtered_gender_age_data[0];
+
+              p3_legends.append("text")
+                .attr("class", "p3_legend_title")
+                .attr('x', 0).attr('y',
+                -40)
+                .text(function(){
+                  return first_line.Gender   + ", Age" + first_line.Age;
+                }
+              )
+                .style("text-anchor", "middle")
+                .style("font-size", "20px")
+                .style("font-weight","300px")
+                .style("fill", "white")
+                .style("opacity","0.7");
+
+              p3_legends.append("text")
+                .attr("class", "p3_legend_grey")
+                .attr('x', 0).attr('y', function(d,i)
+                {return i * 30;})
+                .text(function(d){
+                  return d.Activity   + ": " + d.Duration   + "hr/day";
+                }
+              )
+                .style("text-anchor", "middle")
+                .style("font-size", "20px")
+                .style("font-weight","300px")
+                .style("fill", "white")
+                .style("opacity","0.7");
+
+            }
+
+
+
+
           });
         }
       </script>
