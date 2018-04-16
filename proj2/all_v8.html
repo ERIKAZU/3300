@@ -1134,6 +1134,9 @@ color:#999">
                 return time_use_r_scale(d.Duration);
               }))
               .on('tick', ticked);
+            for (var i = 100; i > 0; --i) {
+              simulation.tick();
+            }
 
             // animation/ force allign the circles
             function ticked() {
@@ -1158,11 +1161,8 @@ color:#999">
                 .style("opacity", 0.8)
                 .style('fill', function(d) {
                   return bubble_colorMap(d.Activity);
-                });
-
-                svg2.selectAll(".cluster_circle")
-                  .on('mouseover',
-                  // function(d){console.log(d.Activity);}
+                })
+                .on('mouseover',
                   function(d) {
                     svg3.selectAll(".cluster_circle")
                       .filter(function(dot) {
@@ -1170,45 +1170,21 @@ color:#999">
                       })
                       .transition()
                       .style("opacity", 1);
-                    // console.log(d.category);
-                    // console.log(d.age);
-                    // if (d.category != -1) {
-                    //   // show tooltip
-                    //   tip_label.show(d);
-                    // }
                   }
                 )
-                  .on('mouseout',
-                  // function(d){console.log(d.Activity);}
+                .on('mouseout',
                   function(d) {
-                    svg3.selectAll(".cluster_circle")
-                      .filter(function(dot) {
-                        return (dot.Activity == d.Activity) // select all that are in the same  category with the circle you are hovering on
-                      })
-                      .transition()
-                      .style("opacity", 0.8);
-                    // console.log(d.category);
-                    // console.log(d.age);
-                    // if (d.category != -1) {
-                    //   // show tooltip
-                    //   tip_label.show(d);
-                    // }
-                  }
-                  // function(d) {
-                  //   svg2.selectAll(".circle_org")
-                  //     .filter(function(dot) {
-                  //       return (dot.category == d.category && dot.color == "#CED3D3")
-                  //     }).transition()
-                  //     .style("fill", "#CED3D3"); // return to its original color
-                  //
-                  //   svg2.selectAll(".circle_org")
-                  //     .filter(function(dot) {
-                  //       return (dot.category == d.category && dot.color == "#B5C45E")
-                  //     }).transition()
-                  //     .style("fill", "#B5C45E"); // return to its original color
-                  //   tip_label.hide(d);
-                  // }
+                  svg3.selectAll(".cluster_circle")
+                    .filter(function(dot) {
+                      return (dot.Activity == d.Activity) // select all that are in the same  category with the circle you are hovering on
+                    })
+                    .transition()
+                    .style("opacity", 0.8);
+                }
                 );
+
+                //svg2.selectAll(".cluster_circle")
+
 
               //console.log(u);
               u.exit().remove()
