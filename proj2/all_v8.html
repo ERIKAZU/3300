@@ -224,7 +224,7 @@ color:#999">
               "Heart Disease",
               "Short Gestation",
               "SIDS",
-              "Maternal Pregnancy Comp",
+              "Maternal Pregnancy Comp.",
               "Suicide",
               "Liver Disease",
               "Chronic Low. Respiratory Disease",
@@ -233,21 +233,21 @@ color:#999">
               "Alzheimer's Disease"
             ])
           .range(
-            ["#E8E8E8",
-              "#ff8c00",
-              "#8a89a6",
-              "#7b6888",
-              "#6b486b",
-              "#a05d56",
-              "#D58054",
-              "#722B25",
-              "#ECCE7C",
-              "#6b486b",
-              "#DA9735",
-              "#D58054",
-              "#36244B",
-              "#F8BD5B",
-              "#6F608E"
+            [ "#505463",    //Others
+              "#891C56",    //Unintentional Injury
+              "#5CC6BC",    //Congenital Anomalies
+              "#D62337",    //Homicide
+              "#FFFFFF",    //Malignant Neoplasms
+              "#C23E82",    //Heart Disease
+              "#F2E0C9",    //Short Gestation
+              "#722B25",    //SIDS
+              "#2E8B57",    //Maternal Pregnancy Comp
+              "#0095C7",    //Suicide
+              "#A6523E",    //Liver Disease
+              "#DBDA3D",    //Chronic Low. Respiratory Disease
+              "#DE5F75",    //Diabetes Mellitus
+              "#F8BD5B",    //Cerebrovascular
+              "#A583CF"     //Alzheimer's Disease
             ]);
         var list_of_cat = ["Unintentional Injury",
           "Congenital Anomalies",
@@ -256,7 +256,7 @@ color:#999">
           "Heart Disease",
           "Short Gestation",
           "SIDS",
-          "Maternal Pregnancy Comp",
+          "Maternal Pregnancy Comp.",
           "Suicide",
           "Liver Disease",
           "Chronic Low. Respiratory Disease",
@@ -537,7 +537,7 @@ color:#999">
             .append("text")
             .attr("dy", ".35em")
             .text(function(d) {
-              if (d.value < 4) {
+              if (d.value < 2) {
                 return "";
               }
               return (d.data.label + ": " + d.value + "%");
@@ -569,7 +569,7 @@ color:#999">
               };
             })
             .text(function(d) {
-              if (d.value < 4) {
+              if (d.value < 2) {
                 return "";
               }
               return (d.data.label + ": " + d.value + "%");
@@ -593,7 +593,7 @@ color:#999">
                 var d2 = interpolate(t);
                 var pos = outerArc.centroid(d2);
                 pos[0] = radius1 * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
-                if (d.value < 4) {
+                if (d.value < 2) {
                   return [0, 0];
                 } else {
                   return [arc.centroid(d2), outerArc.centroid(d2), pos];
