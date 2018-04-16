@@ -189,6 +189,10 @@ color:#999">
                     d3.select(this).remove();
                     var text_to_remove = d3.select("#play_ani_text").node();
                     text_to_remove.remove();
+
+                    // remove center explain text in svg
+                    svg.selectAll(".p1_explain_texts").remove();
+
                     setTimeout(function() {
                       plotGraph1Main();
                     }, 200);
@@ -214,6 +218,7 @@ color:#999">
             .enter();
 
             texts.append("text")
+            .attr("class","p1_explain_texts")
             .text(function(d){
               return d;
             })
@@ -552,8 +557,19 @@ color:#999">
           if (idx == 8) { // the last frame, put back the button
             setTimeout(function() {
               //console.log(pieAnimDuration);
-              playButton(svg_box, 20 ,30);
+              // re-show explain text and play
+              playButton(svg_box, 960/2 ,300);
+              p1_add_text(svg_box, 960/2 ,500/2);
+
+              // remove all pie char elements
               svg.selectAll(".center_circle").remove();
+              svg.selectAll(".centerText").remove();
+
+              svg.selectAll(".labelName").attr("visibility", "hidden");
+              // svg.selectAll(".slices").remove();
+              // svg.selectAll(".labelValue").remove();
+              // svg.selectAll(".lines").remove();
+
             }, 3000);
           }
 
