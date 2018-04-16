@@ -398,6 +398,7 @@ color:#999">
         // representing the percentage of dead population
         function center_circle(prev_r, cur_r) {
           var center_circle = svg.append("circle")
+            .attr("class","center_circle")
             .attr('cx', 0).attr('cy', 0)
             .attr("fill", "#B9B9B9")
             .attr("r", prev_r)
@@ -506,6 +507,7 @@ color:#999">
             setTimeout(function() {
               //console.log(pieAnimDuration);
               playButton(svg_box, 20 ,30);
+              svg.selectAll(".center_circle").remove();
             }, 3000);
           }
 
