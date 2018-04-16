@@ -4,13 +4,15 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet">
 
   <style>
     body {
       margin: 50px 50px 30px 80px;
       background: #222;
       color: #aaa;
-      font-family: 'Amatic SC', Calibri, sans-serif;
+      /* font-family: 'Amatic SC', Calibri, sans-serif; */
+      font-family: 'Josefin Slab', serif;
     }
 
     a {
@@ -39,9 +41,8 @@
       color: #ffcc00;
     }
 
-    .inplot_text {
-      fill: #FF80AB;
-      color: #FF80AB;
+    .intro_text{
+      font-size: 20pt;
     }
   </style>
 </head>
@@ -50,6 +51,7 @@
 
   <div style="float:left">
     <p id="title" style="font-weight: 300;
+    font-family: 'Amatic SC', Calibri, sans-serif;
     font-size: 60pt;
     margin-top: 0px;
     margin-left: 0px;
@@ -57,7 +59,7 @@
       How much time you have left &
       <br /> How you spend it
 
-      <text style="font-size: 12px">Presented by <a href="https://github.com/ERIKAZU/3300/tree/master/proj2">Team </a></text>
+      <text style="font-size: 20px">Presented by <a href="https://github.com/ERIKAZU/3300/tree/master/proj2">Team </a></text>
     </p>
   </div>
 
@@ -72,14 +74,18 @@
 </div> -->
 
   <div style="display:inline-block">
-    <p id="title_h2" style="font-weight: thin;
-    font-size: 30pt;
+    <p id="title_h2" class="intro_text"style="font-weight: thin;
+    font-size: 20pt;
 padding-left: 0px;
 color:#999">
-      We are all going to die someday. Explore the average <span class="Variant">death age, death cause</span> of U.S. residents, and think about <span class="Variant"> how you will spend </span> your time left.</p>
+      Death is a topic we barely talk about or are willing to explore in our daily life. But it is the ultimate end for every single one of us. The plots here show the main
+       <span class="Variant">death causes</span> by age of US residents and
+        <span class="Variant"> how you would be spending your time left</span>.
+      We don't want you to be scared by looking at the data; instead, we want you to realize how precious your time is and be able to cherish every moment of your life. </p>
 
 
-    <h2>Overivew</h2>
+    <p class="intro_text"><span class="Variant">Overivew</span></p>
+    <p class="intro_text"> We first want to give you an overview on the number of deaths in 2015, and how the major death causes change through different age groups. The white circle in the center represents the accumulation of people passed away by the certain age. </p>
 
     <!-- reference:http://bl.ocks.org/michellechandra/0b2ce4923dc9b5809922 -->
   </div>
@@ -154,15 +160,16 @@ color:#999">
 
         // append play button: http://bl.ocks.org/erkal/9871048
         // draw play button
-        playButton(svg_box, 960/2 ,300);
-        p1_add_text(svg_box, 960/2 ,500/2);
+        playButton(svg_box, 960/2 - 20 ,330);
+        p1_add_text(svg_box, 960/2, 100);
 
         // draw the play button, on click, disappear
         function playButton(svg,  x, y) {
             // console.log("new button");
             var messageText = svg.append("text")
             .attr("id", "play_ani_text")
-            .attr("x", x)
+            .attr("x", x + 20)
+            .attr("font-size","20px")
             .attr("y", y).text("play animation");
 
               var button = svg.append("g")
@@ -202,13 +209,9 @@ color:#999">
 
         // display the explain text, on click of play button, disappear
         function p1_add_text(svg,  x, y) {
-            // console.log("new button");
-            var messageText = svg.append("text")
-            .attr("id", "play_ani_text")
-            .attr("x", 40)
-            .attr("y", 20).text("play animation");
 
-            var text_to_add = ["abglajgnkslagnlagn","eagtaohgioashgioa","aoshtiy"];
+          var text_to_add = ["2712492 U.S.residents died in 2015.","The top 5 major causes overall are:",
+          "Heart Disease, Malignant Neoplasms, Chronic Low. Respiratory Disease","Unintentional Injury and Cerebrovascular"];
 
             var p1_explain_text = svg.append("g")
                   .attr("transform", "translate("+ x +","+ y +")");
@@ -219,11 +222,12 @@ color:#999">
 
             texts.append("text")
             .attr("class","p1_explain_texts")
+            .attr("font-size","20px")
             .text(function(d){
               return d;
             })
             .attr("y",function(d,i){
-              return i * 20;
+              return i * 30;
             })
               // button
               //   .append("circle")
@@ -339,6 +343,8 @@ color:#999">
               }
               total_dead_num_list.push(dead_num_sum);
             }
+            console.log(total_dead_num_list);
+
             // operator that maps domain (max total death number) to range (radius)
             var tot_r_scale =
               d3.scaleSqrt()
