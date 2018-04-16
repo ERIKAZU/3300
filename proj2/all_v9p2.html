@@ -269,6 +269,42 @@ color:#999">
           radius1 = Math.min(width, height) / 2;
 
         // set the colors for each {cause of death} category
+        // var colorMap = d3.scaleOrdinal()
+        //   .domain(
+        //     ["Others",
+        //       "Unintentional Injury",
+        //       "Congenital Anomalies",
+        //       "Homicide",
+        //       "Malignant Neoplasms",
+        //       "Heart Disease",
+        //       "Short Gestation",
+        //       "SIDS",
+        //       "Maternal Pregnancy Comp.",
+        //       "Suicide",
+        //       "Liver Disease",
+        //       "Chronic Low. Respiratory Disease",
+        //       "Diabetes Mellitus",
+        //       "Cerebrovascular",
+        //       "Alzheimer's Disease"
+        //     ])
+        //   .range(
+        //     [ "#505463",    //Others
+        //       "#891C56",    //Unintentional Injury
+        //       "#5CC6BC",    //Congenital Anomalies
+        //       "#D62337",    //Homicide
+        //       "#FFFFFF",    //Malignant Neoplasms
+        //       "#C23E82",    //Heart Disease
+        //       "#F2E0C9",    //Short Gestation
+        //       "#722B25",    //SIDS
+        //       "#2E8B57",    //Maternal Pregnancy Comp
+        //       "#0095C7",    //Suicide
+        //       "#A6523E",    //Liver Disease
+        //       "#DBDA3D",    //Chronic Low. Respiratory Disease
+        //       "#DE5F75",    //Diabetes Mellitus
+        //       "#F8BD5B",    //Cerebrovascular
+        //       "#A583CF"     //Alzheimer's Disease
+        //     ]);
+
         var colorMap = d3.scaleOrdinal()
           .domain(
             ["Others",
@@ -288,22 +324,24 @@ color:#999">
               "Alzheimer's Disease"
             ])
           .range(
-            [ "#505463",    //Others
-              "#891C56",    //Unintentional Injury
-              "#5CC6BC",    //Congenital Anomalies
-              "#D62337",    //Homicide
-              "#FFFFFF",    //Malignant Neoplasms
-              "#C23E82",    //Heart Disease
-              "#F2E0C9",    //Short Gestation
+            [ "#C6C0B6",    //Others
+              "#BF7054",    //Unintentional Injury
+              "#8a89a6",    //Congenital Anomalies
+              "#6b486b",    //Homicide
+              "#C3A670",    //Malignant Neoplasms
+              "#628CB6",    //Heart Disease
+              "#919561",    //Short Gestation
               "#722B25",    //SIDS
-              "#2E8B57",    //Maternal Pregnancy Comp
-              "#0095C7",    //Suicide
+              "#777963",    //Maternal Pregnancy Comp
+              "#2C4A78",    //Suicide
               "#A6523E",    //Liver Disease
-              "#DBDA3D",    //Chronic Low. Respiratory Disease
-              "#DE5F75",    //Diabetes Mellitus
-              "#F8BD5B",    //Cerebrovascular
+              "#54896E",    //Chronic Low. Respiratory Disease
+              "#724B44",    //Diabetes Mellitus
+              "#3D594D",    //Cerebrovascular
               "#A583CF"     //Alzheimer's Disease
             ]);
+
+
         var list_of_cat = ["Unintentional Injury",
           "Congenital Anomalies",
           "Homicide",
@@ -564,8 +602,8 @@ color:#999">
             setTimeout(function() {
               //console.log(pieAnimDuration);
               // re-show explain text and play
-              playButton(svg_box, 960/2 ,300);
-              p1_add_text(svg_box, 960/2 ,100);
+              playButton(svg_box, 960/2 - 20 ,330);
+              p1_add_text(svg_box, 960/2, 100);
 
               // remove all pie char elements
               svg.selectAll(".center_circle").remove();
