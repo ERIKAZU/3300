@@ -22,7 +22,7 @@ svg { border: solid #ccc 1px; }
   padding: 0px;
   font-size: 30px;
   height: 200px;
-  width:250px;
+  width:200px;
 }
 </style>
 
@@ -52,7 +52,7 @@ svg { border: solid #ccc 1px; }
 ///////////////////////////////////////////
 
 var height = 200;
-var width = 250;
+var width = 200;
 var padding = 10;
 
 var xScale = d3.scaleLinear().domain([0,1]).range([padding, width - padding]);
@@ -63,13 +63,18 @@ var points = [];
 var numPts = 25;
 var theChosen_idx = Math.floor(Math.random() * (numPts));
 // Sample points from this cluster
-for (var i = 0; i < numPts; i++) {
-  var myLabel = i == theChosen_idx ? 1 : 0;
-  points.push({
-    label: myLabel,
-    x: padding + Math.random() * (width - 2*padding), // "noise" is scaled by "spread" param
-    y: padding + Math.random() * (height - 2*padding)
-  });
+var count = 0;
+for (var i = 0; i < 5; i++) {
+  for (var j = 0; j < 5; j++) {
+    var myLabel = count == theChosen_idx ? 1 : 0;
+    points.push({
+      label: myLabel,
+      x: padding + i * (width - 2*padding)/5, // "noise" is scaled by "spread" param
+      y: padding + j * (height - 2*padding)/5
+    });
+    count++;
+  }
+
 }
 
 
