@@ -10,20 +10,38 @@ svg { border: solid #ccc 1px; }
 </head>
 <body>
 <h3>Problem 1</h3>
+<style>
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  padding: 0px;
+  grid-gap: 10px;
+}
+.grid-item {
+  border: 1px solid black;
+  padding: 0px;
+  font-size: 30px;
+  height: 200px;
+  width:250px;
+}
+</style>
 
-
-<div id="plot">
-<p>
-  <button id="findclosest">Assign Points</button>
-  <button id="movemeans">Update Centroids</button>
-</p>
+<div class="grid-container">
+  <div class="grid-item" id = "plot1"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item">4</div>
+  <div class="grid-item">5</div>
+  <div class="grid-item">6</div>
+  <div class="grid-item">7</div>
+  <div class="grid-item">8</div>
 </div>
 
 <script id="notes">
 
-var height = 500;
-var width = 500;
-var padding = 50;
+var height = 200;
+var width = 250;
+var padding = 20;
 
 // This function will behave like Math.random(), but everyone will get
 //  the same random numbers in the same order, so we can try to fit the
@@ -35,14 +53,14 @@ function seededRandom() {
   return x - Math.floor(x);
 }
 
-var svg = d3.select("#plot").append("svg").attr("height", height).attr("width", width);
+var svg = d3.select("#plot1").append("svg").attr("height", height).attr("width", width);
 
-// Create a "blur" filter
-svg.append("defs")
-.append("filter").attr("id", "blur")
-.attr("x", "-50%").attr("y", "-50%")
-.attr("height", "200%").attr("width", "200%")
-.append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", 10);
+// // Create a "blur" filter
+// svg.append("defs")
+// .append("filter").attr("id", "blur")
+// .attr("x", "-50%").attr("y", "-50%")
+// .attr("height", "200%").attr("width", "200%")
+// .append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", 10);
 
 var points, lines, circles
 var centroids, centroidCircles;
@@ -58,27 +76,32 @@ var yScale = d3.scaleLinear().domain([0,1]).range([height - padding, padding]);
 //centroids = kMeansModel(1);
 
 
-  var points = [];
+var points = [];
+var numPts = 30;
+var theChosen_idx = Math.floor(Math.random() * (numPts));
+// Sample points from this cluster
+for (var i = 0; i < 30; i++) {
+  var myLabel = i == theChosen_idx ? 1 : 0;
+  points.push({
+    label: myLabel,
+    x: padding + Math.random() * (width - 2*padding), // "noise" is scaled by "spread" param
+    y: padding + Math.random() * (height - 2*padding)
+  });
+}
+console.log(points);
 
 
 
-    // // Place a blurry indication of where the cluster "should" be.
-    // svg.append("circle")
-    // .attr("class", "realCenter")
-    // .attr("cx", xScale(center.x))
-    // .attr("cy", yScale(center.y))
-    // .attr("r", xScale(spread) - xScale(0))
-    // //.attr("filter", "url(#blur)")
-    // .style("fill", "#9c9");
 
-    // // Sample points from this cluster
-    // for (var i = 0; i < pointsPerCluster; i++) {
-    //   // Data
-    //   points.push({
-    //     cluster: -1,
-    //     x: center.x + gaussian() * spread, // "noise" is scaled by "spread" param
-    //     y: center.y + gaussian() * spread
-    //   });
+// Place a blurry indication of where the cluster "should" be.
+// svg.append("circle")
+// .attr("class", "realCenter")
+// .attr("cx", xScale(center.x))
+// .attr("cy", yScale(center.y))
+// .attr("r", xScale(spread) - xScale(0))
+// //.attr("filter", "url(#blur)")
+// .style("fill", "#9c9");
+
 
       // Visual representation
   //     svg.append("circle")
