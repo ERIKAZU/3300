@@ -74,29 +74,34 @@ console.log(points);
 
 
 var svg1 = d3.select("#plot1").append("svg").attr("height", height).attr("width", width);
+
+svg1.append("text")
+.attr("x", 10).attr("y", 30)
+.style("fill", "#ccc")
+.text("Shape");
+
+
 var shapes = svg1.selectAll(".shapes")
     .data(points).enter();
 
-var circles = svg1.selectAll(".circles")
-.data(points)
-.enter();
+// var circles = svg1.selectAll(".circles")
+// .data(points)
+// .enter();
 
-circles.append("circle")
-.attr("class","circles")
-    .filter(function(d){ console.log(d);return d.label == 0; })
+shapes.append("circle")
+.attr("class","circles shapes")
+    .filter(function(d){ return d.label == 0; })
     .attr("cx", d => d.x)
     .attr("cy", d => d.y)
     .attr("r", 5);
 
+var symbol = d3.symbol().size([50]);
 
-
-// shapes.append("rect")
-// .attr("class","shapes")
-//     .filter(function(d){ return d.label == 1; })
-//     .attr("x", d => d.x)
-//     .attr("y", d => d.y)
-//     .attr("width", 5)
-//     .attr("height", 5);
+shapes.append("path")
+.attr("class","tris shapes")
+    .filter(function(d){ return d.label == 1; })
+    .attr("d", symbol.type(d3.symbolTriangle))
+    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 // Place a blurry indication of where the cluster "should" be.
 // svg.append("circle")
 // .attr("class", "realCenter")
