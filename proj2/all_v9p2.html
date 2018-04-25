@@ -24,10 +24,6 @@
       text-anchor: middle;
     }
 
-    svg {
-      border: solid #ccc 1px;
-    }
-
     .text_align_left {
       text-align: left;
     }
@@ -59,19 +55,10 @@
       How much time you have left &
       <br /> How you spend it
 
-      <text style="font-size: 20px">Presented by <a href="https://github.com/ERIKAZU/3300/tree/master/proj2">Team </a></text>
+      <text style="font-size: 20px">Presented by <a href="https://github.com/ERIKAZU/3300_project2">Team of INFO 5100</a></text>
     </p>
   </div>
 
-  <!-- <div style = "float:left">
-  <p id="title" style = "font-weight: 100;
-    font-size: 40pt;
-    margin-top: 0px;
-    margin-bottom: 20px;
-    margin-left: 20px;" class="text_align_right">
-  &
-</p>
-</div> -->
 
   <div style="display:inline-block">
     <p id="title_h2" class="intro_text"style="font-weight: thin;
@@ -85,7 +72,7 @@ color:#999">
 
 
     <p class="intro_text"><span class="Variant">Overivew</span></p>
-    <p class="intro_text"> We first want to give you an overview on the number of deaths in 2015, and how the major death causes change among different age groups. The white circle in the center represents the accumulation of people passed away by the certain age. </p>
+    <p class="intro_text"> We first want to give you an overview on the number of deaths in 2015, and how the major death causes change among different age groups. </p>
 
     <!-- reference:http://bl.ocks.org/michellechandra/0b2ce4923dc9b5809922 -->
   </div>
@@ -173,12 +160,6 @@ color:#999">
 
         // draw the play button, on click, disappear
         function playButton(svg,  x, y) {
-            // console.log("new button");
-            // var messageText = svg.append("text")
-            // .attr("id", "play_ani_text")
-            // .attr("x", x + 20)
-            // .attr("font-size","20px")
-            // .attr("y", y).text("play animation");
 
               var button = svg.append("g")
                   .attr("transform", "translate("+ x +","+ y +")");
@@ -202,8 +183,6 @@ color:#999">
                         .style("fill","white")
                         .transition(100).style("fill","steelblue");
                     d3.select(this).remove();
-                    // var text_to_remove = d3.select("#play_ani_text").node();
-                    // text_to_remove.remove();
 
                     // remove center explain text in svg
                     svg.selectAll(".p1_explain_texts").remove();
@@ -237,34 +216,7 @@ color:#999">
             .attr("y",function(d,i){
               return i * 30;
             })
-              // button
-              //   .append("circle")
-              //     .attr("r", 25)
-              //     .attr("cx", 20)
-              //     .attr("cy", 25)
-              //     .style("fill", "steelblue");
-              //
-              // button
-              //   .append("path")
-              //     .attr("d", "M15 10 L15 40 L35 25 Z")
-              //     .style("fill", "white");
-              //
-              //
-              // button
-              //     .on("mousedown", function() {
-              //       d3.select(this).select("circle")
-              //           .style("fill","white")
-              //           .transition(100).style("fill","steelblue");
-              //       d3.select(this).remove();
-              //       var text_to_remove = d3.select("#play_ani_text").node();
-              //       text_to_remove.remove();
-              //       setTimeout(function() {
-              //         console.log("should delete button");
-              //
-              //         plotGraph1Main();
-              //       }, 200);
-              //
-              //     });
+
         }
 
         svg.append("g").attr("class", "slices");
@@ -276,42 +228,6 @@ color:#999">
           height = 450,
           radius1 = Math.min(width, height) / 2;
 
-        // set the colors for each {cause of death} category
-        // var colorMap = d3.scaleOrdinal()
-        //   .domain(
-        //     ["Others",
-        //       "Unintentional Injury",
-        //       "Congenital Anomalies",
-        //       "Homicide",
-        //       "Malignant Neoplasms",
-        //       "Heart Disease",
-        //       "Short Gestation",
-        //       "SIDS",
-        //       "Maternal Pregnancy Comp.",
-        //       "Suicide",
-        //       "Liver Disease",
-        //       "Chronic Low. Respiratory Disease",
-        //       "Diabetes Mellitus",
-        //       "Cerebrovascular",
-        //       "Alzheimer's Disease"
-        //     ])
-        //   .range(
-        //     [ "#505463",    //Others
-        //       "#891C56",    //Unintentional Injury
-        //       "#5CC6BC",    //Congenital Anomalies
-        //       "#D62337",    //Homicide
-        //       "#FFFFFF",    //Malignant Neoplasms
-        //       "#C23E82",    //Heart Disease
-        //       "#F2E0C9",    //Short Gestation
-        //       "#722B25",    //SIDS
-        //       "#2E8B57",    //Maternal Pregnancy Comp
-        //       "#0095C7",    //Suicide
-        //       "#A6523E",    //Liver Disease
-        //       "#DBDA3D",    //Chronic Low. Respiratory Disease
-        //       "#DE5F75",    //Diabetes Mellitus
-        //       "#F8BD5B",    //Cerebrovascular
-        //       "#A583CF"     //Alzheimer's Disease
-        //     ]);
 
         var colorMap = d3.scaleOrdinal()
           .domain(
@@ -389,7 +305,7 @@ color:#999">
               }
               total_dead_num_list.push(dead_num_sum);
             }
-            console.log(total_dead_num_list);
+
 
             // operator that maps domain (max total death number) to range (radius)
             var tot_r_scale =
@@ -399,7 +315,7 @@ color:#999">
 
             // preprocess graph data
             for (var ageStage = 0; ageStage < 9; ageStage++) {
-              //console.log(data[ageStage].tot);
+
               var thisAge = data[ageStage];
               if (ageStage == 0) {
                 prev_r = 0;
@@ -436,8 +352,7 @@ color:#999">
               });
               age_top_cos_list[ageStage] = age_top_cos;
             }
-            // console.log(prev_r_list);
-            // console.log(cur_r_list);
+
 
             function plotGraphAnimation(idx, doFlyCircle) {
               center_circle(prev_r_list[idx], cur_r_list[idx]);
@@ -562,7 +477,7 @@ color:#999">
 
         /** main function to control the transition of the pie chart **/
         function changePieChart(idx, data, doFlyCircle) {
-          //console.log(data);
+
           var pieAnimDuration = 1500;
           // the pie chart
           var pie = d3.pie()
@@ -627,7 +542,6 @@ color:#999">
           }
           if (idx == 8) { // the last frame, put back the button
             setTimeout(function() {
-              //console.log(pieAnimDuration);
               // re-show explain text and play
               playButton(svg_box, 960/2 - 20 ,330);
               p1_add_text(svg_box, 960/2, 100);
@@ -847,9 +761,9 @@ color:#999">
 
       <p class="intro_text"><span class="Variant">How much time is gone in your lifetime</span></p>
       <p class="intro_text"> Have you thought about how you would be spending your time left? When you select your age and gender, the grey dots represent how many years you have lived your life, whereas the green dots represent how much time you have left. In the U.S., the average lifetime is 81 years for women, and 76 years for men.</p>
-      <p class="intro_text"> Hover and click on an age range to explore how people are spending their time during that age. How would you plan to spend your time for the rest of your life? </p>
+      <p class="intro_text"> Hover and click on an age range on the grid to explore how people are spending their time during that age. How would you plan to spend your time for the rest of your life? </p>
 
-      <div class="span_line" style="margin-bottom:30px;">
+      <div class="span_line" style="margin-bottom:30px;     margin-left: 150px;">
 
         <div id="age_slider_div" style="width:40%; float:left;">
           <p id="age_slider_text" style="
@@ -875,14 +789,11 @@ color:#999">
 
       </br>
 
-      <!-- <div class="dead_example span_line">
-        <p id="dead_example_text_id" class="dead_example_text"> someone died </p>
-      </div> -->
 
       <div id="plot_3_div">
       </div>
 
-      <div id="ageGrid">
+      <div id="ageGrid" style="margin-left: 50;">
       </div>
 
       <script>
@@ -914,7 +825,7 @@ color:#999">
 
           var pos_array = new Array();
           // circle pos is by its center
-          var xpos = radius;
+          var xpos = radius + 200;
           var ypos = radius;
           // count of circle
           var curID = 1;
@@ -934,7 +845,7 @@ color:#999">
               curID++;
               xpos += spacing;
             }
-            xpos = radius;
+            xpos = radius + 200;
             ypos += spacing;
           }
           return pos_array;
@@ -951,7 +862,7 @@ color:#999">
           }
           ageGroup[1] = ageGroup[1] < tot_lifetime ? ageGroup[1] : tot_lifetime;
           var pos_array = new Array();
-          var xpos = radius;
+          var xpos = radius + 200;
           var ypos = radius;
 
           var curID = 1;
@@ -970,7 +881,7 @@ color:#999">
               curID++;
               xpos += spacing;
             }
-            xpos = radius;
+            xpos = radius + 200;
             ypos += spacing;
           }
 
@@ -1049,8 +960,7 @@ color:#999">
                 })
                 .transition()
                 .style("fill", "#ffcc00");
-              // console.log(d.category);
-              // console.log(d.age);
+
               if (d.category != -1) {
                 // show tooltip
                 tip_label.show(d);
@@ -1087,16 +997,16 @@ color:#999">
           var num_to_drop = dropping_data.length;
           for (var i = 0; i < num_to_drop; i++) {
             var s = dropping_data[i];
-            //console.log(s);
+
             svg2.append("circle")
               .attr("cx", s.x)
               .attr("cy", s.y)
               .attr("r", 15)
               .style("fill", s.color)
-              .transition().duration(1000)
-              .attr("cy", s.y + getRandomInt(300))
+              .transition().duration(700)
+              .attr("cy",  getRandomInt(100) + 450)
               .attr("r", 10)
-              .delay(getRandomInt(1000))
+              .delay(getRandomInt(500))
               // .style("fill", "#CED3D3")
               .transition().duration(300)
               .attr("r", 0);
@@ -1106,7 +1016,7 @@ color:#999">
 
         /************ Elements ****************/
         var svg2 = d3.select("#ageGrid")
-                    .append("svg").attr("width", 600).attr("height", 800);
+                    .append("svg").attr("width", 800).attr("height", 800);
 
         // age slider listener:
         d3.select("#age_slider").on("change", function() {
@@ -1119,11 +1029,7 @@ color:#999">
 
           var grid_data = gen_grid_data(age, gender);
           showCircles(grid_data);
-
           renew_svg3();
-          // var ageGroup = getAgeGroupRange(age); //[int, int]
-          // var dropping = gen_dropping_data(ageGroup, gender);
-          // drop_rand(dropping);
         });
 
         // gender switch listener
@@ -1188,16 +1094,18 @@ color:#999">
               "Education",
               "Leisure and Sports",
               "Purchasing",
-              "Phone Calls, E-mail"
+              "Phone Calls, E-mail",
+              "Eating and Drinking"
             ])
           .range([
               "#ff8c00",
-              "#8a89a6",
-              "#7b6888",
               "#6b486b",
-              "#a05d56",
-              "#D58054",
-              "#6F608E"
+              "#C3A670",
+              "#628CB6",
+              "#BF7054",
+              "#2C4A78",
+              "#A6523E",
+              "#54896E"
             ]);
 
         var selected_gender = "M";
@@ -1217,10 +1125,7 @@ color:#999">
         function gender_convert_csv(gender_selected) {
           return gender_selected == "M" ? "Male" : "Female";
         }
-        // var age_csv_map = d3.scale.ordinal()
-        // 			.range(["1519","2024","","",])
 
-        // plot_time_use(selected_gender, selected_age_group);
 
         function plot_time_use(selected_gender, age_group) {
           svg3.selectAll("circle").remove();
@@ -1252,7 +1157,7 @@ color:#999">
 
             var simulation = d3.forceSimulation(filtered_gender_age_data)
               .force('charge', d3.forceManyBody().strength(15))
-              .force('center', d3.forceCenter(width / 2, height / 2))
+              .force('center', d3.forceCenter(width / 2 + 40, height / 2 + 50))
               .force('collision', d3.forceCollide().radius(function(d) {
                 return time_use_r_scale(d.Duration);
               }))
@@ -1294,7 +1199,7 @@ color:#999">
                     })
                     .transition()
                     .style("opacity", 1);
-                  p3_highlight_legend(d, 400, 430, d.Activity);
+                  p3_highlight_legend(d, 550, 480, d.Activity);
                 }
               )
               .on('mouseout',
@@ -1312,7 +1217,6 @@ color:#999">
               )
               .on('click',
                 function(d) {
-                  console.log(d);
                 }
               );
             // this can manually speed up the force simulation
@@ -1324,9 +1228,6 @@ color:#999">
 
               if(u.size() == 0) return;
               if(u.size() != filtered_gender_age_data.length) return;
-
-              // console.log(u.size());
-              // console.log(filtered_gender_age_data.length);
 
               u.data(filtered_gender_age_data)
                 .enter()
@@ -1341,10 +1242,9 @@ color:#999">
                   return d.y + 300;
                 });
             }
-            //u.exit().remove();
 
             // add legend texts to the bubbles by side
-            p3_add_legend(filtered_gender_age_data, 400, 430);
+            p3_add_legend(filtered_gender_age_data, 550, 480);
 
             p3_remove_highlight_legend();
 
@@ -1364,7 +1264,6 @@ color:#999">
               .data(filtered_gender_age_data)
               .enter();
 
-              // console.log("here");
               var first_line = filtered_gender_age_data[0];
               var format_gender = d3.scaleOrdinal()
                 .domain(
@@ -1404,7 +1303,7 @@ color:#999">
                   if(d == null || d == undefined) {
                     return;
                   }
-                  return d.Activity   + ": " + d.Duration   + "hr/day";
+                  return d.Activity   + ": " + d.Duration   + " hr/day";
                 })
                 .style("text-anchor", "middle")
                 .style("font-size", "20px")
@@ -1423,16 +1322,13 @@ color:#999">
                     .data(filtered_gender_age_data)
                     .enter();
 
-              console.log(filtered_gender_age_data);
-              console.log(p3_legends_highlight);
-
               p3_legends_highlight.append("text")
                 .attr("class", "p3_highlight_legend")
                 .attr('x', 0)
                 .attr('y', function(d,i) {return i * 30;})
                 .text(function(d){
                   if (d.Activity == selected_data.Activity) {
-                    return selected_data.Activity   + ": " + selected_data.Duration + "hr/day";
+                    return selected_data.Activity   + ": " + selected_data.Duration + " hr/day";
                   }
                   else return "";
                 })
