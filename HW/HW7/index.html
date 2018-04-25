@@ -28,13 +28,13 @@ svg { border: solid #ccc 1px; }
 
 <div class="grid-container">
   <div class="grid-item" id = "plot1"></div>
-  <div class="grid-item"></div>
-  <div class="grid-item"></div>
-  <div class="grid-item">4</div>
-  <div class="grid-item">5</div>
-  <div class="grid-item">6</div>
-  <div class="grid-item">7</div>
-  <div class="grid-item">8</div>
+  <div class="grid-item" id = "plot2"></div>
+  <div class="grid-item" id = "plot3"></div>
+  <div class="grid-item" id = "plot4"></div>
+  <div class="grid-item" id = "plot5"></div>
+  <div class="grid-item" id = "plot6"></div>
+  <div class="grid-item" id = "plot7"></div>
+  <div class="grid-item" id = "plot8"></div>
 </div>
 
 <script id="notes">
@@ -88,8 +88,8 @@ var shapes = svg1.selectAll(".shapes")
     .data(points).enter();
 // plot circles
 shapes.append("circle")
-.attr("class","circles shapes")
-    .filter(function(d){ return d.label == 0; })
+.attr("class","circles shapes").attr("fill","#85BD82")
+    .filter(d => d.label == 0)
     .attr("cx", d => d.x)
     .attr("cy", d => d.y)
     .attr("r", 5);
@@ -97,10 +97,61 @@ shapes.append("circle")
 // plot triangle
 var symbol = d3.symbol().size([50]);
 shapes.append("path")
-.attr("class","tris shapes")
-    .filter(function(d){ return d.label == 1; })
+.attr("class","tris shapes").attr("fill","#85BD82")
+    .filter(d => d.label == 1)
     .attr("d", symbol.type(d3.symbolTriangle))
     .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+/////////////////////////////////
+////  PLOT 2 : CAST SHADOW  /////
+/////////////////////////////////
+
+var svg2 = d3.select("#plot2").append("svg").attr("height", height).attr("width", width);
+// drop shadow reference:
+// https://stackoverflow.com/questions/37155280/adding-drop-shadow-effects-in-d3-js-circle
+var defs = svg2.append("defs");
+var dropShadowFilter = defs.append('svg:filter')
+  .attr('id', 'drop-shadow')
+  .attr('filterUnits', "userSpaceOnUse")
+  .attr('width', '250%')
+  .attr('height', '250%');
+dropShadowFilter.append('svg:feGaussianBlur')
+  .attr('in', 'SourceGraphic')
+  .attr('stdDeviation', 2)
+  .attr('result', 'blur-out');
+dropShadowFilter.append('svg:feColorMatrix')
+  .attr('in', 'blur-out')
+  .attr('type', 'hueRotate')
+  .attr('values', 180)
+  .attr('result', 'color-out');
+dropShadowFilter.append('svg:feOffset')
+  .attr('in', 'color-out')
+  .attr('dx', 3)
+  .attr('dy', 3)
+  .attr('result', 'the-shadow');
+dropShadowFilter.append('svg:feBlend')
+  .attr('in', 'SourceGraphic')
+  .attr('in2', 'the-shadow')
+  .attr('mode', 'normal');
+
+// plot title
+svg2.append("text").attr("x", 10).attr("y", 30).style("fill", "#ccc")
+.text("Cast Shadow");
+
+// plot data
+var shapes = svg2.selectAll(".shapes")
+    .data(points).enter();
+// plot circles
+shapes.append("circle").attr("fill","#85BD82")
+.attr("class","circles shapes")
+    // .filter(function(d){ return d.label == 0; })
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", 5)
+    .style("filter",
+    d => (d.label == 1) ? "url(#drop-shadow)" : 0
+    );
+
 
 
 
