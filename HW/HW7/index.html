@@ -25,6 +25,60 @@ svg { border: solid #ccc 1px; }
   width:200px;
 }
 
+
+.leftright {
+  animation: move_leftright 2s linear infinite;
+  /* position: absolute; */
+  left: 0;
+  bottom: 10;
+}
+@keyframes move_leftright {
+  0%, 15% {
+    transform: translate(2px, 5px);
+  }
+  15%, 40% {
+    transform: translate(8px, 5px);
+  }
+  40%, 50% {
+    transform: translate(10px, 5px);
+  }
+  50%, 60% {
+    transform: translate(8px, 5px);
+  }
+  60%, 85% {
+    transform: translate(2px, 5px);
+  }
+  85%, 100% {
+    transform: translate(0px, 5px);
+  }
+}
+
+
+.updown {
+  animation: move_updown 2s linear infinite;
+}
+@keyframes move_updown {
+  0%, 15% {
+    transform: translate(0px, 2px);
+  }
+  15%, 40% {
+    transform: translate(0px, 8px);
+  }
+  40%, 50% {
+    transform: translate(0px, 10px);
+  }
+  50%, 60% {
+    transform: translate(0px, 8px);
+  }
+  60%, 85% {
+    transform: translate(0px, 2px);
+  }
+  85%, 100% {
+    transform: translate(0px, 0px);
+  }
+
+}
+
 </style>
 
 <div class="grid-container">
@@ -330,49 +384,26 @@ shapes.append("line")
     .attr("stroke", "#85BD82");
 
 
+/////////////////////////////////
+/// PLOT 8 : MOTION DIRECTION ///
+/////////////////////////////////
 
+var svg8 = d3.select("#plot8").append("svg").attr("height", height).attr("width", width);
 
+// plot title
+svg8.append("text").attr("x", 5).attr("y", 190).style("font-size","16px")
+.text("Motion direction");
 
-
-// // plot ellipse
-// shapes.append("ellipse")
-//     .attr("class","tris shapes").attr("fill","#85BD82")
-//     .filter(d => d.label == 1)
-//     .attr("cx", d => d.x)
-//     .attr("cy", d => d.y)
-//     .attr("rx", 10)
-//     .attr("ry", 3);
-
-      // Visual representation
-  //     svg.append("circle")
-  //     .attr("class", "point")
-  //     .attr("cx", function(d) { return xScale(center.x); })
-  //     .attr("cy", function(d) { return yScale(center.y); })
-  //     .attr("r", 3)
-  //     .style("fill", "green")
-  //     .style("opacity", 0.5)
-  //   }
-  // }
-  //
-  // // Implement "pop out" effect to emphasize origin clusters
-  // circles = svg.selectAll(".point").data(points)
-  // .transition().duration(1000)
-  // .attr("cx", function(d) { return xScale(d.x); })
-  // .attr("cy", function(d) { return yScale(d.y); });
-
-//   // Create lines that will connect points to their assigned cluster
-//   lines = svg.selectAll("line").data(points);
-//
-//   lines = lines.enter().append("line")
-//   .attr("x1", function(d) { return xScale(d.x); })
-//   .attr("y1", function(d) { return yScale(d.y); })
-//   .attr("x2", function(d) { return xScale(d.x); })
-//   .attr("y2", function(d) { return yScale(d.y); })
-//   .style("stroke", "#aaa").merge(lines);
-//
-//   return points;
-// }
-
+// plot data
+var shapes = svg8.selectAll(".shapes")
+    .data(points).enter();
+// plot circles
+shapes.append("circle").attr("fill","#85BD82")
+.attr("class", d => d.label == 0 ? "circles shapes updown" : "circles shapes leftright")
+    // .filter(function(d){ return d.label == 0; })
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", 5)
 
 
 
