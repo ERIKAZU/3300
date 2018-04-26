@@ -24,6 +24,7 @@ svg { border: solid #ccc 1px; }
   height: 200px;
   width:200px;
 }
+
 </style>
 
 <div class="grid-container">
@@ -40,12 +41,6 @@ svg { border: solid #ccc 1px; }
 <script id="notes">
 
 
-// // Create a "blur" filter
-// svg.append("defs")
-// .append("filter").attr("id", "blur")
-// .attr("x", "-50%").attr("y", "-50%")
-// .attr("height", "200%").attr("width", "200%")
-// .append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", 10);
 
 ///////////////////////////////////////////
 //////  init  and  generate data  /////////
@@ -154,13 +149,74 @@ shapes.append("circle").attr("fill","#85BD82")
     .attr("cy", d => d.y)
     .attr("r", 5)
     .style("filter",
-    d => (d.label == 1) ? "url(#drop-shadow)" : 0
+    d => (d.label == 1) ? "url(#drop-shadow)" : ""
     );
 
+/////////////////////////////////
+////  PLOT 3 : GREY VALUE  //////
+/////////////////////////////////
+
+var svg3 = d3.select("#plot3").append("svg").attr("height", height).attr("width", width);
+
+svg3.style("background","#DC8E99");
+// plot title
+svg3.append("text").attr("x", 10).attr("y", 30).style("fill", "#ccc")
+.text("Grey Value");
+
+// plot data
+var shapes = svg3.selectAll(".shapes")
+    .data(points).enter();
+// plot circles
+shapes.append("circle")
+.attr("class","circles shapes")
+    // .filter(function(d){ return d.label == 0; })
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", 5)
+    .style("fill",
+    d => (d.label == 1) ? d3.hsl(260, 0.03, 0.36, 1)
+    : d3.hsl(260, 0.03, 0.52, 1));
 
 
 
 
+/////////////////////////////////
+////  PLOT 4 : SHARPNESS  //////
+/////////////////////////////////
+
+
+
+var svg4 = d3.select("#plot4").append("svg").attr("height", height).attr("width", width);
+
+// // Create a "blur" filter
+svg4.append("defs")
+.append("filter").attr("id", "blur")
+.attr("x", "-50%").attr("y", "-50%")
+.attr("height", "200%").attr("width", "200%")
+.append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", 1.5);
+
+// plot title
+svg4.append("text").attr("x", 10).attr("y", 30).style("fill", "#ccc")
+.text("Sharpness");
+
+// plot data
+var shapes = svg4.selectAll(".shapes")
+    .data(points).enter();
+// plot circles
+shapes.append("circle")
+.attr("class","circles shapes")
+    // .filter(function(d){ return d.label == 0; })
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", 5)
+    // .style("fill",
+    // i => i%2 == 1 ? "#85BD82" : "#DC8E99"
+    // )
+    .style("fill",
+    function(){return Math.random() < 0.5 ? "#85BD82" : "#DC8E99"})
+    .style("filter",
+    d => (d.label == 0) ? "url(#blur)" : ""
+    );
 
 // Place a blurry indication of where the cluster "should" be.
 // svg.append("circle")
